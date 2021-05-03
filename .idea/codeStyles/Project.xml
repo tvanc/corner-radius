@@ -9,14 +9,6 @@
         <option name="SMART_TABS" value="true" />
       </value>
     </option>
-    <option name="HTML_KEEP_WHITESPACES" value="true" />
-    <option name="HTML_KEEP_BLANK_LINES" value="1" />
-    <option name="HTML_ALIGN_TEXT" value="true" />
-    <option name="HTML_SPACE_INSIDE_EMPTY_TAG" value="true" />
-    <option name="HTML_ELEMENTS_TO_INSERT_NEW_LINE_BEFORE" value="body,div,p,form,h1,h2,h3,ul,li,select,option" />
-    <option name="HTML_ELEMENTS_TO_REMOVE_NEW_LINE_BEFORE" value="" />
-    <option name="HTML_DO_NOT_INDENT_CHILDREN_OF" value="" />
-    <option name="HTML_INLINE_ELEMENTS" value="a,abbr,acronym,b,basefont,bdo,big,br,cite,cite,code,dfn,em,font,i,kbd,q,s,samp,span,strike,strong,sub,sup,tt,u,var" />
     <option name="FORMATTER_TAGS_ENABLED" value="true" />
     <option name="SOFT_MARGINS" value="80" />
     <CssCodeStyleSettings>
@@ -24,9 +16,11 @@
       <option name="HEX_COLOR_SHORT_FORMAT" value="true" />
       <option name="KEEP_SINGLE_LINE_BLOCKS" value="true" />
     </CssCodeStyleSettings>
-    <DB2CodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
+    <DB2CodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
+      <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
+      <option name="CUSTOM_TYPE_CASE" value="3" />
       <option name="QUERY_EL_LINE" value="101" />
       <option name="QUERY_EL_COMMA" value="2" />
       <option name="QUERY_ALIGN_ELEMENTS" value="false" />
@@ -59,9 +53,11 @@
       <option name="EXPR_BINARY_OP_ALIGN" value="false" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </DB2CodeStyleSettings>
-    <DerbyCodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
+    <DerbyCodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
+      <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
+      <option name="CUSTOM_TYPE_CASE" value="3" />
       <option name="QUERY_EL_LINE" value="101" />
       <option name="QUERY_EL_COMMA" value="2" />
       <option name="QUERY_ALIGN_ELEMENTS" value="false" />
@@ -94,9 +90,11 @@
       <option name="EXPR_BINARY_OP_ALIGN" value="false" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </DerbyCodeStyleSettings>
-    <H2CodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
+    <H2CodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
+      <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
+      <option name="CUSTOM_TYPE_CASE" value="3" />
       <option name="QUERY_EL_LINE" value="101" />
       <option name="QUERY_EL_COMMA" value="2" />
       <option name="QUERY_ALIGN_ELEMENTS" value="false" />
@@ -127,9 +125,46 @@
       <option name="EXPR_BINARY_OP_ALIGN" value="false" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </H2CodeStyleSettings>
-    <HSQLCodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
+    <H2CodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
+      <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
+      <option name="CUSTOM_TYPE_CASE" value="3" />
+      <option name="QUERY_EL_LINE" value="101" />
+      <option name="QUERY_EL_COMMA" value="2" />
+      <option name="QUERY_ALIGN_ELEMENTS" value="false" />
+      <option name="SUBQUERY_OPENING" value="1" />
+      <option name="SUBQUERY_CONTENT" value="2" />
+      <option name="SUBQUERY_CLOSING" value="2" />
+      <option name="INSERT_INTO_NL" value="2" />
+      <option name="INSERT_OPENING" value="4" />
+      <option name="INSERT_CONTENT" value="4" />
+      <option name="INSERT_CLOSING" value="4" />
+      <option name="INSERT_TABLE_EL_LINE" value="1" />
+      <option name="INSERT_EL_WRAP" value="2" />
+      <option name="INSERT_COLLAPSE_MULTI_ROW_VALUES" value="true" />
+      <option name="SET_EL_COMMA" value="2" />
+      <option name="WITH_EL_LINE" value="101" />
+      <option name="SELECT_EL_LINE" value="101" />
+      <option name="SELECT_EL_COMMA" value="2" />
+      <option name="SELECT_ALIGN_AS" value="false" />
+      <option name="FROM_INDENT_JOIN" value="false" />
+      <option name="WHERE_EL_WRAP" value="2" />
+      <option name="ORDER_EL_WRAP" value="1" />
+      <option name="ORDER_EL_COMMA" value="2" />
+      <option name="TABLE_OPENING" value="4" />
+      <option name="TABLE_CONTENT" value="2" />
+      <option name="TABLE_CLOSING" value="3" />
+      <option name="CONSTRAINT_WRAP_1" value="false" />
+      <option name="POST_OPT_WRAP_1" value="true" />
+      <option name="EXPR_BINARY_OP_ALIGN" value="false" />
+      <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
+    </H2CodeStyleSettings>
+    <HSQLCodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
+      <option name="KEYWORD_CASE" value="2" />
+      <option name="TYPE_CASE" value="3" />
+      <option name="CUSTOM_TYPE_CASE" value="3" />
       <option name="QUERY_EL_LINE" value="101" />
       <option name="QUERY_EL_COMMA" value="2" />
       <option name="QUERY_ALIGN_ELEMENTS" value="false" />
@@ -170,6 +205,7 @@
       <option name="HTML_ENFORCE_QUOTES" value="true" />
     </HTMLCodeStyleSettings>
     <JSCodeStyleSettings version="0">
+      <option name="USE_SEMICOLON_AFTER_STATEMENT" value="false" />
       <option name="FORCE_SEMICOLON_STYLE" value="true" />
       <option name="ALIGN_OBJECT_PROPERTIES" value="1" />
       <option name="SPACE_BEFORE_FUNCTION_LEFT_PARENTH" value="false" />
@@ -179,9 +215,11 @@
       <option name="SPACES_WITHIN_IMPORTS" value="true" />
       <option name="USE_CHAINED_CALLS_GROUP_INDENTS" value="true" />
     </JSCodeStyleSettings>
-    <MSSQLCodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
+    <MSSQLCodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
+      <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
+      <option name="CUSTOM_TYPE_CASE" value="3" />
       <option name="QUERY_EL_LINE" value="101" />
       <option name="QUERY_EL_COMMA" value="2" />
       <option name="QUERY_ALIGN_ELEMENTS" value="false" />
@@ -213,9 +251,11 @@
       <option name="EXPR_BINARY_OP_ALIGN" value="false" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </MSSQLCodeStyleSettings>
-    <MySQLCodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
+    <MySQLCodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
+      <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
+      <option name="CUSTOM_TYPE_CASE" value="3" />
       <option name="QUERY_EL_LINE" value="101" />
       <option name="QUERY_EL_COMMA" value="2" />
       <option name="SUBQUERY_OPENING" value="1" />
@@ -252,9 +292,11 @@
       <option name="NEW_LINE_BEFORE_QUERY_INSIDE_DML" value="true" />
       <option name="INDENT_SELECT_INTO_CLAUSE" value="true" />
     </MySQLCodeStyleSettings>
-    <OracleCodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
+    <OracleCodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
+      <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
+      <option name="CUSTOM_TYPE_CASE" value="3" />
       <option name="QUERY_EL_LINE" value="101" />
       <option name="QUERY_EL_COMMA" value="2" />
       <option name="QUERY_ALIGN_ELEMENTS" value="false" />
@@ -302,9 +344,11 @@
       <option name="FORCE_SHORT_DECLARATION_ARRAY_STYLE" value="true" />
       <option name="PLACE_PARENS_FOR_CONSTRUCTOR" value="2" />
     </PHPCodeStyleSettings>
-    <PostgresCodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
+    <PostgresCodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
+      <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
+      <option name="CUSTOM_TYPE_CASE" value="3" />
       <option name="QUERY_EL_LINE" value="101" />
       <option name="QUERY_EL_COMMA" value="2" />
       <option name="QUERY_ALIGN_ELEMENTS" value="false" />
@@ -337,9 +381,11 @@
       <option name="EXPR_BINARY_OP_ALIGN" value="false" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </PostgresCodeStyleSettings>
-    <SQLiteCodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
+    <SQLiteCodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
+      <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
+      <option name="CUSTOM_TYPE_CASE" value="3" />
       <option name="QUERY_EL_LINE" value="101" />
       <option name="QUERY_EL_COMMA" value="2" />
       <option name="QUERY_ALIGN_ELEMENTS" value="false" />
@@ -370,9 +416,10 @@
       <option name="EXPR_BINARY_OP_ALIGN" value="false" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </SQLiteCodeStyleSettings>
-    <SqlCodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
+    <SqlCodeStyleSettings version="5">
+      <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
+      <option name="CUSTOM_TYPE_CASE" value="3" />
       <option name="QUERY_EL_LINE" value="101" />
       <option name="QUERY_EL_COMMA" value="2" />
       <option name="SUBQUERY_OPENING" value="1" />
@@ -410,9 +457,11 @@
       <option name="NEW_LINE_BEFORE_QUERY_INSIDE_DML" value="true" />
       <option name="INDENT_SELECT_INTO_CLAUSE" value="true" />
     </SqlCodeStyleSettings>
-    <SybaseCodeStyleSettings version="2">
-      <option name="KEYWORD_CASE" value="0" />
+    <SybaseCodeStyleSettings version="5">
+      <option name="USE_GENERAL_STYLE" value="false" />
+      <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
+      <option name="CUSTOM_TYPE_CASE" value="3" />
       <option name="QUERY_EL_LINE" value="101" />
       <option name="QUERY_EL_COMMA" value="2" />
       <option name="QUERY_ALIGN_ELEMENTS" value="false" />
@@ -445,6 +494,7 @@
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </SybaseCodeStyleSettings>
     <TypeScriptCodeStyleSettings version="0">
+      <option name="USE_SEMICOLON_AFTER_STATEMENT" value="false" />
       <option name="FORCE_SEMICOLON_STYLE" value="true" />
       <option name="SPACE_BEFORE_FUNCTION_LEFT_PARENTH" value="false" />
       <option name="FORCE_QUOTE_STYlE" value="true" />
@@ -452,9 +502,6 @@
       <option name="SPACES_WITHIN_OBJECT_LITERAL_BRACES" value="true" />
       <option name="SPACES_WITHIN_IMPORTS" value="true" />
     </TypeScriptCodeStyleSettings>
-    <XML>
-      <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
-    </XML>
     <codeStyleSettings language="CSS">
       <indentOptions>
         <option name="CONTINUATION_INDENT_SIZE" value="4" />
