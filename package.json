@@ -20,8 +20,8 @@
   ],
   "scripts": {
     "build": "babel lib/ -d dist/ --source-maps --ignore '**/*.test.js' --delete-dir-on-start",
-    "format": "prettier --write '**/*.*' && eslint . --fix",
-    "lint": "prettier --check '**/*.*' && eslint .",
+    "format": "prettier --write '**/*.*'",
+    "lint": "prettier --check '**/*.*'",
     "prepare": "yarn build",
     "semantic-release": "semantic-release",
     "live": "live-server --open=lib/test.html",
@@ -43,36 +43,6 @@
     "trailingComma": "all",
     "semi": false
   },
-  "eslintConfig": {
-    "env": {
-      "es6": true,
-      "jest": true,
-      "node": true
-    },
-    "parser": "babel-eslint",
-    "parserOptions": {
-      "ecmaVersion": 2019,
-      "sourceType": "module"
-    },
-    "extends": [
-      "eslint:recommended",
-      "plugin:jest/recommended",
-      "plugin:import/recommended"
-    ],
-    "rules": {
-      "arrow-body-style": [
-        "error",
-        "always"
-      ],
-      "curly": "error",
-      "import/order": [
-        "error",
-        {
-          "newlines-between": "always"
-        }
-      ]
-    }
-  },
   "jest": {},
   "dependencies": {},
   "devDependencies": {
@@ -82,7 +52,6 @@
     "@types/jest": "26.0.20",
     "babel-eslint": "10.1.0",
     "babel-jest": "26.6.3",
-    "eslint": "7.22.0",
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-jest": "24.1.5",
     "jest": "26.6.3",
