@@ -6,7 +6,7 @@
       <script value="live" />
     </scripts>
     <node-interpreter value="project" />
-    <package-manager value="yarn" />
+    <package-manager value="C:\Users\User\.yarn" />
     <envs />
     <method v="2" />
   </configuration>
