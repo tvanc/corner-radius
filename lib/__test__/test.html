@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Test Corner Radius</title>
+  </head>
+  <script type="module">
+    import { tracePath } from "../index.js"
+
+    tracePath(document.querySelector('.roundMyCorners'))
+  </script>
+  <style>
+    body {
+      all: initial;
+      display: flex;
+      align-items: center;
+      min-height: 100vh;
+      justify-content: center;
+      background: goldenrod;
+    }
+
+    .roundMyCorners {
+      height: 50vmin;
+      width: 50vmin;
+      position: absolute;
+      background: #006789;
+    }
+
+    .child1 {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: translate(-50%, -50%);
+      height: 25%;
+      width: 25%;
+      background: #258934;
+    }
+  </style>
+  <body>
+    <div class="roundMyCorners">
+      <div class="child1"></div>
+    </div>
+  </body>
+</html>

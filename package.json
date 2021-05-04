@@ -20,8 +20,6 @@
   ],
   "scripts": {
     "build": "babel lib/ -d dist/ --source-maps --ignore '**/*.test.js' --delete-dir-on-start",
-    "format": "prettier --write '**/*.*'",
-    "lint": "prettier --check '**/*.*'",
     "prepare": "yarn build",
     "semantic-release": "semantic-release",
     "live": "live-server --open=lib/test.html",
@@ -43,7 +41,9 @@
     "trailingComma": "all",
     "semi": false
   },
-  "jest": {},
+  "jest": {
+
+  },
   "dependencies": {},
   "devDependencies": {
     "@babel/cli": "7.13.0",
