@@ -12,7 +12,6 @@ npm-debug.log*
 package-lock.json
 
 /.env
-/lib/__test__/gpc/
 
 ###> JetBrains #################################################################
 # JetBrains IDE metadata. Adapted from:
