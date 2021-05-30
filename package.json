@@ -22,7 +22,7 @@
     "build": "babel lib/ -d dist/ --source-maps --ignore '**/*.test.js' --delete-dir-on-start",
     "prepare": "yarn build",
     "semantic-release": "semantic-release",
-    "live": "live-server --open=lib/gpc-example.html",
+    "live": "live-server --open=lib/example.html",
     "test": "jest --coverage && yarn lint --watch"
   },
   "babel": {

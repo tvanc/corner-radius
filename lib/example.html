@@ -1,0 +1,44 @@
+<html lang="en-US">
+  <head>
+    <title>Corner Radius</title>
+    <script src="example.js" type="module"></script>
+  </head>
+  <style>
+    :root {
+      --transparency: 0.5;
+    }
+    html,
+    body {
+      min-height: 100vh;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .root {
+      position: relative;
+      background-color: hsla(0, 100%, 55%, var(--transparency));
+      width: 20rem;
+      height: 20rem;
+    }
+    .leaf {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 10rem;
+      height: 10rem;
+      transform: translate(50%, 50%);
+      background-color: hsla(200, 100%, 35%, var(--transparency));
+    }
+  </style>
+  <body>
+    <div id="traceMe" class="root">
+      <div class="leaf">
+        <div class="leaf">
+          <div class="leaf"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
