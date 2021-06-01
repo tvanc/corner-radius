@@ -4,27 +4,37 @@
     <script src="example.js" type="module"></script>
   </head>
   <style>
-    :root {
-      --transparency: 0.5;
-    }
     html,
     body {
       min-height: 100vh;
       padding: 0;
       margin: 0;
+      font-family: sans-serif;
+      background: linear-gradient(to bottom, #1c1c1c, #1c4c4c);
     }
+
     .center {
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-direction: column;
     }
+
+    h2,
+    p {
+      margin: 0;
+    }
+
     .root {
       position: relative;
-      background-color: hsla(0, 100%, 55%, var(--transparency));
       width: 20rem;
       height: 20rem;
-      --corner-radius: 1rem;
+      z-index: 2;
+      color: white;
+      gap: 1rem;
+      padding: 1rem;
     }
+
     .leaf {
       position: absolute;
       right: 0;
@@ -32,28 +42,29 @@
       width: 10rem;
       height: 10rem;
       transform: translate(50%, 50%);
-      background-color: hsla(200, 100%, 35%, var(--transparency));
+      border-radius: 1rem;
     }
+
+    .node {
+      --corner-radius: 1rem;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 1rem;
+    }
+
     svg {
       pointer-events: none;
     }
-    path {
-      fill: transparent;
-      stroke: red;
-      stroke-width: 1rem;
-    }
 
-    button {
-      position: relative;
-      z-index: 1;
+    path {
+      fill: hsla(0, 100%, 55%, 0.5);
     }
 
     .root:active {
-      height: 5rem;
+      height: max-content;
     }
 
     .root:hover .leaf {
-      animation: foo 2s forwards;
+      animation: foo 1.5s forwards;
     }
 
     @keyframes foo {
@@ -61,16 +72,17 @@
         transform: translate(50%, 50%);
       }
       100% {
-        transform: translate(99%, 99%);
+        transform: translate(94%, 94%);
       }
     }
   </style>
   <body class="center">
-    <div id="traceMe" class="root center">
-      Hover me
-      <div class="leaf">
-        <div class="leaf">
-          <div class="leaf"></div>
+    <div id="traceMe" class="root center node">
+      <h2>Hover me</h2>
+      <p>Click to change height</p>
+      <div class="leaf node">
+        <div class="leaf node">
+          <div class="leaf node"></div>
         </div>
       </div>
     </div>
