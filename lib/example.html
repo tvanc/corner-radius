@@ -13,7 +13,7 @@
       padding: 0;
       margin: 0;
     }
-    body {
+    .center {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -34,14 +34,46 @@
       transform: translate(50%, 50%);
       background-color: hsla(200, 100%, 35%, var(--transparency));
     }
+    svg {
+      pointer-events: none;
+    }
     path {
       fill: transparent;
       stroke: red;
       stroke-width: 1rem;
     }
+
+    button {
+      position: relative;
+      z-index: 1;
+    }
+
+    .root:hover .leaf,
+    .animate .leaf {
+      animation: foo 3s;
+    }
+
+    @keyframes foo {
+      0% {
+        transform: translate(50%, 50%);
+      }
+      25% {
+        transform: translate(70%, 60%);
+      }
+      50% {
+        transform: translate(80%, 85%);
+      }
+      75% {
+        transform: translate(90%, 90%);
+      }
+      100% {
+        transform: translate(100%, 100%);
+      }
+    }
   </style>
-  <body>
-    <div id="traceMe" class="root">
+  <body class="center">
+    <div id="traceMe" class="root center">
+      Hover me
       <div class="leaf">
         <div class="leaf">
           <div class="leaf"></div>
