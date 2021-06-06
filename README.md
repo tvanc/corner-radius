@@ -1,7 +1,8 @@
+# Tracer
 
-## Recipes
+Generate SVG paths that perfectly match the contours of an element, even when the children protrude or lie completely outside the parent.
 
-### Using `yarn link`
+Effects are controllable through CSS or JS.
 
 To use `yarn link` efficiently, do this:
 
@@ -15,6 +16,3 @@ To use `yarn link` efficiently, do this:
 
 ### Reformating all code
 
-```bash
-yarn format
-```

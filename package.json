@@ -2,7 +2,7 @@
   "name": "corner-radius",
   "version": "0.0.0-development",
   "private": false,
-  "description": "CSS-Houdini module for bidirectional rounded corners.",
+  "description": "Draw SVG paths under the union of an element's and its childrens' polygons.",
   "repository": {
     "type": "git",
     "url": "https://github.com/tvanc/corner-radius.git"
