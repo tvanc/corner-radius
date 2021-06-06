@@ -41,9 +41,6 @@
     "trailingComma": "all",
     "semi": false
   },
-  "jest": {
-
-  },
   "dependencies": {},
   "devDependencies": {
     "@babel/cli": "7.13.0",
