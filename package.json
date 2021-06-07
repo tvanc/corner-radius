@@ -19,8 +19,6 @@
     "README.md"
   ],
   "scripts": {
-    "build": "babel src/ -d dist/ --source-maps --ignore '**/*.test.js' --delete-dir-on-start",
-    "prepare": "yarn build",
     "semantic-release": "semantic-release",
     "live": "live-server --open=src/example.html",
     "test": "jest --coverage && yarn lint --watch"
