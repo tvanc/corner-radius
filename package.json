@@ -37,10 +37,6 @@
       ]
     ]
   },
-  "prettier": {
-    "trailingComma": "all",
-    "semi": false
-  },
   "devDependencies": {
     "live-server": "^1.2.1",
     "prettier": "2.2.1",
