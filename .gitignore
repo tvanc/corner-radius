@@ -12,30 +12,7 @@
 
 # User-specific stuff
 /.idea/**/workspace.xml
-/.idea/**/tasks.xml
 /.idea/**/usage.statistics.xml
-/.idea/**/dictionaries
 /.idea/**/shelf
 
-# These are ignored because every user has different environments
-# If we all deploy to the same place (like localhost) it will make sense
-# to stop ignoring these
-/.idea/**/deployment.xml
-/.idea/**/webServers.xml
-/.idea/**/sshConfigs.xml
-
-# Generated files
-/.idea/**/contentModel.xml
-
-# Sensitive or high-churn files
-/.idea/**/dataSources/
-/.idea/**/dataSources.ids
-/.idea/**/dataSources.local.xml
-/.idea/**/sqlDataSources.xml
-/.idea/**/dynamic.xml
-/.idea/**/uiDesigner.xml
-/.idea/**/dbnavigator.xml
-
-# Editor-based Rest Client
-/.idea/httpRequests
 ###< JetBrains #################################################################
