@@ -192,3 +192,8 @@ function getSvg(el) {
 
   return svg
 }
+
+export function registerProperty(arg0: { name: string; syntax: string; inherits: boolean; initialValue: number }) {
+    throw new Error("Function not implemented.")
+}
+
