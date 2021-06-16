@@ -5,6 +5,8 @@
 
 /.env
 
+/yarn-error.log
+
 ###> JetBrains #################################################################
 # JetBrains IDE metadata. Adapted from:
 # https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
