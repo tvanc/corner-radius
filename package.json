@@ -19,8 +19,8 @@
   ],
   "scripts": {
     "semantic-release": "semantic-release",
-    "live": "live-server --open=src/example.html",
-    "test": "jest --coverage && yarn lint --watch"
+    "test": "jest --coverage && yarn lint --watch",
+    "dev-server": "webpack serve --mode=development"
   },
   "devDependencies": {
     "live-server": "^1.2.1",
@@ -30,7 +30,9 @@
     "source-map-loader": "^3.0.0",
     "ts-loader": "^9.2.3",
     "typescript": "^4.3.2",
-    "webpack": "^5.38.1"
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
   },
   "renovate": {
     "extends": [
