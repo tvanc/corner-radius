@@ -1,7 +1,7 @@
 import Point from "./gpc/geometry/Point.js"
 import PolyDefault from "./gpc/geometry/PolyDefault.js"
 
-const canvas = document.getElementById("canvas")
+const canvas = document.getElementById("canvas") as HTMLCanvasElement
 const context = canvas.getContext("2d")
 
 //define polygons
