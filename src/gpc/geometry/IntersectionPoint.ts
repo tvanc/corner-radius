@@ -1,10 +1,11 @@
+import Point from "./Point"
+
 export default class IntersectionPoint {
-  /**
-   * @param {Point} p1
-   * @param {Point} p2
-   * @param {Point} p3
-   */
-  constructor(p1, p2, p3) {
+  polygonPoint1
+  polygonPoint2
+  intersectionPoint
+
+  constructor(p1: Point, p2: Point, p3: Point) {
     this.polygonPoint1 = p1
     this.polygonPoint2 = p2
     this.intersectionPoint = p3
