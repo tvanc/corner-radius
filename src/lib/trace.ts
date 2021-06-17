@@ -1,4 +1,4 @@
-import PolyDefault from "../gpc/geometry/PolyDefault.js"
+import PolyDefault from "../gpc/geometry/PolyDefault"
 import { draw } from "./draw.js"
 import { roundPathCorners } from "./round.js"
 

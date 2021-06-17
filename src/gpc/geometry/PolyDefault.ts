@@ -22,6 +22,7 @@ import Rectangle from "./Rectangle.js"
  */
 export default class PolyDefault {
   m_List = new ArrayList()
+  m_IsHole
 
   constructor(isHole = false) {
     /**
@@ -323,7 +324,7 @@ export default class PolyDefault {
 
       res += "InnerPoly(" + i + ").hole=" + p.isHole()
 
-      let points = []
+      let points: Point[] = []
 
       for (let j = 0; j < p.getNumPoints(); j++) {
         points.push(new Point(p.getX(j), p.getY(j)))

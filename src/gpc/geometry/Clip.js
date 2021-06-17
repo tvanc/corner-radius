@@ -1,6 +1,6 @@
 import ArrayHelper from "../util/ArrayHelper.js"
 import OperationType from "./OperationType.js"
-import PolyDefault from "./PolyDefault.js"
+import PolyDefault from "./PolyDefault"
 import AetTree from "./AetTree.js"
 import PolySimple from "./PolySimple.js"
 import LmtTable from "./LmtTable.js"
