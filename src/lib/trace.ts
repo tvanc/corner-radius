@@ -7,6 +7,7 @@ const svgElMap = new WeakMap()
 const mutationObserverMap = new WeakMap()
 const resizeObserverMap = new WeakMap()
 
+// @ts-ignore
 CSS.registerProperty({
   name: "--corner-radius",
   syntax: "<length>",
