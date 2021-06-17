@@ -848,7 +848,7 @@ export default class Clip {
 
     const subj_num_poly = subj.getNumInnerPoly()
     const clip_num_poly = clip.getNumInnerPoly()
-    const o_table = ArrayHelper.create2DArray(subj_num_poly, clip_num_poly)
+    const o_table = ArrayHelper.create2DArray(subj_num_poly)
 
     /* Check all subject contour bounding boxes against clip boxes */
     for (let s = 0; s < subj_num_poly; s++) {
@@ -1115,7 +1115,7 @@ export default class Clip {
     sbte,
     p,
     type, //poly type SUBJ/Clip.CLIP
-    op
+    op,
   ) {
     /* Create the entire input polygon edge table in one go */
     let edge_table = new EdgeTable()
@@ -1197,7 +1197,7 @@ export default class Clip {
             }
             Clip.insert_bound(
               Clip.bound_list(lmt_table, edge_table.getNode(min).vertex.y),
-              e
+              e,
             )
             if (Clip.DEBUG) {
               //console.log("fwd");
@@ -1260,7 +1260,7 @@ export default class Clip {
             }
             Clip.insert_bound(
               Clip.bound_list(lmt_table, edge_table.getNode(min).vertex.y),
-              e
+              e,
             )
             if (Clip.DEBUG) {
               //console.log("rev");
