@@ -330,7 +330,7 @@ export default class PolyDefault {
         points.push(new Point(p.getX(j), p.getY(j)))
       }
 
-      points = ArrayHelper.sortPointsClockwise(points)
+      points = ArrayHelper.sortPointsClockwise(points) as Point[]
 
       for (let k = 0; k < points.length; k++) {
         res += points[k].toString()
