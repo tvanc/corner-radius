@@ -92,6 +92,8 @@ export function roundPathCorners(pathCommands, radius, useFractionalRadius) {
     }, [])
   }
 
+  const origPointMap = new Map()
+
   // Split apart the path, handing concatonated letters and numbers
   const commands =
     pathCommands instanceof Array
@@ -142,12 +144,12 @@ export function roundPathCorners(pathCommands, radius, useFractionalRadius) {
         if (useFractionalRadius) {
           curveStart = moveTowardsFractional(
             curPoint,
-            prevCmd.origPoint || prevPoint,
+            origPointMap.get(prevCmd) ?? prevPoint,
             radius,
           )
           curveEnd = moveTowardsFractional(
             curPoint,
-            nextCmd.origPoint || nextPoint,
+            origPointMap.get(nextCmd) ?? nextPoint,
             radius,
           )
         } else {
@@ -157,7 +159,7 @@ export function roundPathCorners(pathCommands, radius, useFractionalRadius) {
 
         // Adjust the current command and add it
         adjustCommand(curCmd, curveStart)
-        curCmd.origPoint = curPoint
+        origPointMap.set(curCmd, curPoint)
         resultCommands.push(curCmd)
 
         // The curve control points are halfway between the start/end of the curve and
@@ -175,8 +177,9 @@ export function roundPathCorners(pathCommands, radius, useFractionalRadius) {
           curveEnd.x,
           curveEnd.y,
         ]
+
         // Save the original point for fractional calculations
-        curveCmd.origPoint = curPoint
+        origPointMap.set(curveCmd, curPoint)
         resultCommands.push(curveCmd)
       } else {
         // Pass through commands that don't qualify
