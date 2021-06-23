@@ -1,5 +1,5 @@
 import PolyDefault from "../gpc/geometry/PolyDefault"
-import { draw } from "./draw.js"
+import { draw } from "./draw"
 import { roundPathCorners } from "./round.js"
 
 const svgNs = "http://www.w3.org/2000/svg"
