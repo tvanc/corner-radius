@@ -3,6 +3,7 @@ import Point from "./Point.js"
 import Clip from "./Clip.js"
 import Rectangle from "./Rectangle.js"
 import Polygon from "./Polygon.js"
+import PolygonInterface from "./PolygonInterface"
 
 /**
  * <code>PolySimple</code> is a simple polygon - contains only one inner polygon.
@@ -12,16 +13,14 @@ import Polygon from "./Polygon.js"
  *
  * @author  Dan Bridenbecker, Solution Engineering, Inc.
  */
-export default class PolySimple {
-  constructor() {
-    /**
-     * The list of Point objects in the polygon.
-     */
-    this.m_List = new ArrayList()
+export default class PolySimple implements PolygonInterface {
+  /**
+   * The list of Point objects in the polygon.
+   */
+  m_List = new ArrayList
 
-    /** Flag used by the Clip algorithm */
-    this.m_Contributes = true
-  }
+  /** Flag used by the Clip algorithm */
+  m_Contributes = true
 
   /**
    * Return true if the given object is equal to this one.
@@ -111,7 +110,7 @@ export default class PolySimple {
     this.m_List.clear()
   }
 
-  add(arg0, arg1) {
+  add(arg0, arg1 = undefined) {
     const args = []
     args[0] = arg0
 

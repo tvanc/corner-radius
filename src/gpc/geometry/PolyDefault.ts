@@ -3,8 +3,9 @@ import { equals } from "../util/equals.js"
 import Point from "./Point.js"
 import Clip from "./Clip.js"
 import ArrayHelper from "../util/ArrayHelper.js"
-import PolySimple from "./PolySimple.js"
+import PolySimple from "./PolySimple"
 import Rectangle from "./Rectangle.js"
+import PolygonInterface from "./PolygonInterface"
 
 /**
  * <code>PolyDefault</code> is a default <code>Poly</code> implementation.
@@ -20,7 +21,7 @@ import Rectangle from "./Rectangle.js"
  *
  * @author  Dan Bridenbecker, Solution Engineering, Inc.
  */
-export default class PolyDefault {
+export default class PolyDefault implements PolygonInterface {
   m_List = new ArrayList()
   m_IsHole
 
