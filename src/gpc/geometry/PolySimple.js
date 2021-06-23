@@ -152,7 +152,7 @@ export default class PolySimple {
   /**
    * Throws IllegalStateexception if called
    */
-  addPoly() {
+  addPoly(_) {
     alert("Cannot add poly to a simple poly.")
   }
 
