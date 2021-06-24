@@ -1,12 +1,14 @@
-import PolyDefault from "./gpc/geometry/PolyDefault.js"
-import { draw } from "./draw.js"
+import PolyDefault from "../gpc/geometry/PolyDefault"
+import { draw } from "./draw"
 import { roundPathCorners } from "./round.js"
+import PolygonInterface from "../gpc/geometry/PolygonInterface"
 
 const svgNs = "http://www.w3.org/2000/svg"
 const svgElMap = new WeakMap()
 const mutationObserverMap = new WeakMap()
 const resizeObserverMap = new WeakMap()
 
+// @ts-ignore
 CSS.registerProperty({
   name: "--corner-radius",
   syntax: "<length>",
@@ -18,7 +20,7 @@ export function trace(el) {
   const svg = getSvg(el)
 
   const allPaths = svg.querySelectorAll("path")
-  const polygon = getPolygons(el)
+  const polygon = getPolygonUnions(el)
   const { x, y, w, h } = polygon.getBounds()
   const cornerRadius = parseFloat(
     getComputedStyle(el).getPropertyValue("--corner-radius"),
@@ -145,21 +147,17 @@ function getResizeObserver(el, force = true) {
   return observer
 }
 
-/**
- * @param root
- * @returns {PolyDefault}
- */
-function getPolygons(root) {
+function getPolygonUnions(root: HTMLElement) {
   let polygon = getPolygon(root)
 
   ;[...root.children].forEach((leaf) => {
-    polygon = polygon.union(getPolygons(leaf))
+    polygon = polygon.union(getPolygonUnions(leaf as HTMLElement))
   })
 
   return polygon
 }
 
-function getPolygon(el) {
+function getPolygon(el): PolygonInterface {
   const rect = el.getBoundingClientRect()
   const polygon = new PolyDefault(false)
 
@@ -192,3 +190,8 @@ function getSvg(el) {
 
   return svg
 }
+
+export function registerProperty(arg0: { name: string; syntax: string; inherits: boolean; initialValue: number }) {
+    throw new Error("Function not implemented.")
+}
+

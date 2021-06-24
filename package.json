@@ -1,7 +1,6 @@
 {
   "name": "corner-radius",
   "version": "0.0.0-development",
-  "private": false,
   "description": "Draw SVG paths under the union of an element's and its childrens' polygons.",
   "repository": {
     "type": "git",
@@ -11,53 +10,29 @@
   "author": "Travis Van Couvering",
   "sideEffects": false,
   "main": "dist/",
-  "module": "lib/",
+  "module": "src/",
   "files": [
     "dist/",
-    "lib/",
+    "src/",
     "LICENSE",
     "README.md"
   ],
   "scripts": {
-    "build": "babel lib/ -d dist/ --source-maps --ignore '**/*.test.js' --delete-dir-on-start",
-    "prepare": "yarn build",
     "semantic-release": "semantic-release",
-    "live": "live-server --open=lib/example.html",
-    "test": "jest --coverage && yarn lint --watch"
+    "test": "jest --coverage && yarn lint --watch",
+    "dev-server": "webpack serve --mode=development"
   },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": {
-            "node": "12"
-          }
-        }
-      ]
-    ]
-  },
-  "prettier": {
-    "trailingComma": "all",
-    "semi": false
-  },
-  "dependencies": {},
   "devDependencies": {
-    "@babel/cli": "7.13.0",
-    "@babel/core": "7.13.8",
-    "@babel/preset-env": "7.13.9",
-    "@types/jest": "26.0.20",
-    "babel-eslint": "10.1.0",
-    "babel-jest": "26.6.3",
-    "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-jest": "24.1.10",
-    "jest": "26.6.3",
-    "jest-date-mock": "1.0.8",
     "live-server": "^1.2.1",
     "prettier": "2.2.1",
-    "prettier-plugin-packagejson": "2.2.10",
     "semantic-release": "17.4.1",
-    "semantic-release-cli": "5.4.3"
+    "semantic-release-cli": "5.4.3",
+    "source-map-loader": "^3.0.0",
+    "ts-loader": "^9.2.3",
+    "typescript": "^4.3.2",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
   },
   "renovate": {
     "extends": [

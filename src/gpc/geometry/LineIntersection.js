@@ -1,7 +1,7 @@
 import LineHelper from "./LineHelper.js"
-import IntersectionPoint from "./IntersectionPoint.js"
+import IntersectionPoint from "./IntersectionPoint"
 import { equals } from "../util/equals.js"
-import PolySimple from "./PolySimple.js"
+import PolySimple from "./PolySimple"
 
 export default class LineIntersection {
   static iteratePoints(points, s1, s2, e1, e2) {
@@ -88,19 +88,19 @@ export default class LineIntersection {
       if (
         (equals(
           firstIntersection.polygonPoint1,
-          lastIntersection.polygonPoint1
+          lastIntersection.polygonPoint1,
         ) &&
           equals(
             firstIntersection.polygonPoint2,
-            lastIntersection.polygonPoint2
+            lastIntersection.polygonPoint2,
           )) ||
         (equals(
           firstIntersection.polygonPoint1,
-          lastIntersection.polygonPoint2
+          lastIntersection.polygonPoint2,
         ) &&
           equals(
             firstIntersection.polygonPoint2,
-            lastIntersection.polygonPoint1
+            lastIntersection.polygonPoint1,
           ))
       ) {
         let poly1 = new PolySimple()
@@ -116,7 +116,7 @@ export default class LineIntersection {
           firstIntersection.polygonPoint1,
           firstIntersection.polygonPoint2,
           lastIntersection.polygonPoint1,
-          lastIntersection.polygonPoint2
+          lastIntersection.polygonPoint2,
         ).concat(newLine.reverse())
 
         const points2 = this.iteratePoints(
@@ -124,7 +124,7 @@ export default class LineIntersection {
           firstIntersection.polygonPoint2,
           firstIntersection.polygonPoint1,
           lastIntersection.polygonPoint1,
-          lastIntersection.polygonPoint2
+          lastIntersection.polygonPoint2,
         ).concat(newLine)
 
         const poly1 = new PolySimple()
