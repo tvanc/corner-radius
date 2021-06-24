@@ -20,7 +20,7 @@ export function trace(el) {
   const svg = getSvg(el)
 
   const allPaths = svg.querySelectorAll("path")
-  const polygon = getPolygons(el)
+  const polygon = getPolygonUnions(el)
   const { x, y, w, h } = polygon.getBounds()
   const cornerRadius = parseFloat(
     getComputedStyle(el).getPropertyValue("--corner-radius"),
@@ -147,15 +147,11 @@ function getResizeObserver(el, force = true) {
   return observer
 }
 
-/**
- * @param root
- * @returns {PolyDefault}
- */
-function getPolygons(root) {
+function getPolygonUnions(root: HTMLElement) {
   let polygon = getPolygon(root)
 
   ;[...root.children].forEach((leaf) => {
-    polygon = polygon.union(getPolygons(leaf))
+    polygon = polygon.union(getPolygonUnions(leaf as HTMLElement))
   })
 
   return polygon
