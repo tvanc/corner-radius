@@ -2,15 +2,15 @@ module.exports = {
   entry: {
     main: {
       import: "./src/index.ts",
-      filename: "./dist/index.ts",
+      filename: "./dist/index.js",
     },
     example: {
       import: "./src/example.ts",
-      filename: "./dist/example.ts",
+      filename: "./dist/example.js",
     },
     gpcExample: {
       import: "./src/gpc-example.ts",
-      filename: "./dist/gpc-example.ts",
+      filename: "./dist/gpc-example.js",
     },
   },
   // Enable sourcemaps for debugging webpack's output.
