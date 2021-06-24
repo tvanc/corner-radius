@@ -1,6 +1,7 @@
 import PolyDefault from "../gpc/geometry/PolyDefault"
 import { draw } from "./draw"
 import { roundPathCorners } from "./round.js"
+import PolygonInterface from "../gpc/geometry/PolygonInterface"
 
 const svgNs = "http://www.w3.org/2000/svg"
 const svgElMap = new WeakMap()
@@ -160,7 +161,7 @@ function getPolygons(root) {
   return polygon
 }
 
-function getPolygon(el) {
+function getPolygon(el): PolygonInterface {
   const rect = el.getBoundingClientRect()
   const polygon = new PolyDefault(false)
 
