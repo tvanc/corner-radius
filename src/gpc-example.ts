@@ -5,7 +5,7 @@ const canvas = document.getElementById("canvas") as HTMLCanvasElement
 const context = canvas.getContext("2d")
 
 //define polygons
-const vertices1 = [
+const poly1 = createPoly([
   [61, 68],
   [145, 122],
   [186, 94],
@@ -15,43 +15,47 @@ const vertices1 = [
   [141, 163],
   [48, 139],
   [74, 117],
-]
-const vertices2 = [
+])
+
+const poly2 = createPoly([
   [131, 84],
   [224, 110],
   [174, 180],
   [120, 136],
   [60, 167],
-]
+])
 
-const vertices3 = [
+const poly3 = createPoly([
   [281, 84],
   [374, 110],
-  [324, 180],
-  [270, 136],
-  [250, 167],
-]
+  [344, 180],
+  [270, 146],
+  [240, 157],
+])
 
-const poly1 = createPoly(vertices1)
-const poly2 = createPoly(vertices2)
-const poly3 = createPoly(vertices3)
+const poly4 = createPoly([
+  [250, 99],
+  [380, 125],
+  [298, 193],
+  [280, 166],
+  [260, 167],
+])
 
-//bring to screen
-drawPoly(poly1, "red", 0, -30)
-drawPoly(poly2, "green", 0, -30)
-drawPoly(poly3, "blue", 0, -30)
-
-//listen to buttons
+// Generate union on load
 document.addEventListener("DOMContentLoaded", union)
 
 function union() {
   clearScreen()
 
+  // Draw discrete but overlapping polygons on top
   drawPoly(poly1, "red", 0, -30)
   drawPoly(poly2, "green", 0, -30)
   drawPoly(poly3, "blue", 0, -30)
+  drawPoly(poly4, "orange", 0, -30)
 
-  drawPoly(poly1.union(poly2).union(poly3), "red", 0, 150)
+  // Then draw the union of all (which generates one polygon per set of overlapping polygons)
+  // So in this example, generates two polygons
+  drawPoly(poly1.union(poly2).union(poly3).union(poly4), "red", 0, 150)
 }
 
 function createPoly(points) {
