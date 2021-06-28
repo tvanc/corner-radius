@@ -25,6 +25,7 @@
   "devDependencies": {
     "live-server": "^1.2.1",
     "prettier": "2.2.1",
+    "sass-loader": "^12.1.0",
     "semantic-release": "17.4.1",
     "semantic-release-cli": "5.4.3",
     "source-map-loader": "^3.0.0",
@@ -45,6 +46,5 @@
       ":automergeTesters",
       ":automergeTypes"
     ]
-  },
-  "dependencies": {}
+  }
 }
