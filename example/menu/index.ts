@@ -1,4 +1,4 @@
-import { trace, watch } from "./lib/trace"
+import { trace, watch } from "../../src/lib/trace"
 
 const el = document.getElementById("traceMe")
 

@@ -1,0 +1,40 @@
+/**
+ * @author Travis Van Couvering https://github.com/tvanc
+ */
+
+html,
+body {
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+  background: linear-gradient(to bottom, #1c1c1c, #1c4c4c);
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+svg {
+  pointer-events: none;
+}
+
+path {
+  fill: hsla(0, 100%, 55%, 0.5);
+}
+
+.root {
+  --corner-radius: 1rem;
+}
+
+@keyframes foo {
+  0% {
+    transform: translate(50%, 50%);
+  }
+  100% {
+    transform: translate(110%, 110%);
+  }
+}

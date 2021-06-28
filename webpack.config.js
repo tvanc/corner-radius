@@ -5,11 +5,11 @@ module.exports = {
       filename: "./dist/index.js",
     },
     example: {
-      import: "./src/example.ts",
-      filename: "./dist/example.js",
+      import: "./example/menu/index.ts",
+      filename: "./dist/example/menu/index.js",
     },
     gpcExample: {
-      import: "./src/gpc-example.ts",
+      import: "./src/gpc-index.ts",
       filename: "./dist/gpc-example.js",
     },
   },
