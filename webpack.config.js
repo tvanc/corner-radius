@@ -9,8 +9,8 @@ module.exports = {
       filename: "./dist/example/menu/index.js",
     },
     gpcExample: {
-      import: "./src/gpc-index.ts",
-      filename: "./dist/gpc-example.js",
+      import: "./example/gpc/index.ts",
+      filename: "./dist/example/gpc/index.js",
     },
   },
   // Enable sourcemaps for debugging webpack's output.
