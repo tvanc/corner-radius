@@ -1,10 +1,12 @@
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+
 module.exports = {
   entry: {
     main: {
       import: "./src/index.ts",
       filename: "./dist/index.js",
     },
-    example: {
+    menuExample: {
       import: "./example/menu/index.ts",
       filename: "./dist/example/menu/index.js",
     },
@@ -19,6 +21,14 @@ module.exports = {
     // Add '.ts' and '.tsx' as resolvable extensions.
     extensions: ["", ".ts", ".js"],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: "Menu Example",
+      filename: "[name].html",
+      template: "./example/menu/index.ejs",
+      chunks: ["menuExample"],
+    }),
+  ],
   module: {
     // TS rules must come before JS
     rules: [
