@@ -1,4 +1,5 @@
 import { trace, watch } from "./../../src/lib/trace"
+import "./index.scss"
 
 const el = document.getElementById("traceMe")
 
