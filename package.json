@@ -19,7 +19,8 @@
   ],
   "scripts": {
     "semantic-release": "semantic-release",
-    "test": "jest --coverage && yarn lint --watch"
+    "test": "jest --coverage && yarn lint --watch",
+    "dev-server": "encore dev-server"
   },
   "devDependencies": {
     "@symfony/webpack-encore": "^1.5.0",
