@@ -1,19 +1,22 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin")
+const path = require("path")
+// const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 
 module.exports = {
   entry: {
     main: {
       import: "./src/index.ts",
-      filename: "./dist/index.js",
     },
     menuExample: {
       import: "./example/menu/index.ts",
-      filename: "./dist/example/menu/index.js",
     },
     gpcExample: {
       import: "./example/gpc/index.ts",
-      filename: "./dist/example/gpc/index.js",
     },
+  },
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "dist/[name].js",
   },
   // Enable sourcemaps for debugging webpack's output.
   devtool: "inline-source-map",
@@ -21,14 +24,6 @@ module.exports = {
     // Add '.ts' and '.tsx' as resolvable extensions.
     extensions: ["", ".ts", ".js"],
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      title: "Menu Example",
-      filename: "[name].html",
-      template: "./example/menu/index.ejs",
-      chunks: ["menuExample"],
-    }),
-  ],
   module: {
     // TS rules must come before JS
     rules: [
@@ -37,9 +32,9 @@ module.exports = {
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
       { test: /\.js$/, loader: "source-map-loader" },
       {
-        test: /\.scss$/,
+        test: /\.s?css$/,
         use: [
-          // Creates `style` nodes from JS strings
+          // { loader: MiniCssExtractPlugin.loader },
           "style-loader",
           // Translates CSS into CommonJS
           "css-loader",
