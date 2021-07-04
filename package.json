@@ -20,7 +20,8 @@
   "scripts": {
     "semantic-release": "semantic-release",
     "test": "jest --coverage && yarn lint --watch",
-    "dev-server": "encore dev-server"
+    "dev-server": "encore dev-server",
+    "ci": "rm -rf node_modules && yarn install --frozen-lockfile"
   },
   "devDependencies": {
     "@symfony/webpack-encore": "^1.5.0",
