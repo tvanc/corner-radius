@@ -1,4 +1,7 @@
 const Encore = require("@symfony/webpack-encore")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const path = require("path")
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -12,8 +15,8 @@ Encore
   // public path used by the web server to access the output path
   .setPublicPath("/dist")
   .addEntry("main", "./src/index.ts")
-  .addEntry("menuExample", "example/menu/index.ts")
-  .addEntry("gpcExample", "example/gpc/index.ts")
+  .addEntry("menuExample", "./example/menu/index.ts")
+  .addEntry("gpcExample", "./example/gpc/index.ts")
   .splitEntryChunks()
 
   // will require an extra script tag for runtime.js
@@ -38,6 +41,16 @@ Encore
 
   // uncomment if you use TypeScript
   .enableTypeScriptLoader()
+
+  .addPlugin(
+    new HtmlWebpackPlugin({
+      title: "Menu Example",
+      filename: "[name].html",
+      template: "./example/menu/index.ejs",
+      chunks: ["menuExample"],
+      inject: true,
+    }),
+  )
 // endregion features
 
 module.exports = Encore.getWebpackConfig()
