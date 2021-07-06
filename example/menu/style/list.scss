@@ -1,0 +1,58 @@
+/**
+ * @author Travis Uribe <travis@turibe.com>
+ * @file
+ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.menu {
+  --menu-spacing: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: black;
+
+  > li {
+    position: relative;
+    width: 100%;
+    padding: calc(var(--menu-spacing) / 2) var(--menu-spacing);
+    white-space: nowrap;
+
+    &:first-child {
+      padding-top: var(--menu-spacing);
+    }
+    &:last-child {
+      padding-bottom: var(--menu-spacing);
+    }
+
+    > ul {
+      position: absolute;
+      top: calc(0 - var(--menu-spacing));
+      left: 100%;
+    }
+
+    &:not(:hover) > ul {
+      display: none;
+    }
+  }
+}
+
+.root {
+  --corner-radius: 1rem;
+  align-items: start;
+  list-style: none;
+  position: relative;
+  z-index: 1;
+}
+
+
+@keyframes foo {
+  0% {
+    transform: translate(50%, 50%);
+  }
+  100% {
+    transform: translate(110%, 110%);
+  }
+}

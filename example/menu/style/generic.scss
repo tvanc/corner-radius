@@ -1,0 +1,15 @@
+html,
+body {
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+  background: linear-gradient(to bottom, #1c1c1c, #1c4c4c);
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
