@@ -15,3 +15,7 @@ el.addEventListener("transitionend", log)
 el.addEventListener("mouseleave", function () {
   trace(el)
 })
+
+el.addEventListener('mouseover', function () {
+  trace(el)
+})
