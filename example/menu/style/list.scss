@@ -3,39 +3,67 @@
  * @file
  */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 .menu {
+  --corner-radius: 1rem;
   --menu-spacing: 1rem;
+  --half-spacing: calc(var(--menu-spacing) / 2);
+  --menu-width: 5rem;
+  padding: calc(var(--menu-spacing) / 2) 0;
   margin: 0;
-  padding: 0;
   list-style: none;
   color: black;
+  min-width: 12rem;
 
   > li {
     position: relative;
     width: 100%;
-    padding: calc(var(--menu-spacing) / 2) var(--menu-spacing);
+    padding: var(--half-spacing) var(--menu-spacing);
+    background-clip: padding-box;
     white-space: nowrap;
 
     &:first-child {
-      padding-top: var(--menu-spacing);
+      border-radius: var(--corner-radius) var(--corner-radius) 0 0;
     }
     &:last-child {
-      padding-bottom: var(--menu-spacing);
+      border-radius: 0 0 var(--corner-radius) var(--corner-radius);
     }
 
     > ul {
       position: absolute;
-      top: calc(0 - var(--menu-spacing));
-      left: 100%;
+      top: calc(var(--half-spacing) * -1);
+      left: calc(100%);
     }
 
-    &:not(:hover) > ul {
+    &:not(:hover, .is-hovered) > ul {
       display: none;
     }
+
+    &:hover,
+    &.is-hovered {
+      background: rgba(0, 0, 0, 0.25);
+    }
+  }
+}
+
+.has-menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+
+  &::after {
+    content: "›";
+    font-size: 1.5rem;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
 
@@ -46,7 +74,6 @@
   position: relative;
   z-index: 1;
 }
-
 
 @keyframes foo {
   0% {
