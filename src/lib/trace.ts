@@ -2,6 +2,7 @@ import PolyDefault from "../gpc/geometry/PolyDefault"
 import { draw } from "./draw"
 import { roundPathCorners } from "./round.js"
 import PolygonInterface from "../gpc/geometry/PolygonInterface"
+import { simplifyPathCommands } from "./simplify"
 
 const svgNs = "http://www.w3.org/2000/svg"
 const svgElMap = new WeakMap()
@@ -20,19 +21,21 @@ export function trace(el) {
   const svg = getSvg(el)
 
   const allPaths = svg.querySelectorAll("path")
-  const polygon = getPolygonUnions(el)
-  const { x, y, w, h } = polygon.getBounds()
+  const arrayOfComplexPolygons = getPolygonUnions(el)
+  const { x, y, w, h } = arrayOfComplexPolygons.getBounds()
   const cornerRadius = parseFloat(
     getComputedStyle(el).getPropertyValue("--corner-radius"),
   )
 
-  const polygonCommands = draw(x, y, polygon).flat()
+  const commandSets = draw(x, y, arrayOfComplexPolygons).flat()
 
-  for (let j = 0; j < polygonCommands.length; ++j) {
-    const pathCommands = polygonCommands[j]
-    console.log("pathCommands", pathCommands)
-    const roundedCommands = roundPathCorners(pathCommands, cornerRadius, false)
-    console.log("roundedCommands", roundedCommands)
+  for (let j = 0; j < commandSets.length; ++j) {
+    const simplifiedCommands = simplifyPathCommands(commandSets[j])
+    const roundedCommands = roundPathCorners(
+      simplifiedCommands,
+      cornerRadius,
+      false,
+    )
     // reuse existing path if available
     const path = allPaths[j] ?? document.createElementNS(svgNs, "path")
 
@@ -40,12 +43,12 @@ export function trace(el) {
     svg.appendChild(path)
   }
 
-  for (let i = allPaths.length; i > polygonCommands.length; --i) {
+  for (let i = allPaths.length; i > commandSets.length; --i) {
     allPaths[i - 1].remove()
   }
 
   if (w === 352) {
-    console.log(polygon.getBounds())
+    console.log(arrayOfComplexPolygons.getBounds())
   }
 
   svg.setAttribute("width", w)
