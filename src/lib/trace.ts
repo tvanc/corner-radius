@@ -30,7 +30,10 @@ export function trace(el) {
 
   for (let j = 0; j < polygonCommands.length; ++j) {
     const pathCommands = polygonCommands[j]
+    console.log("pathCommands", pathCommands)
     const roundedCommands = roundPathCorners(pathCommands, cornerRadius, false)
+    console.log("roundedCommands", roundedCommands)
+    // reuse existing path if available
     const path = allPaths[j] ?? document.createElementNS(svgNs, "path")
 
     path.setAttribute("d", roundedCommands)
@@ -191,7 +194,11 @@ function getSvg(el) {
   return svg
 }
 
-export function registerProperty(arg0: { name: string; syntax: string; inherits: boolean; initialValue: number }) {
-    throw new Error("Function not implemented.")
+export function registerProperty(arg0: {
+  name: string
+  syntax: string
+  inherits: boolean
+  initialValue: number
+}) {
+  throw new Error("Function not implemented.")
 }
-

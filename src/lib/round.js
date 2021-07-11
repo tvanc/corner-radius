@@ -22,7 +22,7 @@
  * string where all line-line corners have been rounded. Only supports absolute
  * commands at the moment.
  *
- * @param pathCommands The SVG input string, or an array of commands
+ * @param originalCommands The SVG input string, or an array of commands
  * @param radius The amount to round the corners, either a value in the SVG
  *               coordinate space, or, if useFractionalRadius is true, a value
  *               from 0 to 1.
@@ -31,7 +31,11 @@
  *               the previous and next points.
  * @returns A new SVG path string with the rounding
  */
-export function roundPathCorners(pathCommands, radius, useFractionalRadius) {
+export function roundPathCorners(
+  originalCommands,
+  radius,
+  useFractionalRadius,
+) {
   function moveTowardsLength(movingPoint, targetPoint, amount) {
     const width = targetPoint.x - movingPoint.x
     const height = targetPoint.y - movingPoint.y
@@ -67,62 +71,35 @@ export function roundPathCorners(pathCommands, radius, useFractionalRadius) {
     }
   }
 
-  function drawStringToCommands(pathString) {
-    const pathParts = pathString.split(/[,\s]/).reduce((parts, part) => {
-      const match = part.match("([a-zA-Z])(.+)")
-      if (match) {
-        parts.push(match[1])
-        parts.push(match[2])
-      } else {
-        parts.push(part)
-      }
-
-      return parts
-    }, [])
-
-    // Group the commands with their arguments for easier handling
-    return pathParts.reduce(function (commands, part) {
-      if (parseFloat(part) + "" === part && commands.length) {
-        commands[commands.length - 1].push(part)
-      } else {
-        commands.push([part])
-      }
-
-      return commands
-    }, [])
-  }
-
   const origPointMap = new Map()
-
-  // Split apart the path, handing concatonated letters and numbers
-  const commands =
-    pathCommands instanceof Array
-      ? pathCommands
-      : drawStringToCommands(pathCommands)
+  const newCommands = [...originalCommands]
 
   // The resulting commands, also grouped
   let resultCommands = []
 
-  if (commands.length > 1) {
-    const startPoint = pointForCommand(commands[0])
+  if (newCommands.length > 1) {
+    const startPoint = pointForCommand(newCommands[0])
 
     // Handle the close path case with a "virtual" closing line
     let virtualCloseLine = null
-    if (commands[commands.length - 1][0] === "Z" && commands[0].length > 2) {
+    if (
+      newCommands[newCommands.length - 1][0] === "Z" &&
+      newCommands[0].length > 2
+    ) {
       virtualCloseLine = ["L", startPoint.x, startPoint.y]
-      commands[commands.length - 1] = virtualCloseLine
+      newCommands[newCommands.length - 1] = virtualCloseLine
     }
 
     // We always use the first command (but it may be mutated)
-    resultCommands.push(commands[0])
+    resultCommands.push(newCommands[0])
 
-    for (let cmdIndex = 1; cmdIndex < commands.length; cmdIndex++) {
+    for (let cmdIndex = 1; cmdIndex < newCommands.length; cmdIndex++) {
       const prevCmd = resultCommands[resultCommands.length - 1]
-      const curCmd = commands[cmdIndex]
+      const curCmd = newCommands[cmdIndex]
 
       // Handle closing case
       const nextCmd =
-        curCmd === virtualCloseLine ? commands[1] : commands[cmdIndex + 1]
+        curCmd === virtualCloseLine ? newCommands[1] : newCommands[cmdIndex + 1]
 
       // Nasty logic to decide if this path is a candidite.
       if (
@@ -182,7 +159,7 @@ export function roundPathCorners(pathCommands, radius, useFractionalRadius) {
         origPointMap.set(curveCmd, curPoint)
         resultCommands.push(curveCmd)
       } else {
-        // Pass through commands that don't qualify
+        // Pass through newCommands that don't qualify
         resultCommands.push(curCmd)
       }
     }
@@ -196,10 +173,8 @@ export function roundPathCorners(pathCommands, radius, useFractionalRadius) {
       adjustCommand(resultCommands[0], newStartPoint)
     }
   } else {
-    resultCommands = commands
+    resultCommands = newCommands
   }
 
-  return resultCommands.reduce(function (str, c) {
-    return str + c.join(" ") + " "
-  }, "")
+  return resultCommands.reduce((str, c) => str + c.join(" ") + " ", "")
 }
