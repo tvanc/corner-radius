@@ -1,4 +1,6 @@
-export function draw(x, y, ...polygons) {
+import { CommandSet } from "./CommandSet"
+
+export function draw(x, y, ...polygons): CommandSet[][] {
   const commands = []
 
   for (const polygon of polygons) {
@@ -19,21 +21,21 @@ function getPolygonVertices(poly) {
   return vertices
 }
 
-function drawPoly(polygon, ox, oy) {
+function drawPoly(polygon, ox, oy): CommandSet[] {
   const num = polygon.getNumInnerPoly()
-  const pathCommandSets = []
+  const commandSets = []
 
   for (let i = 0; i < num; i++) {
     const poly = polygon.getInnerPoly(i)
     const vertices = getPolygonVertices(poly)
 
-    pathCommandSets.push(drawSinglePoly(vertices, poly.isHole(), ox, oy))
+    commandSets.push(drawSinglePoly(vertices, poly.isHole(), ox, oy))
   }
 
-  return pathCommandSets
+  return commandSets
 }
 
-function drawSinglePoly(vertices, hole, ox = 0, oy = 0) {
+function drawSinglePoly(vertices, hole, ox = 0, oy = 0): CommandSet {
   const commands = [[`M`, vertices[0][0] + ox, vertices[0][1] + oy]]
 
   for (let i = 1; i < vertices.length; i++) {
@@ -42,5 +44,5 @@ function drawSinglePoly(vertices, hole, ox = 0, oy = 0) {
 
   commands.push(["Z"])
 
-  return commands
+  return new CommandSet(commands)
 }

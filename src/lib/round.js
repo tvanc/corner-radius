@@ -1,4 +1,8 @@
 /*****************************************************************************
+ * Original license below. This file is a derivation of the file of the work  *
+ * described in the license below. It has been modified from its original     *
+ * form, for the purposes of this software.                                   *
+ * ========================================================================== *
  *                                                                            *
  *  SVG Path Rounding Function                                                *
  *  Copyright (C) 2014 Yona Appletree                                         *
@@ -22,7 +26,7 @@
  * string where all line-line corners have been rounded. Only supports absolute
  * commands at the moment.
  *
- * @param originalCommands The SVG input string, or an array of commands
+ * @param commandSet The SVG input string, or an array of commands
  * @param radius The amount to round the corners, either a value in the SVG
  *               coordinate space, or, if useFractionalRadius is true, a value
  *               from 0 to 1.
@@ -31,11 +35,7 @@
  *               the previous and next points.
  * @returns A new SVG path string with the rounding
  */
-export function roundPathCorners(
-  originalCommands,
-  radius,
-  useFractionalRadius,
-) {
+export function roundPathCorners(commandSet, radius, useFractionalRadius) {
   function moveTowardsLength(movingPoint, targetPoint, amount) {
     const width = targetPoint.x - movingPoint.x
     const height = targetPoint.y - movingPoint.y
@@ -72,7 +72,7 @@ export function roundPathCorners(
   }
 
   const origPointMap = new Map()
-  const newCommands = [...originalCommands]
+  const newCommands = [...commandSet.commands]
 
   // The resulting commands, also grouped
   let resultCommands = []
