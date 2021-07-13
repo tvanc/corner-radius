@@ -43,19 +43,19 @@ function combineOverlappingLines(segments) {
         if (x1 == x2) {
           // If 1st segment fully overlaps 2nd, add latter to the list
           if (completelyOverlaps(y1, y2, y3, y4)) {
-            overlapped.join(segments[j])
+            overlapped.push(segments[j])
           }
           // If 2nd segment fully overlaps 1st, add latter to the list
           else if (completelyOverlaps(y3, y4, y1, y2)) {
-            overlapped.join(segments[i])
+            overlapped.push(segments[i])
           }
         }
         // In all other cases, consider the x-coordinates
         else {
           if (completelyOverlaps(x1, x2, x3, x4)) {
-            overlapped.join(segments[j])
+            overlapped.push(segments[j])
           } else if (completelyOverlaps(x3, x4, x1, x2)) {
-            overlapped.join(segments[i])
+            overlapped.push(segments[i])
           }
         }
       }
