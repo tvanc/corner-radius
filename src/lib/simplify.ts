@@ -10,7 +10,11 @@ export function simplifyPathCommands(originalCommandSet: CommandSet) {
   return new CommandSet(newCommands)
 }
 
-function combineOverlappingLines(segments) {
+/**
+ * @param segments
+ * Array of array of numbers
+ */
+function combineOverlappingLines(segments: number[][]) {
   segments = [
     [1, 1, 2, 1],
     [2, 1, 2, 2],
@@ -21,10 +25,12 @@ function combineOverlappingLines(segments) {
 
   //  Function determines if segment between coordinates (a,b) completely overlaps
   //  the segment between coordinates (y,z)
-  function completelyOverlaps(a, b, y, z) {
+  function completelyOverlaps(aStart, aEnd, bStart, bEnd) {
     return (
-      (a <= y && a <= z && b >= y && b >= z) ||
-      (b <= y && b <= z && a >= y && a >= z)
+      // line A includes line B
+      (aStart <= bStart && aStart <= bEnd && aEnd >= bStart && aEnd >= bEnd) ||
+      // line B includes line A
+      (aEnd <= bStart && aEnd <= bEnd && aStart >= bStart && aStart >= bEnd)
     )
   }
 
