@@ -19,12 +19,12 @@ function combineOverlappingLines(segments) {
     [3, 1, 1, 1],
   ]
 
-  //  Function determines if segment between coordinates 1 & 2 completely overlaps
-  //  the segment between coordinates 3 & 4
-  function completelyOverlaps(x1, x2, x3, x4) {
+  //  Function determines if segment between coordinates (a,b) completely overlaps
+  //  the segment between coordinates (y,z)
+  function completelyOverlaps(a, b, y, z) {
     return (
-      (x1 <= x3 && x1 <= x4 && x2 >= x3 && x2 >= x4) ||
-      (x2 <= x3 && x2 <= x4 && x1 >= x3 && x1 >= x4)
+      (a <= y && a <= z && b >= y && b >= z) ||
+      (b <= y && b <= z && a >= y && a >= z)
     )
   }
 
