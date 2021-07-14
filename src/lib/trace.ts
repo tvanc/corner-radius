@@ -21,13 +21,13 @@ export function trace(el) {
   const svg = getSvg(el)
 
   const allPaths = svg.querySelectorAll("path")
-  const arrayOfComplexPolygons = getUnionOfAllPolygons(el)
-  const { x, y, w, h } = arrayOfComplexPolygons.getBounds()
+  const unionPolygon = getUnionOfAllPolygons(el)
+  const { x, y, w, h } = unionPolygon.getBounds()
   const cornerRadius = parseFloat(
     getComputedStyle(el).getPropertyValue("--corner-radius"),
   )
 
-  const commandSets = draw(x, y, arrayOfComplexPolygons).flat()
+  const commandSets = draw(x, y, unionPolygon).flat()
 
   for (let j = 0; j < commandSets.length; ++j) {
     const simplifiedCommands = simplifyPathCommands(commandSets[j])
@@ -48,7 +48,7 @@ export function trace(el) {
   }
 
   if (w === 352) {
-    console.log(arrayOfComplexPolygons.getBounds())
+    console.log(unionPolygon.getBounds())
   }
 
   svg.setAttribute("width", w)
