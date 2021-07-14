@@ -39,6 +39,7 @@ function combineOverlappingLines(segments: number[][]) {
     for (let j = i + 1; j < segments.length; ++j) {
       const [x1, y1, x2, y2] = segments[i]
       const [x3, y3, x4, y4] = segments[j]
+
       // Checks whether the cross product between two different pairs of points
       // are both == 0, which means that the segments are both on the same line
       if (
@@ -46,7 +47,7 @@ function combineOverlappingLines(segments: number[][]) {
         crossProduct([x1 - x2, y1 - y2], [x3 - x1, y3 - y1]) == 0
       ) {
         // If lines are vertical, consider the y-coordinates
-        if (x1 == x2) {
+        if (x1 === x2) {
           // If 1st segment fully overlaps 2nd, add latter to the list
           if (completelyOverlaps(y1, y2, y3, y4)) {
             overlapped.push(segments[j])
@@ -67,7 +68,9 @@ function combineOverlappingLines(segments: number[][]) {
       }
     }
   }
-  // segments = [s for s in segments if s not in overlapped]
+
+  // original python expression: segments = [s for s in segments if s not in overlapped]
+  return segments.filter((segment: number[]) => !overlapped.includes(segment))
 }
 
 function crossProduct([v1x, v1y], [v2x, v2y]): Number {
