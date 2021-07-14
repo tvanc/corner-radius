@@ -1,13 +1,15 @@
 import { CommandSet } from "./CommandSet"
 
 export function simplifyPathCommands(originalCommandSet: CommandSet) {
-  const newCommands = []
-  let lines
-
-  for (const [type, ...parameters] of originalCommandSet.commands) {
-  }
-
-  return new CommandSet(newCommands)
+  return originalCommandSet
+  // const newCommands = []
+  // let lines
+  //
+  // for (const [type, ...parameters] of originalCommandSet.commands) {
+  //
+  // }
+  //
+  // return new CommandSet(newCommands)
 }
 
 /**
