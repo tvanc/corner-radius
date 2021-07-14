@@ -30,4 +30,6 @@ export default interface PolygonInterface {
   xor
   difference
   getArea
+
+  removeUnnecessaryPoints(): this
 }

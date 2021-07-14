@@ -339,4 +339,12 @@ export default class PolyDefault implements PolygonInterface {
     }
     return res
   }
+
+  removeUnnecessaryPoints() {
+    for (let i = 0; i < this.m_List.size(); i++) {
+      this.getInnerPoly(i).removeUnnecessaryPoints()
+    }
+
+    return this
+  }
 }

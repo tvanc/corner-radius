@@ -17,7 +17,7 @@ export default class PolySimple implements PolygonInterface {
   /**
    * The list of Point objects in the polygon.
    */
-  m_List = new ArrayList
+  m_List = new ArrayList()
 
   /** Flag used by the Clip algorithm */
   m_Contributes = true
@@ -358,5 +358,9 @@ export default class PolySimple implements PolygonInterface {
     }
     area = 0.5 * Math.abs(area)
     return area
+  }
+
+  removeUnnecessaryPoints() {
+    return this
   }
 }
