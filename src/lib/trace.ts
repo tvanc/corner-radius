@@ -47,10 +47,6 @@ export function trace(el) {
     allPaths[i - 1].remove()
   }
 
-  if (w === 352) {
-    console.log(unionPolygon.getBounds())
-  }
-
   svg.setAttribute("width", w)
   svg.setAttribute("height", h)
   svg.style.top = `${y}px`
