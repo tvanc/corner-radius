@@ -5,11 +5,11 @@ it("Removes unnecessary points from square", () => {
   const poly = new PolySimple()
   poly.add([
     new Point(0, 0),
-    new Point(1, 0), // | - on the same line
+    new Point(1, 0), // can be eliminated
     new Point(2, 0),
-    new Point(2, 1), // could be eliminated
+    new Point(2, 1), // can be eliminated
     new Point(2, 2),
-    new Point(1, 2), // could be eliminated
+    new Point(1, 2), // can be eliminated
     new Point(0, 1),
   ])
 
@@ -20,5 +20,26 @@ it("Removes unnecessary points from square", () => {
     new Point(2, 0),
     new Point(2, 2),
     new Point(0, 1),
+  ])
+})
+
+it("Removes unnecessary points from triangle", () => {
+  const poly = new PolySimple()
+  poly.add([
+    new Point(2, 0),
+    new Point(3, 1), // can be eliminated
+    new Point(4, 2),
+    new Point(3, 2), // can be eliminated
+    new Point(2, 2), // can be eliminated
+    new Point(1, 2), // can be eliminated
+    new Point(0, 2),
+  ])
+
+  poly.removeUnnecessaryPoints()
+
+  expect(poly.getPoints()).toEqual([
+    new Point(2, 0),
+    new Point(4, 2),
+    new Point(0, 2),
   ])
 })
