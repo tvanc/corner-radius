@@ -2,8 +2,7 @@ import PolySimple from "../PolySimple"
 import Point from "../Point"
 
 it("Removes unnecessary points from square", () => {
-  const poly = new PolySimple()
-  poly.add([
+  const poly = new PolySimple([
     new Point(0, 0),
     new Point(1, 0), // can be eliminated
     new Point(2, 0),
@@ -24,8 +23,7 @@ it("Removes unnecessary points from square", () => {
 })
 
 it("Removes unnecessary points from triangle", () => {
-  const poly = new PolySimple()
-  poly.add([
+  const poly = new PolySimple([
     new Point(2, 0),
     new Point(3, 1), // can be eliminated
     new Point(4, 2),

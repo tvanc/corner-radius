@@ -23,6 +23,12 @@ export default class PolySimple implements PolygonInterface {
   /** Flag used by the Clip algorithm */
   m_Contributes = true
 
+  constructor(pointList) {
+    if (pointList) {
+      this.add(pointList)
+    }
+  }
+
   /**
    * Return true if the given object is equal to this one.
    * <p>
