@@ -2,7 +2,6 @@ import PolyDefault from "../gpc/geometry/PolyDefault"
 import { draw } from "./draw"
 import { roundPathCorners } from "./round.js"
 import PolygonInterface from "../gpc/geometry/PolygonInterface"
-import { simplifyPathCommands } from "./simplify"
 
 const svgNs = "http://www.w3.org/2000/svg"
 const svgElMap = new WeakMap()
