@@ -4,6 +4,7 @@ import Clip from "./Clip.js"
 import Rectangle from "./Rectangle.js"
 import Polygon from "./Polygon.js"
 import PolygonInterface from "./PolygonInterface"
+import Line from "./Line"
 
 /**
  * <code>PolySimple</code> is a simple polygon - contains only one inner polygon.
@@ -360,8 +361,13 @@ export default class PolySimple implements PolygonInterface {
     return area
   }
 
-  removeUnnecessaryPoints() {
+  removeUnnecessaryPoints(): this {
     const points = this.getPoints()
+
+    return this
+  }
+
+  removeUnnecessaryPointsOriginal(): number[][] {
     const segments = [
       [1, 1, 2, 1],
       [2, 1, 2, 2],
@@ -369,24 +375,6 @@ export default class PolySimple implements PolygonInterface {
       [3, 2, 3, 1],
       [3, 1, 1, 1],
     ]
-
-    //  Function determines if segment between coordinates (a,b) completely overlaps
-    //  the segment between coordinates (y,z)
-    function completelyOverlaps(aStart, aEnd, bStart, bEnd) {
-      return (
-        // line A includes line B
-        (aStart <= bStart &&
-          aStart <= bEnd &&
-          aEnd >= bStart &&
-          aEnd >= bEnd) ||
-        // line B includes line A
-        (aEnd <= bStart && aEnd <= bEnd && aStart >= bStart && aStart >= bEnd)
-      )
-    }
-
-    function crossProduct([v1x, v1y], [v2x, v2y]): Number {
-      return v1x * v2y - v1y * v2x
-    }
 
     const overlapped = []
     for (let i = 0; i < segments.length; ++i) {
@@ -426,4 +414,19 @@ export default class PolySimple implements PolygonInterface {
     // original python expression: segments = [s for s in segments if s not in overlapped]
     return segments.filter((segment: number[]) => !overlapped.includes(segment))
   }
+}
+
+//  Function determines if segment between coordinates (a,b) completely overlaps
+//  the segment between coordinates (y,z)
+function completelyOverlaps(aStart, aEnd, bStart, bEnd) {
+  return (
+    // line A includes line B
+    (aStart <= bStart && aStart <= bEnd && aEnd >= bStart && aEnd >= bEnd) ||
+    // line B includes line A
+    (aEnd <= bStart && aEnd <= bEnd && aStart >= bStart && aStart >= bEnd)
+  )
+}
+
+function crossProduct([v1x, v1y], [v2x, v2y]): Number {
+  return v1x * v2y - v1y * v2x
 }
