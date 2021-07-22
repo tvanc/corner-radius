@@ -26,12 +26,13 @@ export function trace(el) {
     getComputedStyle(el).getPropertyValue("--corner-radius"),
   )
 
+  unionPolygon.removeUnnecessaryPoints()
+
   const commandSets = draw(x, y, unionPolygon).flat()
 
   for (let j = 0; j < commandSets.length; ++j) {
-    const simplifiedCommands = simplifyPathCommands(commandSets[j])
     const roundedCommands = roundPathCorners(
-      simplifiedCommands,
+      commandSets[j],
       cornerRadius,
       false,
     )
