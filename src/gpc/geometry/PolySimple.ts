@@ -362,7 +362,27 @@ export default class PolySimple implements PolygonInterface {
   }
 
   removeUnnecessaryPoints(): this {
-    const points = this.getPoints()
+    const oPoints = this.getPoints()
+    const nPoints = [oPoints[0]]
+
+    let l1 = new Line(oPoints[0], oPoints[1])
+
+    for (let i = 2, len = oPoints.length; i < len; ++i) {
+      const l2 = new Line(l1.end, oPoints[i])
+      const linesShareSlope =
+        getSlope(l1.start, l1.end) === getSlope(l2.start, l2.end)
+
+      if (linesShareSlope) {
+        l1.end = l2.end
+      } else {
+        nPoints.push(l1.end)
+        l1 = l2
+      }
+    }
+
+    nPoints.push(oPoints.pop())
+
+    this.m_List = new ArrayList(nPoints)
 
     return this
   }
@@ -414,6 +434,11 @@ export default class PolySimple implements PolygonInterface {
     // original python expression: segments = [s for s in segments if s not in overlapped]
     return segments.filter((segment: number[]) => !overlapped.includes(segment))
   }
+}
+
+function getSlope(p1, p2) {
+  //     |--delta y--|   |--delta x--|
+  return (p2.y - p1.y) / (p2.x - p1.x)
 }
 
 //  Function determines if segment between coordinates (a,b) completely overlaps
