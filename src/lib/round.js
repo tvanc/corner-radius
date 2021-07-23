@@ -164,7 +164,7 @@ export function roundPathCorners(commandSet, radius, useFractionalRadius) {
       }
     }
 
-    // Fix up the starting point and restore the close path if the path was orignally closed
+    // Fix up the starting point and restore the close path if the path was originally closed
     if (virtualCloseLine) {
       const newStartPoint = pointForCommand(
         resultCommands[resultCommands.length - 1],
