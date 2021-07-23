@@ -2,7 +2,7 @@ import PolySimple from "../PolySimple"
 import Point from "../Point"
 
 it("Removes unnecessary points from square", () => {
-  const poly = new PolySimple([
+  const square = new PolySimple([
     new Point(0, 0),
     new Point(1, 0), // can be eliminated
     new Point(2, 0),
@@ -12,9 +12,9 @@ it("Removes unnecessary points from square", () => {
     new Point(0, 1),
   ])
 
-  poly.removeUnnecessaryPoints()
+  square.removeUnnecessaryPoints()
 
-  expect(poly.getPoints()).toEqual([
+  expect(square.getPoints()).toEqual([
     new Point(0, 0),
     new Point(2, 0),
     new Point(2, 2),
@@ -22,8 +22,35 @@ it("Removes unnecessary points from square", () => {
   ])
 })
 
+it("Removes final redundant point", () => {
+  const square = new PolySimple([
+    new Point(192, 152),
+    new Point(0, 152),
+    new Point(0, 144),
+    new Point(0, 110),
+    new Point(0, 76),
+    new Point(0, 42),
+    new Point(0, 8),
+    new Point(0, 0),
+    new Point(192, 0),
+    new Point(192, 8),
+    new Point(192, 42),
+    new Point(192, 76),
+    new Point(192, 110),
+  ])
+
+  square.removeUnnecessaryPoints()
+
+  expect(square.getPoints()).toEqual([
+    new Point(192, 152),
+    new Point(0, 152),
+    new Point(0, 0),
+    new Point(192, 0),
+  ])
+})
+
 it("Removes unnecessary points from triangle", () => {
-  const poly = new PolySimple([
+  const triangle = new PolySimple([
     new Point(2, 0),
     new Point(3, 1), // can be eliminated
     new Point(4, 2),
@@ -33,9 +60,9 @@ it("Removes unnecessary points from triangle", () => {
     new Point(0, 2),
   ])
 
-  poly.removeUnnecessaryPoints()
+  triangle.removeUnnecessaryPoints()
 
-  expect(poly.getPoints()).toEqual([
+  expect(triangle.getPoints()).toEqual([
     new Point(2, 0),
     new Point(4, 2),
     new Point(0, 2),
