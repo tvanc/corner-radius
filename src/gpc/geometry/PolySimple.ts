@@ -370,23 +370,37 @@ export default class PolySimple implements PolygonInterface {
   removeUnnecessaryPoints(): this {
     const oPoints = this.getPoints()
     const nPoints = [oPoints[0]]
+    const len = oPoints.length
+    const lastIndex = len - 1
+    const pathStartPoint = oPoints[0]
+    const pathEndPoint = oPoints[lastIndex]
 
     let l1 = new Line(oPoints[0], oPoints[1])
+    let l1Slope = getSlope(l1.start, l1.end)
 
-    for (let i = 2, len = oPoints.length; i < len; ++i) {
+    for (let i = 2; i < len; ++i) {
       const l2 = new Line(l1.end, oPoints[i])
-      const linesShareSlope =
-        getSlope(l1.start, l1.end) === getSlope(l2.start, l2.end)
+      const l2Slope = getSlope(l2.start, l2.end)
+      const slopeHasChanged = l1Slope !== l2Slope
 
-      if (linesShareSlope) {
-        l1.end = l2.end
-      } else {
+      if (slopeHasChanged) {
         nPoints.push(l1.end)
+        if (lastIndex === i) {
+          nPoints.push(l2.end)
+        }
+
         l1 = l2
+        l1Slope = l2Slope
+      } else if (
+        lastIndex === i &&
+        l2Slope !== getSlope(pathEndPoint, pathStartPoint)
+      ) {
+        nPoints.push(l2.end)
+      } else {
+        // extend last segment
+        l1.end = l2.end
       }
     }
-
-    nPoints.push(oPoints.pop())
 
     this.m_List = new ArrayList(nPoints)
 
