@@ -18,6 +18,7 @@ it("Removes unnecessary points from square", () => {
     new Point(0, 0),
     new Point(2, 0),
     new Point(2, 2),
+    new Point(1, 2),
     new Point(0, 1),
   ])
 })
