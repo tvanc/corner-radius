@@ -1,4 +1,4 @@
-import { Path } from "./Path"
+import { Path } from "./class/Path"
 import PolygonInterface from "../gpc/geometry/PolygonInterface"
 
 export function getPaths(

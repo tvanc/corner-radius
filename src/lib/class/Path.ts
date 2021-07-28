@@ -1,4 +1,4 @@
-import PolySimple from "../gpc/geometry/PolySimple"
+import PolySimple from "../../gpc/geometry/PolySimple"
 
 export class Path {
   public commands: string[][]
