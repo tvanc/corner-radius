@@ -11,7 +11,7 @@
  *  you may not use this file except in compliance with the License.          *
  *  You may obtain a copy of the License at                                   *
  *                                                                            *
- *      http://www.apache.org/licenses/LICENSE-2.0                            *
+ *      https://www.apache.org/licenses/LICENSE-2.0                           *
  *                                                                            *
  *  Unless required by applicable law or agreed to in writing, software       *
  *  distributed under the License is distributed on an "AS IS" BASIS,         *
@@ -26,7 +26,7 @@
  * string where all line-line corners have been rounded. Only supports absolute
  * commands at the moment.
  *
- * @param commandSet The SVG input string, or an array of commands
+ * @param path The SVG input string, or an array of commands
  * @param radius The amount to round the corners, either a value in the SVG
  *               coordinate space, or, if useFractionalRadius is true, a value
  *               from 0 to 1.
@@ -35,7 +35,7 @@
  *               the previous and next points.
  * @returns A new SVG path string with the rounding
  */
-export function roundPathCorners(commandSet, radius, useFractionalRadius) {
+export function roundPathCorners(path, radius, useFractionalRadius) {
   function moveTowardsLength(movingPoint, targetPoint, amount) {
     const width = targetPoint.x - movingPoint.x
     const height = targetPoint.y - movingPoint.y
@@ -72,7 +72,7 @@ export function roundPathCorners(commandSet, radius, useFractionalRadius) {
   }
 
   const origPointMap = new Map()
-  const newCommands = [...commandSet.commands]
+  const newCommands = [...path.commands]
 
   // The resulting commands, also grouped
   let resultCommands = []

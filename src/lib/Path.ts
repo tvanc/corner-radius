@@ -9,7 +9,7 @@ export class Path {
     const commands = [[`M`, firstPoint.x + offsetX, firstPoint.y + offsetY]]
 
     for (let i = 1; i < points.length; i++) {
-      commands.push(["L", points[i][0] + offsetX, points[i][1] + offsetY])
+      commands.push(["L", points[i].x + offsetX, points[i].y + offsetY])
     }
 
     commands.push(["Z"])

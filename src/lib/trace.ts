@@ -1,5 +1,5 @@
 import PolyDefault from "../gpc/geometry/PolyDefault"
-import { draw } from "./draw"
+import { getPaths } from "./draw"
 import { roundPathCorners } from "./round.js"
 import PolygonInterface from "../gpc/geometry/PolygonInterface"
 
@@ -28,14 +28,10 @@ export function trace(el) {
 
   unionPolygon.removeUnnecessaryPoints()
 
-  const commandSets = draw(x, y, unionPolygon).flat()
+  const paths = getPaths(x, y, unionPolygon)
 
-  for (let j = 0; j < commandSets.length; ++j) {
-    const roundedCommands = roundPathCorners(
-      commandSets[j],
-      cornerRadius,
-      false,
-    )
+  for (let j = 0; j < paths.length; ++j) {
+    const roundedCommands = roundPathCorners(paths[j], cornerRadius, false)
     // reuse existing path if available
     const path = allPaths[j] ?? document.createElementNS(svgNs, "path")
 
@@ -43,7 +39,7 @@ export function trace(el) {
     svg.appendChild(path)
   }
 
-  for (let i = allPaths.length; i > commandSets.length; --i) {
+  for (let i = allPaths.length; i > paths.length; --i) {
     allPaths[i - 1].remove()
   }
 
