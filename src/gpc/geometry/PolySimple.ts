@@ -23,7 +23,7 @@ export default class PolySimple implements PolygonInterface {
   /** Flag used by the Clip algorithm */
   m_Contributes = true
 
-  constructor(pointList = null) {
+  constructor(pointList: Point[] = null) {
     if (pointList) {
       this.add(pointList)
     }
