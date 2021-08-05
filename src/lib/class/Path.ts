@@ -3,7 +3,14 @@ import PolySimple from "../../gpc/geometry/PolySimple"
 export class Path {
   public commands: string[][]
 
-  constructor(poly: PolySimple, offsetX: number, offsetY: number) {
+  private constructor() {}
+
+  toString() {
+    return this.commands.reduce((str, c) => str + c + " ", "").slice(0, -1)
+  }
+
+  static fromPoly(poly: PolySimple, offsetX: number = 0, offsetY: number = 0) {
+    const path = new Path()
     const points = poly.getPoints()
     const [firstPoint] = points
     const commands = [[`M`, firstPoint.x + offsetX, firstPoint.y + offsetY]]
@@ -14,12 +21,8 @@ export class Path {
 
     commands.push(["Z"])
 
-    this.commands = commands
-  }
+    path.commands = commands
 
-  toString() {
-    return this.commands
-      .reduce((str, c) => str + c.join(" ") + " ", "")
-      .slice(0, -1)
+    return path
   }
 }

@@ -33,7 +33,7 @@ function getPathsForSingleComplexPolygon(
   for (let i = 0; i < num; i++) {
     const simplePoly = complexPoly.getInnerPoly(i)
 
-    paths.push(new Path(simplePoly, ox, oy))
+    paths.push(Path.fromPoly(simplePoly, ox, oy))
   }
 
   return paths
