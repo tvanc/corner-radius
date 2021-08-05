@@ -1,7 +1,11 @@
 import PolySimple from "../../gpc/geometry/PolySimple"
+import CommandInterface from "./Command/CommandInterface"
+import MoveTo from "./Command/MoveTo"
+import LineTo from "./Command/LineTo"
+import Close from "./Command/Close"
 
 export class Path {
-  public commands: string[][]
+  public commands: CommandInterface[]
 
   private constructor() {}
 
@@ -13,13 +17,15 @@ export class Path {
     const path = new Path()
     const points = poly.getPoints()
     const [firstPoint] = points
-    const commands = [[`M`, firstPoint.x + offsetX, firstPoint.y + offsetY]]
+    const commands: CommandInterface[] = [
+      new MoveTo(firstPoint.x + offsetX, firstPoint.y + offsetY),
+    ]
 
     for (let i = 1; i < points.length; i++) {
-      commands.push(["L", points[i].x + offsetX, points[i].y + offsetY])
+      commands.push(new LineTo(points[i].x + offsetX, points[i].y + offsetY))
     }
 
-    commands.push(["Z"])
+    commands.push(new Close())
 
     path.commands = commands
 
