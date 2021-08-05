@@ -4,7 +4,7 @@ export default abstract class AbstractLineCommand extends AbstractCommand {
   x: number
   y: number
 
-  protected constructor(x: number, y: number) {
+  constructor(x: number, y: number) {
     super()
 
     this.x = x
