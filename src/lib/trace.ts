@@ -1,6 +1,6 @@
 import PolyDefault from "../gpc/geometry/PolyDefault"
 import { getPaths } from "./draw"
-import { roundPathCorners } from "./round.js"
+import { roundPathCorners } from "./round"
 import PolygonInterface from "../gpc/geometry/PolygonInterface"
 
 const svgNs = "http://www.w3.org/2000/svg"

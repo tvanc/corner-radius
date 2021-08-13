@@ -1,17 +1,16 @@
 import AbstractCommand from "./AbstractCommand"
+import Point from "../../../gpc/geometry/Point"
 
 export default abstract class AbstractLineCommand extends AbstractCommand {
-  x: number
-  y: number
+  endPoint: Point
 
-  constructor(x: number, y: number) {
+  constructor(endPoint: Point) {
     super()
 
-    this.x = x
-    this.y = y
+    this.endPoint = endPoint
   }
 
   getParameters(): any[] {
-    return [this.x, this.y]
+    return [this.endPoint]
   }
 }

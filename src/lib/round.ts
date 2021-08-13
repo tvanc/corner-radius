@@ -21,6 +21,12 @@
  *                                                                            *
  *****************************************************************************/
 
+import { Path } from "./class/Path"
+import LineTo from "./class/Command/LineTo"
+import CubicCurve from "./class/Command/CubicCurve"
+import Point from "../gpc/geometry/Point"
+import Close from "./class/Command/Close"
+
 /**
  * SVG Path rounding function. Takes an input path string and outputs a path
  * string where all line-line corners have been rounded. Only supports absolute
@@ -35,81 +41,39 @@
  *               the previous and next points.
  * @returns A new SVG path string with the rounding
  */
-export function roundPathCorners(path, radius, useFractionalRadius) {
-  function moveTowardsLength(movingPoint, targetPoint, amount) {
-    const width = targetPoint.x - movingPoint.x
-    const height = targetPoint.y - movingPoint.y
-    const distance = Math.sqrt(width * width + height * height)
-
-    return moveTowardsFractional(
-      movingPoint,
-      targetPoint,
-      Math.min(1, amount / distance),
-    )
-  }
-
-  function moveTowardsFractional(movingPoint, targetPoint, fraction) {
-    return {
-      x: movingPoint.x + (targetPoint.x - movingPoint.x) * fraction,
-      y: movingPoint.y + (targetPoint.y - movingPoint.y) * fraction,
-    }
-  }
-
-  // Adjusts the ending position of a command
-  function adjustCommand(cmd, newPoint) {
-    if (cmd.length > 2) {
-      cmd[cmd.length - 2] = newPoint.x
-      cmd[cmd.length - 1] = newPoint.y
-    }
-  }
-
-  // Gives an {x, y} object for a command's ending position
-  function pointForCommand(cmd) {
-    return {
-      x: parseFloat(cmd[cmd.length - 2]),
-      y: parseFloat(cmd[cmd.length - 1]),
-    }
-  }
-
+export function roundPathCorners(path: Path, radius: number, useFractionalRadius: boolean) {
   const origPointMap = new Map()
-  const newCommands = [...path.commands]
+  const oldCommands = [...path.commands]
 
   // The resulting commands, also grouped
-  let resultCommands = []
+  let newCommands = []
 
-  if (newCommands.length > 1) {
-    const startPoint = pointForCommand(newCommands[0])
+  if (oldCommands.length > 1) {
+    const startPoint = pointForCommand(oldCommands[0])
 
     // Handle the close path case with a "virtual" closing line
     let virtualCloseLine = null
     if (
-      newCommands[newCommands.length - 1][0] === "Z" &&
-      newCommands[0].length > 2
+      oldCommands[oldCommands.length - 1].getCommandLetter() === "Z" &&
+      oldCommands[0].getParameters().length >= 2
     ) {
-      virtualCloseLine = ["L", startPoint.x, startPoint.y]
-      newCommands[newCommands.length - 1] = virtualCloseLine
+      virtualCloseLine = new LineTo(startPoint)
+      oldCommands[oldCommands.length - 1] = virtualCloseLine
     }
 
     // We always use the first command (but it may be mutated)
-    resultCommands.push(newCommands[0])
+    newCommands.push(oldCommands[0])
 
-    for (let cmdIndex = 1; cmdIndex < newCommands.length; cmdIndex++) {
-      const prevCmd = resultCommands[resultCommands.length - 1]
-      const curCmd = newCommands[cmdIndex]
+    for (let cmdIndex = 1; cmdIndex < oldCommands.length; cmdIndex++) {
+      const prevCmd = newCommands[newCommands.length - 1]
+      const curCmd = oldCommands[cmdIndex]
 
       // Handle closing case
       const nextCmd =
-        curCmd === virtualCloseLine ? newCommands[1] : newCommands[cmdIndex + 1]
+        curCmd === virtualCloseLine ? oldCommands[1] : oldCommands[cmdIndex + 1]
 
       // Nasty logic to decide if this path is a candidite.
-      if (
-        nextCmd &&
-        prevCmd &&
-        prevCmd.length > 2 &&
-        curCmd[0] === "L" &&
-        nextCmd.length > 2 &&
-        nextCmd[0] === "L"
-      ) {
+      if (prevCmd instanceof LineTo && nextCmd instanceof LineTo) {
         // Calc the points we're dealing with
         const prevPoint = pointForCommand(prevCmd)
         const curPoint = pointForCommand(curCmd)
@@ -137,7 +101,7 @@ export function roundPathCorners(path, radius, useFractionalRadius) {
         // Adjust the current command and add it
         adjustCommand(curCmd, curveStart)
         origPointMap.set(curCmd, curPoint)
-        resultCommands.push(curCmd)
+        newCommands.push(curCmd)
 
         // The curve control points are halfway between the start/end of the curve and
         // the original point
@@ -145,36 +109,64 @@ export function roundPathCorners(path, radius, useFractionalRadius) {
         const endControl = moveTowardsFractional(curPoint, curveEnd, 0.5)
 
         // Create the curve
-        const curveCmd = [
-          "C",
-          startControl.x,
-          startControl.y,
-          endControl.x,
-          endControl.y,
-          curveEnd.x,
-          curveEnd.y,
-        ]
+        const curveCmd = new CubicCurve(
+          new Point(startControl.x, startControl.y),
+          new Point(endControl.x, endControl.y),
+          new Point(curveEnd.x, curveEnd.y),
+        )
 
         // Save the original point for fractional calculations
         origPointMap.set(curveCmd, curPoint)
-        resultCommands.push(curveCmd)
+        newCommands.push(curveCmd)
       } else {
-        // Pass through newCommands that don't qualify
-        resultCommands.push(curCmd)
+        // Pass through oldCommands that don't qualify
+        newCommands.push(curCmd)
       }
     }
 
     // Fix up the starting point and restore the close path if the path was originally closed
     if (virtualCloseLine) {
-      const newStartPoint = pointForCommand(
-        resultCommands[resultCommands.length - 1],
-      )
-      resultCommands.push(["Z"])
-      adjustCommand(resultCommands[0], newStartPoint)
+      const newStartPoint = pointForCommand(newCommands[newCommands.length - 1])
+      newCommands.push(new Close())
+      adjustCommand(newCommands[0], newStartPoint)
     }
   } else {
-    resultCommands = newCommands
+    newCommands = oldCommands
   }
 
-  return resultCommands.reduce((str, c) => str + c.join(" ") + " ", "")
+  // region Inner functions
+  function moveTowardsLength (movingPoint, targetPoint, amount) {
+    const width = targetPoint.x - movingPoint.x
+    const height = targetPoint.y - movingPoint.y
+    const distance = Math.sqrt(width * width + height * height)
+
+    return moveTowardsFractional(
+      movingPoint,
+      targetPoint,
+      Math.min(1, amount / distance),
+    )
+  }
+
+  function moveTowardsFractional (movingPoint, targetPoint, fraction) {
+    return {
+      x: movingPoint.x + (targetPoint.x - movingPoint.x) * fraction,
+      y: movingPoint.y + (targetPoint.y - movingPoint.y) * fraction,
+    }
+  }
+
+  // Adjusts the ending position of a command
+  function adjustCommand (cmd, newPoint) {
+    if (cmd.length > 2) {
+      cmd[cmd.length - 2] = newPoint.x
+      cmd[cmd.length - 1] = newPoint.y
+    }
+  }
+
+  // Gives an {x, y} object for a command's ending position
+  function pointForCommand (cmd) {
+    return cmd.endPoint
+  }
+  // endregion Inner functions
+
+  return new Path(newCommands)
 }
