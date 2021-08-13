@@ -1,4 +1,4 @@
-import Point from "./../../src/gpc/geometry/Point.js"
+import Point from "../../src/gpc/geometry/Point"
 import PolyDefault from "./../../src/gpc/geometry/PolyDefault"
 
 const canvas = document.getElementById("canvas") as HTMLCanvasElement

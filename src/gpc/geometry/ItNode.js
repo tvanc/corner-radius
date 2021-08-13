@@ -1,4 +1,4 @@
-import Point from "./Point.js"
+import Point from "./Point"
 
 export default class ItNode {
   constructor(edge0, edge1, x, y, next) {

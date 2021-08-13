@@ -1,5 +1,5 @@
 import ArrayList from "../util/ArrayList.js"
-import Point from "./Point.js"
+import Point from "./Point"
 import Clip from "./Clip.js"
 import Rectangle from "./Rectangle.js"
 import Polygon from "./Polygon.js"
