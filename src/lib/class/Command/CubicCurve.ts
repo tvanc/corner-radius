@@ -1,7 +1,7 @@
 import AbstractCommand from "./AbstractCommand"
 import Point from "../../../gpc/geometry/Point"
 
-export default class CurveCommand extends AbstractCommand {
+export default class CubicCurve extends AbstractCommand {
   private readonly controlPoint1: Point
   private readonly controlPoint2: Point
   private readonly endPoint: Point
@@ -22,6 +22,6 @@ export default class CurveCommand extends AbstractCommand {
   }
 
   toString(): string {
-    return `${this.getCommandLetter()} ${this.getParameters().join(",")}`
+    return `${this.getCommandLetter()} ${this.getParameters().join(" ")}`
   }
 }
