@@ -3,6 +3,7 @@ import { Path } from "../../Path"
 import Point from "../../../../gpc/geometry/Point"
 import RadialPathRounder from "../RadialPathRounder"
 import CubicCurve from "../../Command/CubicCurve"
+import { roundPathCorners } from "../../../round.bak"
 
 it("Rounds to given positive numbers", () => {
   const lineLength = 10
@@ -22,7 +23,20 @@ it("Rounds to given positive numbers", () => {
   expect(roundedPath.commands.some(c => c instanceof CubicCurve)).toBe(true)
 })
 
-it("Does not round with negative numbers", () => {})
+function runOldSchoolRoundingFunc(lineLength, radius) {
+  console.log(
+    roundPathCorners(
+      [
+        ["M", 0, 0],
+        ["L", lineLength, 0],
+        ["L", lineLength, lineLength],
+        ["L", 0, lineLength],
+      ],
+      radius,
+      false,
+    ),
+  )
+}
 
 it("Has no effect given a radius of zero", () => {})
 
