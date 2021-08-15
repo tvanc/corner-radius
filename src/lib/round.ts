@@ -26,6 +26,7 @@ import LineTo from "./class/Command/LineTo"
 import CubicCurve from "./class/Command/CubicCurve"
 import Point from "../gpc/geometry/Point"
 import Close from "./class/Command/Close"
+import AbstractLineCommand from "./class/Command/AbstractLineCommand"
 
 /**
  * SVG Path rounding function. Takes an input path string and outputs a path
@@ -43,37 +44,42 @@ import Close from "./class/Command/Close"
  */
 export function roundPathCorners(path: Path, radius: number, useFractionalRadius: boolean) {
   const origPointMap = new Map()
-  const oldCommands = [...path.commands]
+  const newCommands = [...path.commands]
 
   // The resulting commands, also grouped
-  let newCommands = []
+  let resultCommands = []
 
-  if (oldCommands.length > 1) {
-    const startPoint = pointForCommand(oldCommands[0])
+  if (newCommands.length > 1) {
+    const startPoint = pointForCommand(newCommands[0])
 
     // Handle the close path case with a "virtual" closing line
     let virtualCloseLine = null
     if (
-      oldCommands[oldCommands.length - 1].getCommandLetter() === "Z" &&
-      oldCommands[0].getParameters().length >= 2
+      newCommands[newCommands.length - 1].getCommandLetter() === "Z" &&
+      newCommands[0].getParameters().length >= 2
     ) {
       virtualCloseLine = new LineTo(startPoint)
-      oldCommands[oldCommands.length - 1] = virtualCloseLine
+      newCommands[newCommands.length - 1] = virtualCloseLine
     }
 
     // We always use the first command (but it may be mutated)
-    newCommands.push(oldCommands[0])
+    resultCommands.push(newCommands[0])
 
-    for (let cmdIndex = 1; cmdIndex < oldCommands.length; cmdIndex++) {
-      const prevCmd = newCommands[newCommands.length - 1]
-      const curCmd = oldCommands[cmdIndex]
+    for (let cmdIndex = 1; cmdIndex < newCommands.length; cmdIndex++) {
+      const prevCmd = resultCommands[resultCommands.length - 1]
+      const curCmd = newCommands[cmdIndex]
 
       // Handle closing case
       const nextCmd =
-        curCmd === virtualCloseLine ? oldCommands[1] : oldCommands[cmdIndex + 1]
+        curCmd === virtualCloseLine ? newCommands[1] : newCommands[cmdIndex + 1]
+      const isCandidate = nextCmd &&
+        prevCmd &&
+        prevCmd.endPoint &&
+        curCmd instanceof LineTo &&
+        nextCmd instanceof LineTo
 
       // Nasty logic to decide if this path is a candidite.
-      if (prevCmd instanceof LineTo && nextCmd instanceof LineTo) {
+      if (isCandidate) {
         // Calc the points we're dealing with
         const prevPoint = pointForCommand(prevCmd)
         const curPoint = pointForCommand(curCmd)
@@ -101,7 +107,7 @@ export function roundPathCorners(path: Path, radius: number, useFractionalRadius
         // Adjust the current command and add it
         adjustCommand(curCmd, curveStart)
         origPointMap.set(curCmd, curPoint)
-        newCommands.push(curCmd)
+        resultCommands.push(curCmd)
 
         // The curve control points are halfway between the start/end of the curve and
         // the original point
@@ -117,25 +123,25 @@ export function roundPathCorners(path: Path, radius: number, useFractionalRadius
 
         // Save the original point for fractional calculations
         origPointMap.set(curveCmd, curPoint)
-        newCommands.push(curveCmd)
+        resultCommands.push(curveCmd)
       } else {
         // Pass through oldCommands that don't qualify
-        newCommands.push(curCmd)
+        resultCommands.push(curCmd)
       }
     }
 
     // Fix up the starting point and restore the close path if the path was originally closed
     if (virtualCloseLine) {
-      const newStartPoint = pointForCommand(newCommands[newCommands.length - 1])
-      newCommands.push(new Close())
-      adjustCommand(newCommands[0], newStartPoint)
+      const newStartPoint = pointForCommand(resultCommands[resultCommands.length - 1])
+      resultCommands.push(new Close())
+      adjustCommand(resultCommands[0], newStartPoint)
     }
   } else {
-    newCommands = oldCommands
+    resultCommands = newCommands
   }
 
   // region Inner functions
-  function moveTowardsLength (movingPoint, targetPoint, amount) {
+  function moveTowardsLength(movingPoint: Point, targetPoint: Point, amount: number) {
     const width = targetPoint.x - movingPoint.x
     const height = targetPoint.y - movingPoint.y
     const distance = Math.sqrt(width * width + height * height)
@@ -147,26 +153,26 @@ export function roundPathCorners(path: Path, radius: number, useFractionalRadius
     )
   }
 
-  function moveTowardsFractional (movingPoint, targetPoint, fraction) {
-    return {
-      x: movingPoint.x + (targetPoint.x - movingPoint.x) * fraction,
-      y: movingPoint.y + (targetPoint.y - movingPoint.y) * fraction,
-    }
+  function moveTowardsFractional(movingPoint: Point, targetPoint: Point, fraction: number) {
+    return new Point(
+      movingPoint.x + (targetPoint.x - movingPoint.x) * fraction,
+      movingPoint.y + (targetPoint.y - movingPoint.y) * fraction,
+    )
   }
 
   // Adjusts the ending position of a command
-  function adjustCommand (cmd, newPoint) {
-    if (cmd.length > 2) {
-      cmd[cmd.length - 2] = newPoint.x
-      cmd[cmd.length - 1] = newPoint.y
+  function adjustCommand(cmd, newPoint: Point) {
+    if (cmd instanceof AbstractLineCommand) {
+      cmd.endPoint = newPoint
     }
   }
 
   // Gives an {x, y} object for a command's ending position
-  function pointForCommand (cmd) {
+  function pointForCommand(cmd): Point {
     return cmd.endPoint
   }
+
   // endregion Inner functions
 
-  return new Path(newCommands)
+  return new Path(resultCommands)
 }
