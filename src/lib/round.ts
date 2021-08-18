@@ -27,6 +27,7 @@ import CubicCurve from "./class/Command/CubicCurve"
 import Point from "../gpc/geometry/Point"
 import Close from "./class/Command/Close"
 import AbstractLineCommand from "./class/Command/AbstractLineCommand"
+import MoveTo from "./class/Command/MoveTo"
 
 /**
  * SVG Path rounding function. Takes an input path string and outputs a path
@@ -42,7 +43,11 @@ import AbstractLineCommand from "./class/Command/AbstractLineCommand"
  *               the previous and next points.
  * @returns A new SVG path string with the rounding
  */
-export function roundPathCorners(path: Path, radius: number, useFractionalRadius: boolean) {
+export function roundPathCorners(
+  path: Path,
+  radius: number,
+  useFractionalRadius: boolean,
+) {
   const origPointMap = new Map()
   const newCommands = [...path.commands]
 
@@ -54,10 +59,7 @@ export function roundPathCorners(path: Path, radius: number, useFractionalRadius
 
     // Handle the close path case with a "virtual" closing line
     let virtualCloseLine = null
-    if (
-      newCommands[newCommands.length - 1].getCommandLetter() === "Z" &&
-      newCommands[0].getParameters().length >= 2
-    ) {
+    if (newCommands[newCommands.length - 1] instanceof Close) {
       virtualCloseLine = new LineTo(startPoint)
       newCommands[newCommands.length - 1] = virtualCloseLine
     }
@@ -72,7 +74,8 @@ export function roundPathCorners(path: Path, radius: number, useFractionalRadius
       // Handle closing case
       const nextCmd =
         curCmd === virtualCloseLine ? newCommands[1] : newCommands[cmdIndex + 1]
-      const isCandidate = nextCmd &&
+      const isCandidate =
+        nextCmd &&
         prevCmd &&
         prevCmd.endPoint &&
         curCmd instanceof LineTo &&
@@ -132,16 +135,45 @@ export function roundPathCorners(path: Path, radius: number, useFractionalRadius
 
     // Fix up the starting point and restore the close path if the path was originally closed
     if (virtualCloseLine) {
-      const newStartPoint = pointForCommand(resultCommands[resultCommands.length - 1])
+      const newStartPoint = pointForCommand(
+        resultCommands[resultCommands.length - 1],
+      )
       resultCommands.push(new Close())
       adjustCommand(resultCommands[0], newStartPoint)
+    }
+
+    // Eliminate the first line if a close path would work just as well
+    // TODO Rotate path until we can replace a line with a MoveTo...Close
+    const firstCommand = resultCommands[0]
+    const secondCommand = resultCommands[1]
+    const finalCommand = resultCommands[resultCommands.length - 1]
+    const finalNonCloseCommand =
+      finalCommand instanceof Close
+        ? resultCommands[resultCommands.length - 2]
+        : finalCommand
+
+    if (
+      firstCommand instanceof MoveTo &&
+      secondCommand instanceof LineTo &&
+      firstCommand.endPoint.x === finalNonCloseCommand.endPoint.x &&
+      firstCommand.endPoint.y === finalNonCloseCommand.endPoint.y
+    ) {
+      resultCommands = resultCommands.slice(2)
+      resultCommands.unshift(firstCommand)
+      firstCommand.endPoint = secondCommand.endPoint
     }
   } else {
     resultCommands = newCommands
   }
 
+  return new Path(resultCommands)
+
   // region Inner functions
-  function moveTowardsLength(movingPoint: Point, targetPoint: Point, amount: number) {
+  function moveTowardsLength(
+    movingPoint: Point,
+    targetPoint: Point,
+    amount: number,
+  ) {
     const width = targetPoint.x - movingPoint.x
     const height = targetPoint.y - movingPoint.y
     const distance = Math.sqrt(width * width + height * height)
@@ -153,7 +185,11 @@ export function roundPathCorners(path: Path, radius: number, useFractionalRadius
     )
   }
 
-  function moveTowardsFractional(movingPoint: Point, targetPoint: Point, fraction: number) {
+  function moveTowardsFractional(
+    movingPoint: Point,
+    targetPoint: Point,
+    fraction: number,
+  ) {
     return new Point(
       movingPoint.x + (targetPoint.x - movingPoint.x) * fraction,
       movingPoint.y + (targetPoint.y - movingPoint.y) * fraction,
@@ -173,6 +209,4 @@ export function roundPathCorners(path: Path, radius: number, useFractionalRadius
   }
 
   // endregion Inner functions
-
-  return new Path(resultCommands)
 }

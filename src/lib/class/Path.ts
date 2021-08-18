@@ -16,9 +16,8 @@ export class Path {
     return this.commands.reduce((str, cmd) => str + cmd + "\n", "").slice(0, -1)
   }
 
-  static fromPoly(poly: PolySimple, offsetX: number = 0, offsetY: number = 0) {
+  static fromPoints(points: Point[], offsetX: number = 0, offsetY: number = 0) {
     const path = new Path()
-    const points = poly.getPoints()
     const [firstPoint] = points
     const commands: CommandInterface[] = [
       new MoveTo(new Point(firstPoint.x + offsetX, firstPoint.y + offsetY)),
@@ -35,6 +34,10 @@ export class Path {
     path.commands = commands
 
     return path
+  }
+
+  static fromPoly(poly: PolySimple, offsetX: number = 0, offsetY: number = 0) {
+    return this.fromPoints(poly.getPoints(), offsetX, offsetY)
   }
 
   add(...commands: CommandInterface[]) {
