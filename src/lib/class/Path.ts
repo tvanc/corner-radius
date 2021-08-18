@@ -9,10 +9,11 @@ export class Path {
   public commands: CommandInterface[]
 
   constructor(commands: CommandInterface[] = []) {
+    this.commands = commands
   }
 
   toString() {
-    return this.commands.reduce((str, c) => str + c + " ", "").slice(0, -1)
+    return this.commands.reduce((str, cmd) => str + cmd + "\n", "").slice(0, -1)
   }
 
   static fromPoly(poly: PolySimple, offsetX: number = 0, offsetY: number = 0) {

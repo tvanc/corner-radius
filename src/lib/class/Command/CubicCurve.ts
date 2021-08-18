@@ -2,7 +2,9 @@ import AbstractCommand from "./AbstractCommand"
 import Point from "../../../gpc/geometry/Point"
 import CommandWithEndpointInterface from "./CommandWithEndpointInterface"
 
-export default class CubicCurve extends AbstractCommand implements CommandWithEndpointInterface {
+export default class CubicCurve
+  extends AbstractCommand
+  implements CommandWithEndpointInterface {
   controlPoint1: Point
   controlPoint2: Point
   endPoint: Point
