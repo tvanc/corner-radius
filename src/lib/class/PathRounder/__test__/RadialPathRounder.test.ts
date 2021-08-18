@@ -6,6 +6,7 @@ import CubicCurve from "../../Command/CubicCurve"
 import { roundPathCorners } from "../../../round.bak"
 import MoveTo from "../../Command/MoveTo"
 import LineTo from "../../Command/LineTo"
+import Close from "../../Command/Close"
 
 it("Rounds to given positive numbers", () => {
   const lineLength = 100
@@ -16,20 +17,17 @@ it("Rounds to given positive numbers", () => {
   const lineLengthMinusHalfRadius = lineLength - halfRadius
 
   const rounder = new RadialPathRounder()
-  const squarePath = Path.fromPoly(
-    new PolySimple([
-      new Point(0, 0),
-      new Point(lineLength, 0),
-      new Point(lineLength, lineLength),
-      new Point(0, lineLength),
-    ]),
-  )
+  const squarePath = Path.fromPoints([
+    new Point(0, 0),
+    new Point(lineLength, 0),
+    new Point(lineLength, lineLength),
+    new Point(0, lineLength),
+  ])
 
   const actualResult = rounder.roundPath(squarePath, radius)
   const expectedResult = new Path([
-    new MoveTo(new Point(radius, 0)),
-    // top side
-    new LineTo(new Point(lineLengthMinusRadius, 0)),
+    // Move to start of top right rounded corner
+    new MoveTo(new Point(lineLengthMinusRadius, 0)),
     // top right corner
     new CubicCurve(
       new Point(lineLengthMinusHalfRadius, 0),
@@ -60,6 +58,7 @@ it("Rounds to given positive numbers", () => {
       new Point(halfRadius, 0),
       new Point(radius, 0),
     ),
+    new Close(),
   ])
 
   console.log(expectedResult.toString())
