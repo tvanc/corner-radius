@@ -9,7 +9,6 @@ export class Path {
   public commands: CommandInterface[]
 
   constructor(commands: CommandInterface[] = []) {
-    this.#commands = commands
   }
 
   toString() {
@@ -32,7 +31,7 @@ export class Path {
 
     commands.push(new Close())
 
-    path.#commands = commands
+    path.commands = commands
 
     return path
   }
