@@ -6,7 +6,7 @@ import Close from "./Command/Close"
 import Point from "../../gpc/geometry/Point"
 
 export class Path {
-  #commands: CommandInterface[]
+  public commands: CommandInterface[]
 
   constructor(commands: CommandInterface[] = []) {
     this.#commands = commands
@@ -25,7 +25,9 @@ export class Path {
     ]
 
     for (let i = 1; i < points.length; i++) {
-      commands.push(new LineTo(new Point(points[i].x + offsetX, points[i].y + offsetY)))
+      commands.push(
+        new LineTo(new Point(points[i].x + offsetX, points[i].y + offsetY)),
+      )
     }
 
     commands.push(new Close())
@@ -35,15 +37,11 @@ export class Path {
     return path
   }
 
-  add (...commands: CommandInterface[]) {
-    this.#commands.push(...commands)
-  }
-
-  get commands() {
-    return this.#commands
+  add(...commands: CommandInterface[]) {
+    this.commands.push(...commands)
   }
 
   get length() {
-    return this.#commands.length
+    return this.commands.length
   }
 }
