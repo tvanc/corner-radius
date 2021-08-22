@@ -22,11 +22,11 @@ export function trace(el) {
   const paths = getPaths(x, y, unionPolygon)
 
   for (let j = 0; j < paths.length; ++j) {
-    const roundedCommands = roundPathCorners(paths[j], cornerRadius, false)
+    const roundedPath = roundPathCorners(paths[j], cornerRadius, false)
     // reuse existing path if available
     const path = allPaths[j] ?? document.createElementNS(svgNs, "path")
 
-    path.setAttribute("d", roundedCommands.toString())
+    path.setAttribute("d", roundedPath.toString())
     svg.appendChild(path)
   }
 
