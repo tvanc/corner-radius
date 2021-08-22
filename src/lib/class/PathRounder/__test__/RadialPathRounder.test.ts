@@ -1,7 +1,7 @@
 import PolySimple from "../../../../gpc/geometry/PolySimple"
 import { Path } from "../../Path"
 import Point from "../../../../gpc/geometry/Point"
-import RadialPathRounder from "../RadialPathRounder"
+import RadialRounder from "../RadialRounder"
 import CubicCurve from "../../Command/CubicCurve"
 import MoveTo from "../../Command/MoveTo"
 import LineTo from "../../Command/LineTo"
@@ -15,7 +15,7 @@ it("Rounds to given positive numbers", () => {
   const lineLengthMinusRadius = lineLength - radius
   const lineLengthMinusHalfRadius = lineLength - halfRadius
 
-  const rounder = new RadialPathRounder()
+  const rounder = new RadialRounder()
   const squarePath = Path.fromPoints([
     new Point(0, 0),
     new Point(lineLength, 0),
