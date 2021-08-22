@@ -4,6 +4,6 @@ import { roundPathCorners } from "./round"
 
 export default class RadialRounder implements PathRounderInterface {
   roundPath(path: Path, radius: number): Path {
-    return roundPathCorners(path, radius, false)
+    return roundPathCorners(path, radius)
   }
 }

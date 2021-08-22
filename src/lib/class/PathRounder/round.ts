@@ -38,16 +38,9 @@ import MoveTo from "../Command/MoveTo"
  * @param radius The amount to round the corners, either a value in the SVG
  *               coordinate space, or, if useFractionalRadius is true, a value
  *               from 0 to 1.
- * @param useFractionalRadius If true, the curve radius is expressed as a
- *               fraction of the distance between the point being curved and
- *               the previous and next points.
  * @returns A new SVG path string with the rounding
  */
-export function roundPathCorners(
-  path: Path,
-  radius: number,
-  useFractionalRadius: boolean,
-) {
+export function roundPathCorners(path: Path, radius: number) {
   const origPointMap = new Map()
   const newCommands = [...path.commands]
 
@@ -89,23 +82,8 @@ export function roundPathCorners(
         const nextPoint = pointForCommand(nextCmd)
 
         // The start and end of the curve are just our point moved towards the previous and next points, respectivly
-        let curveStart, curveEnd
-
-        if (useFractionalRadius) {
-          curveStart = moveTowardsFractional(
-            curPoint,
-            origPointMap.get(prevCmd) ?? prevPoint,
-            radius,
-          )
-          curveEnd = moveTowardsFractional(
-            curPoint,
-            origPointMap.get(nextCmd) ?? nextPoint,
-            radius,
-          )
-        } else {
-          curveStart = moveTowardsLength(curPoint, prevPoint, radius)
-          curveEnd = moveTowardsLength(curPoint, nextPoint, radius)
-        }
+        const curveStart = moveTowardsLength(curPoint, prevPoint, radius)
+        const curveEnd = moveTowardsLength(curPoint, nextPoint, radius)
 
         // Adjust the current command and add it
         adjustCommand(curCmd, curveStart)
@@ -114,8 +92,14 @@ export function roundPathCorners(
 
         // The curve control points are halfway between the start/end of the curve and
         // the original point
-        const startControl = moveTowardsFractional(curveStart, curPoint, 0.5)
-        const endControl = moveTowardsFractional(curPoint, curveEnd, 0.5)
+        const startControl = new Point(
+          curveStart.x + (curPoint.x - curveStart.x) * 0.5,
+          curveStart.y + (curPoint.y - curveStart.y) * 0.5,
+        )
+        const endControl = new Point(
+          curPoint.x + (curveEnd.x - curPoint.x) * 0.5,
+          curPoint.y + (curveEnd.y - curPoint.y) * 0.5,
+        )
 
         // Create the curve
         const curveCmd = new CubicCurve(
@@ -177,19 +161,8 @@ export function roundPathCorners(
     const width = targetPoint.x - movingPoint.x
     const height = targetPoint.y - movingPoint.y
     const distance = Math.sqrt(width * width + height * height)
+    const fraction = Math.min(1, amount / distance)
 
-    return moveTowardsFractional(
-      movingPoint,
-      targetPoint,
-      Math.min(1, amount / distance),
-    )
-  }
-
-  function moveTowardsFractional(
-    movingPoint: Point,
-    targetPoint: Point,
-    fraction: number,
-  ) {
     return new Point(
       movingPoint.x + (targetPoint.x - movingPoint.x) * fraction,
       movingPoint.y + (targetPoint.y - movingPoint.y) * fraction,
