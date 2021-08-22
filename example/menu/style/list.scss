@@ -14,11 +14,12 @@
   --menu-spacing: 1rem;
   --half-spacing: calc(var(--menu-spacing) / 2);
   --menu-width: 5rem;
-  padding: calc(var(--menu-spacing) / 2) 0;
+  padding: calc(var(--corner-radius)) 0;
   margin: 0;
   list-style: none;
   color: black;
   min-width: 12rem;
+  border-radius: var(--corner-radius);
 
   > li {
     position: relative;
@@ -26,13 +27,6 @@
     padding: var(--half-spacing) var(--menu-spacing);
     background-clip: padding-box;
     white-space: nowrap;
-
-    &:first-child {
-      border-radius: var(--corner-radius) var(--corner-radius) 0 0;
-    }
-    &:last-child {
-      border-radius: 0 0 var(--corner-radius) var(--corner-radius);
-    }
 
     > ul {
       position: absolute;
