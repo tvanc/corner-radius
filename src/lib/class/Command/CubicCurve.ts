@@ -23,8 +23,4 @@ export default class CubicCurve
   getParameters(): Point[] {
     return [this.controlPoint1, this.controlPoint2, this.endPoint]
   }
-
-  toString(): string {
-    return `${this.getCommandLetter()} ${this.getParameters().join(" ")}`
-  }
 }
