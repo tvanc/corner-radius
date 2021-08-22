@@ -21,13 +21,13 @@
  *                                                                            *
  *****************************************************************************/
 
-import { Path } from "./class/Path"
-import LineTo from "./class/Command/LineTo"
-import CubicCurve from "./class/Command/CubicCurve"
-import Point from "../gpc/geometry/Point"
-import Close from "./class/Command/Close"
-import AbstractLineCommand from "./class/Command/AbstractLineCommand"
-import MoveTo from "./class/Command/MoveTo"
+import { Path } from "../Path"
+import LineTo from "../Command/LineTo"
+import CubicCurve from "../Command/CubicCurve"
+import Point from "../../../gpc/geometry/Point"
+import Close from "../Command/Close"
+import AbstractLineCommand from "../Command/AbstractLineCommand"
+import MoveTo from "../Command/MoveTo"
 
 /**
  * SVG Path rounding function. Takes an input path string and outputs a path
