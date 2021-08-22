@@ -8,23 +8,14 @@ const svgElMap = new WeakMap()
 const mutationObserverMap = new WeakMap()
 const resizeObserverMap = new WeakMap()
 
-// @ts-ignore
-CSS.registerProperty({
-  name: "--corner-radius",
-  syntax: "<length>",
-  inherits: false,
-  initialValue: 0,
-})
-
 export function trace(el) {
   const svg = getSvg(el)
 
   const allPaths = svg.querySelectorAll("path")
   const unionPolygon = getUnionOfAllPolygons(el)
   const { x, y, w, h } = unionPolygon.getBounds()
-  const cornerRadius = parseFloat(
-    getComputedStyle(el).getPropertyValue("--corner-radius"),
-  )
+  const style = getComputedStyle(el)
+  const cornerRadius = parseFloat(style.getPropertyValue("border-radius"))
 
   unionPolygon.removeUnnecessaryPoints()
 
