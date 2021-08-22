@@ -79,7 +79,7 @@ function roundPathCorners(path: Path, radius: number) {
         curCmd instanceof LineTo &&
         nextCmd instanceof LineTo
 
-      // Nasty logic to decide if this path is a candidite.
+      // Nasty logic to decide if this path is a candidate.
       if (isCandidate) {
         // Calc the points we're dealing with
         const prevPoint = pointForCommand(prevCmd)
