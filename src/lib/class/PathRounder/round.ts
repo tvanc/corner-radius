@@ -88,7 +88,7 @@ export function roundPathCorners(
         const curPoint = pointForCommand(curCmd)
         const nextPoint = pointForCommand(nextCmd)
 
-        // The start and end of the cuve are just our point moved towards the previous and next points, respectivly
+        // The start and end of the curve are just our point moved towards the previous and next points, respectivly
         let curveStart, curveEnd
 
         if (useFractionalRadius) {
