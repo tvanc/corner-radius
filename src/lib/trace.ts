@@ -35,7 +35,7 @@ export function trace(el) {
     // reuse existing path if available
     const path = allPaths[j] ?? document.createElementNS(svgNs, "path")
 
-    path.setAttribute("d", roundedCommands)
+    path.setAttribute("d", roundedCommands.toString())
     svg.appendChild(path)
   }
 
