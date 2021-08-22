@@ -3,7 +3,6 @@ import { Path } from "../../Path"
 import Point from "../../../../gpc/geometry/Point"
 import RadialPathRounder from "../RadialPathRounder"
 import CubicCurve from "../../Command/CubicCurve"
-import { roundPathCorners } from "../../../round.bak"
 import MoveTo from "../../Command/MoveTo"
 import LineTo from "../../Command/LineTo"
 import Close from "../../Command/Close"
@@ -65,21 +64,6 @@ it("Rounds to given positive numbers", () => {
 
   expect(actualResult).toEqual(expectedResult)
 })
-
-function runOldSchoolRoundingFunc(lineLength, radius) {
-  console.log(
-    roundPathCorners(
-      [
-        ["M", 0, 0],
-        ["L", lineLength, 0],
-        ["L", lineLength, lineLength],
-        ["L", 0, lineLength],
-      ],
-      radius,
-      false,
-    ),
-  )
-}
 
 it("Has no effect given a radius of zero", () => {})
 
