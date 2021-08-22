@@ -86,6 +86,10 @@ function roundPathCorners(path: Path, radius: number) {
         const curPoint = pointForCommand(curCmd)
         const nextPoint = pointForCommand(nextCmd)
 
+        if (curPoint.x === prevPoint.x && curPoint.y === prevPoint.y) {
+          continue
+        }
+
         // The start and end of the curve are just our point moved towards the previous and next points, respectivly
         const curveStart = moveTowardsLength(curPoint, prevPoint, radius)
         const curveEnd = moveTowardsLength(curPoint, nextPoint, radius)
