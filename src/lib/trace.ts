@@ -1,12 +1,13 @@
 import PolyDefault from "../gpc/geometry/PolyDefault"
 import { getPaths } from "./draw"
-import { roundPathCorners } from "./class/PathRounder/round"
 import PolygonInterface from "../gpc/geometry/PolygonInterface"
+import RadialRounder from "./class/PathRounder/RadialRounder"
 
 const svgNs = "http://www.w3.org/2000/svg"
 const svgElMap = new WeakMap()
 const mutationObserverMap = new WeakMap()
 const resizeObserverMap = new WeakMap()
+const rounder = new RadialRounder()
 
 export function trace(el) {
   const svg = getSvg(el)
@@ -21,10 +22,10 @@ export function trace(el) {
 
   const paths = getPaths(x, y, unionPolygon)
 
-  for (let j = 0; j < paths.length; ++j) {
-    const roundedPath = roundPathCorners(paths[j], cornerRadius, false)
+  for (let i = 0; i < paths.length; ++i) {
+    const roundedPath = rounder.roundPath(paths[i], cornerRadius)
     // reuse existing path if available
-    const path = allPaths[j] ?? document.createElementNS(svgNs, "path")
+    const path = allPaths[i] ?? document.createElementNS(svgNs, "path")
 
     path.setAttribute("d", roundedPath.toString())
     svg.appendChild(path)
