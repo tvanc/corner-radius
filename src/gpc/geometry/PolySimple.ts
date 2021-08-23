@@ -5,6 +5,7 @@ import Rectangle from "./Rectangle.js"
 import Polygon from "./Polygon.js"
 import PolygonInterface from "./PolygonInterface"
 import Line from "./Line"
+import { getSlope } from "../../lib/util"
 
 /**
  * <code>PolySimple</code> is a simple polygon - contains only one inner polygon.
@@ -406,9 +407,4 @@ export default class PolySimple implements PolygonInterface {
 
     return this
   }
-}
-
-function getSlope(p1, p2) {
-  //     |--delta y--|   |--delta x--|
-  return (p2.y - p1.y) / (p2.x - p1.x)
 }
