@@ -6,6 +6,7 @@ import Point from "../../../gpc/geometry/Point"
 import Close from "../Command/Close"
 import AbstractLineCommand from "../Command/AbstractLineCommand"
 import MoveTo from "../Command/MoveTo"
+import { getSlope } from "../../util"
 
 export default class RadialRounder implements PathRounderInterface {
   roundPath(path: Path, radius: number): Path {
@@ -87,10 +88,18 @@ function roundPathCorners(path: Path, radius: number) {
         const nextPoint = pointForCommand(nextCmd)
 
         if (curPoint.x === prevPoint.x && curPoint.y === prevPoint.y) {
+          if (prevCmd instanceof CubicCurve) {
+            prevCmd.controlPoint2 = moveTowardsLength(
+              curPoint,
+              nextPoint,
+              radius / -2,
+            )
+          }
+
           continue
         }
 
-        // The start and end of the curve are just our point moved towards the previous and next points, respectivly
+        // The start and end of the curve are just our point moved towards the previous and next points, respectively
         const curveStart = moveTowardsLength(curPoint, prevPoint, radius)
         const curveEnd = moveTowardsLength(curPoint, nextPoint, radius)
 
@@ -169,7 +178,7 @@ function roundPathCorners(path: Path, radius: number) {
   ) {
     const width = targetPoint.x - movingPoint.x
     const height = targetPoint.y - movingPoint.y
-    const distance = Math.sqrt(width * width + height * height)
+    const distance = Math.sqrt(width ** 2 + height ** 2)
     const fraction = Math.min(1, amount / distance)
 
     return new Point(
