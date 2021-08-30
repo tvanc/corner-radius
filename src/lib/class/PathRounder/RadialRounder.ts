@@ -74,8 +74,6 @@ function roundPathCorners(path: Path, radius: number) {
       const nextCmd =
         curCmd === virtualCloseLine ? newCommands[1] : newCommands[cmdIndex + 1]
       const isCandidate =
-        nextCmd &&
-        prevCmd &&
         prevCmd.endPoint &&
         curCmd instanceof LineTo &&
         nextCmd instanceof LineTo
