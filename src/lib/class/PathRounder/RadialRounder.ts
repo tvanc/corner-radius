@@ -109,12 +109,12 @@ function roundPathCorners(path: Path, radius: number) {
         // The curve control points are halfway between the start/end of the curve and
         // the original point
         const startControl = new Point(
-          curveStart.x + (curPoint.x - curveStart.x) * 0.5,
-          curveStart.y + (curPoint.y - curveStart.y) * 0.5,
+          curveStart.x + (curPoint.x - curveStart.x) / 2,
+          curveStart.y + (curPoint.y - curveStart.y) / 2,
         )
         const endControl = new Point(
-          curPoint.x + (curveEnd.x - curPoint.x) * 0.5,
-          curPoint.y + (curveEnd.y - curPoint.y) * 0.5,
+          curPoint.x + (curveEnd.x - curPoint.x) / 2,
+          curPoint.y + (curveEnd.y - curPoint.y) / 2,
         )
 
         // Create the curve
