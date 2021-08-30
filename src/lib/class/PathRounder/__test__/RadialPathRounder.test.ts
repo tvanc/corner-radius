@@ -60,11 +60,59 @@ it("Rounds to given positive numbers", () => {
     new Close(),
   ])
 
-  console.log(expectedResult.toString())
-
   expect(actualResult).toEqual(expectedResult)
 })
 
-it("Has no effect given a radius of zero", () => {})
+it("Gracefully handles corners shorter than given radius", () => {
+  const horizontalLineLength = 20
+  const verticalLineLength = 10
+  const givenRadius = horizontalLineLength
+  const expectedRadius = verticalLineLength / 2
+  const halfExpectedRadius = expectedRadius / 2
 
-it("Does not exceed line lengths", () => {})
+  const startX = 0
+  const startY = 0
+
+  // Path looks like this, is rectilinear
+  // -------|
+  //        |-------
+  const midX = startX + horizontalLineLength
+  const midY = startY + verticalLineLength / 2
+  const endX = startX + horizontalLineLength * 2
+  const endY = startY + verticalLineLength
+
+  const rounder = new RadialRounder()
+  const startPath = Path.fromPoints([
+    new Point(startX, startY),
+    new Point(midX, startY),
+    new Point(midX, endY),
+    new Point(endX, endY),
+  ])
+
+  const expectedResultPath = new Path([
+    new MoveTo(new Point(startX, startY)),
+    new LineTo(new Point(midX - expectedRadius, startY)),
+    new CubicCurve(
+      new Point(midX - halfExpectedRadius, startY),
+      new Point(midX, startY + halfExpectedRadius),
+      new Point(midX, midY),
+    ),
+    new CubicCurve(
+      new Point(midX, midY + halfExpectedRadius),
+      new Point(midX + halfExpectedRadius, endY),
+      new Point(midX + expectedRadius, endY),
+    ),
+    new LineTo(new Point(endX, endY)),
+  ])
+
+  // Remove close command
+  startPath.commands.pop()
+
+  const actualResultPath = rounder.roundPath(startPath, givenRadius)
+
+  console.log("Original path", startPath.toString())
+  console.log("Rounded path", actualResultPath.toString())
+  console.log("expected path", expectedResultPath.toString())
+
+  expect(actualResultPath.toString()).toBe(expectedResultPath.toString())
+})
