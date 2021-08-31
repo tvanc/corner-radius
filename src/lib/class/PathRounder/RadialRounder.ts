@@ -6,7 +6,7 @@ import Point from "../../../gpc/geometry/Point"
 import Close from "../Command/Close"
 import AbstractLineCommand from "../Command/AbstractLineCommand"
 import MoveTo from "../Command/MoveTo"
-import { getSlope } from "../../util"
+import { getDistance, getSlope } from "../../util"
 
 export default class RadialRounder implements PathRounderInterface {
   roundPath(path: Path, radius: number): Path {
@@ -43,12 +43,13 @@ export default class RadialRounder implements PathRounderInterface {
  * commands at the moment.
  *
  * @param path The SVG input string, or an array of commands
- * @param radius The amount to round the corners.
+ * @param maxRadius The amount to round the corners.
  * @returns A new SVG path string with the rounding
  */
-function roundPathCorners(path: Path, radius: number) {
+function roundPathCorners(path: Path, maxRadius: number) {
   const origPointMap = new Map()
-  const newCommands = [...path.commands]
+  const originalCommands = [...path.commands]
+  const newCommands = [...originalCommands]
 
   // The resulting commands, also grouped
   let resultCommands = []
@@ -66,6 +67,8 @@ function roundPathCorners(path: Path, radius: number) {
     // We always use the first command (but it may be mutated)
     resultCommands.push(newCommands[0])
 
+    let prevRadius = Infinity
+
     for (let cmdIndex = 1; cmdIndex < newCommands.length; cmdIndex++) {
       const prevCmd = resultCommands[resultCommands.length - 1]
       const curCmd = newCommands[cmdIndex]
@@ -80,31 +83,26 @@ function roundPathCorners(path: Path, radius: number) {
 
       // Nasty logic to decide if this path is a candidate.
       if (isCandidate) {
-        // Calc the points we're dealing with
-        const prevPoint = pointForCommand(prevCmd)
         const curPoint = pointForCommand(curCmd)
+        const prevPoint = pointForCommand(prevCmd)
+
+        // Calc the points we're dealing with
         const nextPoint = pointForCommand(nextCmd)
-
-        if (curPoint.x === prevPoint.x && curPoint.y === prevPoint.y) {
-          if (prevCmd instanceof CubicCurve) {
-            prevCmd.controlPoint2 = moveTowardsLength(
-              curPoint,
-              nextPoint,
-              radius / -2,
-            )
-          }
-
-          continue
-        }
+        const distanceToNext = getDistance(curPoint, nextPoint)
+        const minRadius = Math.min(maxRadius, prevRadius, distanceToNext / 2)
 
         // The start and end of the curve are just our point moved towards the previous and next points, respectively
-        const curveStart = moveTowardsLength(curPoint, prevPoint, radius)
-        const curveEnd = moveTowardsLength(curPoint, nextPoint, radius)
+        const curveStart = moveTowardsLength(curPoint, prevPoint, minRadius)
+        const curveEnd = moveTowardsLength(curPoint, nextPoint, minRadius)
 
         // Adjust the current command and add it
         adjustCommand(curCmd, curveStart)
         origPointMap.set(curCmd, curPoint)
-        resultCommands.push(curCmd)
+        const distanceToCurveStart = getDistance(prevPoint, curveStart)
+
+        if (distanceToCurveStart !== 0) {
+          resultCommands.push(curCmd)
+        }
 
         // The curve control points are halfway between the start/end of the curve and
         // the original point
@@ -127,9 +125,11 @@ function roundPathCorners(path: Path, radius: number) {
         // Save the original point for fractional calculations
         origPointMap.set(curveCmd, curPoint)
         resultCommands.push(curveCmd)
+        prevRadius = minRadius
       } else {
         // Pass through oldCommands that don't qualify
         resultCommands.push(curCmd)
+        prevRadius = Infinity
       }
     }
 
