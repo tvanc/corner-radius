@@ -65,8 +65,9 @@ it("Rounds to given positive numbers", () => {
 it("Gracefully handles corners shorter than given radius", () => {
   const horizontalLineLength = 20
   const verticalLineLength = 10
-  const givenRadius = horizontalLineLength
+  const givenRadius = verticalLineLength
   const expectedRadius = verticalLineLength / 2
+  const halfGivenRadius = givenRadius / 2
   const halfExpectedRadius = expectedRadius / 2
 
   const startX = 0
@@ -74,34 +75,50 @@ it("Gracefully handles corners shorter than given radius", () => {
 
   // Path looks like this, is rectilinear
   // -------|
-  //        |-------
+  //        |-------|
+  //                |
+  //                |
   const midX = startX + horizontalLineLength
-  const midY = startY + verticalLineLength / 2
+  const firstY = startY + verticalLineLength / 2
   const endX = startX + horizontalLineLength * 2
-  const endY = startY + verticalLineLength
+  const secondY = startY + verticalLineLength
+  const thirdY = secondY + verticalLineLength
 
   const rounder = new RadialRounder()
   const startPath = Path.fromPoints([
+    // start point
     new Point(startX, startY),
+    // top right of first ledge
     new Point(midX, startY),
-    new Point(midX, endY),
-    new Point(endX, endY),
+    // start of second ledge
+    new Point(midX, secondY),
+    // top right of second ledge
+    new Point(endX, secondY),
+    // descender
+    new Point(endX, thirdY),
   ])
 
   const expectedResultPath = new Path([
     new MoveTo(new Point(startX, startY)),
     new LineTo(new Point(midX - expectedRadius, startY)),
+    // expect these two curves to have a smaller radius than the one given because the points are close together
     new CubicCurve(
       new Point(midX - halfExpectedRadius, startY),
       new Point(midX, startY + halfExpectedRadius),
-      new Point(midX, midY),
+      new Point(midX, firstY),
     ),
     new CubicCurve(
-      new Point(midX, midY + halfExpectedRadius),
-      new Point(midX + halfExpectedRadius, endY),
-      new Point(midX + expectedRadius, endY),
+      new Point(midX, firstY + halfExpectedRadius),
+      new Point(midX + halfExpectedRadius, secondY),
+      new Point(midX + expectedRadius, secondY),
     ),
-    new LineTo(new Point(endX, endY)),
+    new LineTo(new Point(endX - givenRadius, secondY)),
+    //expect this curve to be match the radius given because there is plenty of room
+    new CubicCurve(
+      new Point(endX - halfGivenRadius, secondY),
+      new Point(endX, secondY + halfGivenRadius),
+      new Point(endX, secondY + givenRadius),
+    ),
   ])
 
   // Remove close command
