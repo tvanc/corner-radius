@@ -1,4 +1,3 @@
-import PolySimple from "../../../../gpc/geometry/PolySimple"
 import { Path } from "../../Path"
 import Point from "../../../../gpc/geometry/Point"
 import RadialRounder from "../RadialRounder"
@@ -110,9 +109,6 @@ it("Gracefully handles corners shorter than given radius", () => {
 
   const actualResultPath = rounder.roundPath(startPath, givenRadius)
 
-  console.log("Original path", startPath.toString())
-  console.log("Rounded path", actualResultPath.toString())
-  console.log("expected path", expectedResultPath.toString())
-
+  // It's easier to compare differences between strings
   expect(actualResultPath.toString()).toBe(expectedResultPath.toString())
 })
