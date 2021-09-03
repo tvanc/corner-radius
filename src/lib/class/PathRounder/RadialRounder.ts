@@ -67,8 +67,6 @@ function roundPathCorners(path: Path, maxRadius: number) {
     // We always use the first command (but it may be mutated)
     resultCommands.push(newCommands[0])
 
-    let prevRadius = Infinity
-
     for (let cmdIndex = 1; cmdIndex < newCommands.length; cmdIndex++) {
       const prevCmd = resultCommands[resultCommands.length - 1]
       const curCmd = newCommands[cmdIndex]
@@ -81,15 +79,23 @@ function roundPathCorners(path: Path, maxRadius: number) {
         curCmd instanceof LineTo &&
         nextCmd instanceof LineTo
 
+      const prevPoint = pointForCommand(prevCmd)
+      const curPoint = pointForCommand(curCmd)
+
       // Nasty logic to decide if this path is a candidate.
       if (isCandidate) {
-        const curPoint = pointForCommand(curCmd)
-        const prevPoint = pointForCommand(prevCmd)
-
         // Calc the points we're dealing with
         const nextPoint = pointForCommand(nextCmd)
         const distanceToNext = getDistance(curPoint, nextPoint)
-        const minRadius = Math.min(maxRadius, prevRadius, distanceToNext / 2)
+        const distanceToPrev = getDistance(prevPoint, curPoint)
+        // next point is the last
+        const divisor = cmdIndex === newCommands.length - 2 ? 1 : 2
+
+        const minRadius = Math.min(
+          maxRadius,
+          distanceToPrev,
+          distanceToNext / divisor,
+        )
 
         // The start and end of the curve are just our point moved towards the previous and next points, respectively
         const curveStart = moveTowardsLength(curPoint, prevPoint, minRadius)
@@ -125,11 +131,9 @@ function roundPathCorners(path: Path, maxRadius: number) {
         // Save the original point for fractional calculations
         origPointMap.set(curveCmd, curPoint)
         resultCommands.push(curveCmd)
-        prevRadius = minRadius
-      } else {
+      } else if (getDistance(prevPoint, curPoint)) {
         // Pass through oldCommands that don't qualify
         resultCommands.push(curCmd)
-        prevRadius = Infinity
       }
     }
 
