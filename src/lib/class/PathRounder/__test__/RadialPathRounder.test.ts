@@ -129,3 +129,55 @@ it("Gracefully handles corners shorter than given radius", () => {
   // It's easier to compare differences between strings
   expect(actualResultPath.toString()).toBe(expectedResultPath.toString())
 })
+
+it("A square with oversized radius produces a circle", () => {
+  const originX = 0
+  const originY = 0
+  const size = 8
+  const endX = originX + size
+  const endY = originY + size
+  const radius = size
+
+  const halfSize = size / 2
+  const quarterSize = size / 4
+
+  const startPath = Path.fromPoints([
+    new Point(originX, originY),
+    new Point(endX, originY),
+    new Point(endX, endY),
+    new Point(originX, endY),
+  ])
+
+  const expectedResultPath = new Path([
+    new MoveTo(new Point(originX + halfSize, originY)),
+    // top-right "corner"
+    new CubicCurve(
+      new Point(endX - quarterSize, originY),
+      new Point(endX, originY + quarterSize),
+      new Point(endX, originY + halfSize),
+    ),
+    // bottom-right "corner"
+    new CubicCurve(
+      new Point(endX, endY - quarterSize),
+      new Point(endX - quarterSize, endY),
+      new Point(endX - halfSize, endY),
+    ),
+    // bottom-left "corner"
+    new CubicCurve(
+      new Point(originX + quarterSize, endY),
+      new Point(originX, endY - quarterSize),
+      new Point(originX, originX + halfSize),
+    ),
+    // top-left "corner"
+    new CubicCurve(
+      new Point(originX, originY + quarterSize),
+      new Point(originX + quarterSize, originY),
+      new Point(originX + halfSize, originY),
+    ),
+  ])
+
+  const rounder = new RadialRounder()
+  const actualResultPath = rounder.roundPath(startPath, radius)
+
+  expect(actualResultPath.toString()).toBe(expectedResultPath.toString())
+})
