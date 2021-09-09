@@ -44,6 +44,13 @@ export class Path {
     this.commands.push(...commands)
   }
 
+  unclose() {
+    const [finalCommand] = this.commands.slice(-1)
+    if (finalCommand instanceof Close) {
+      this.commands.splice(-1, 1)
+    }
+  }
+
   get length() {
     return this.commands.length
   }
