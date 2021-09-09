@@ -174,6 +174,7 @@ it("A square with oversized radius produces a circle", () => {
       new Point(originX + quarterSize, originY),
       new Point(originX + halfSize, originY),
     ),
+    new Close(),
   ])
 
   const rounder = new RadialRounder()
