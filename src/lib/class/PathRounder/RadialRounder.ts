@@ -70,10 +70,12 @@ function roundPathCorners(path: Path, maxRadius: number) {
     for (let cmdIndex = 1; cmdIndex < newCommands.length; cmdIndex++) {
       const prevCmd = resultCommands[resultCommands.length - 1]
       const curCmd = newCommands[cmdIndex]
+      const isCloseLine = curCmd === virtualCloseLine
 
       // Handle closing case
-      const nextCmd =
-        curCmd === virtualCloseLine ? newCommands[1] : newCommands[cmdIndex + 1]
+      const nextCmd = isCloseLine ? newCommands[1] : newCommands[cmdIndex + 1]
+
+      // Nasty logic to decide if this path is a candidate.
       const isCandidate =
         prevCmd.endPoint &&
         curCmd instanceof LineTo &&
@@ -82,14 +84,14 @@ function roundPathCorners(path: Path, maxRadius: number) {
       const prevPoint = pointForCommand(prevCmd)
       const curPoint = pointForCommand(curCmd)
 
-      // Nasty logic to decide if this path is a candidate.
       if (isCandidate) {
         // Calc the points we're dealing with
         const nextPoint = pointForCommand(nextCmd)
         const distanceToNext = getDistance(curPoint, nextPoint)
         const distanceToPrev = getDistance(prevPoint, curPoint)
         // next point is the last
-        const divisor = cmdIndex === newCommands.length - 2 ? 1 : 2
+        const divisor =
+          isCloseLine || cmdIndex === newCommands.length - 2 ? 1 : 2
 
         const minRadius = Math.min(
           maxRadius,
