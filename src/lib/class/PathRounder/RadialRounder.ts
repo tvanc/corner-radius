@@ -56,12 +56,14 @@ function roundPathCorners(path: Path, maxRadius: number) {
 
   if (newCommands.length > 1) {
     const startPoint = pointForCommand(newCommands[0])
-
+    const [originalFinalCommand] = newCommands.slice(-1)
+    const pathIsClosed = originalFinalCommand instanceof Close
     // Handle the close path case with a "virtual" closing line
-    let virtualCloseLine = null
-    if (newCommands[newCommands.length - 1] instanceof Close) {
-      virtualCloseLine = new LineTo(startPoint)
+    const virtualCloseLine = new LineTo(startPoint)
+    if (pathIsClosed) {
       newCommands[newCommands.length - 1] = virtualCloseLine
+    } else {
+      newCommands.push(virtualCloseLine)
     }
 
     // We always use the first command (but it may be mutated)
@@ -144,8 +146,11 @@ function roundPathCorners(path: Path, maxRadius: number) {
       const newStartPoint = pointForCommand(
         resultCommands[resultCommands.length - 1],
       )
-      resultCommands.push(new Close())
       adjustCommand(resultCommands[0], newStartPoint)
+    }
+
+    if (pathIsClosed) {
+      resultCommands.push(new Close())
     }
 
     // Eliminate the first line if a close path would work just as well
