@@ -141,14 +141,19 @@ it("A square with oversized radius produces a circle", () => {
   const halfSize = size / 2
   const quarterSize = size / 4
 
-  const startPath = Path.fromPoints([
+  const vertices = [
     new Point(originX, originY),
     new Point(endX, originY),
     new Point(endX, endY),
     new Point(originX, endY),
-  ])
+  ]
 
-  const expectedResultPath = new Path([
+  const closedStartPath = Path.fromPoints(vertices)
+  const unclosedStartPath = Path.fromPoints(vertices)
+
+  unclosedStartPath.unclose()
+
+  const expectedClosedCommandList = [
     new MoveTo(new Point(originX + halfSize, originY)),
     // top-right "corner"
     new CubicCurve(
@@ -175,10 +180,18 @@ it("A square with oversized radius produces a circle", () => {
       new Point(originX + halfSize, originY),
     ),
     new Close(),
-  ])
+  ]
+  const expectedUnclosedCommandList = expectedClosedCommandList.slice(0, -1)
+
+  const expectedClosedPath = new Path(expectedClosedCommandList)
+  const expectedUnclosedPath = new Path(expectedUnclosedCommandList)
 
   const rounder = new RadialRounder()
-  const actualResultPath = rounder.roundPath(startPath, radius)
+  const actualClosedResult = rounder.roundPath(closedStartPath, radius)
+  const actualUnclosedResult = rounder.roundPath(unclosedStartPath, radius)
+  const actualClosedPathString = actualClosedResult.toString()
+  const actualUnclosedPathString = actualUnclosedResult.toString()
 
-  expect(actualResultPath.toString()).toBe(expectedResultPath.toString())
+  expect(actualClosedPathString).toBe(expectedClosedPath.toString())
+  expect(actualUnclosedPathString).toBe(expectedUnclosedPath.toString())
 })
