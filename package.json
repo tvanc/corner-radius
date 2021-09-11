@@ -20,19 +20,27 @@
   "scripts": {
     "semantic-release": "semantic-release",
     "test": "jest --coverage && yarn lint --watch",
-    "dev-server": "webpack serve --mode=development"
+    "dev-server": "encore dev-server",
+    "dev": "encore dev",
+    "ci": "rm -rf node_modules && yarn install --frozen-lockfile"
   },
   "devDependencies": {
-    "live-server": "^1.2.1",
+    "@symfony/webpack-encore": "^1.5.0",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@types/jest": "^26.0.24",
+    "core-js": "^3.15.2",
+    "html-webpack-plugin": "^5.3.2",
+    "jest": "^27.0.6",
+    "mini-css-extract-plugin": "^2.1.0",
     "prettier": "2.2.1",
+    "sass": "^1.35.1",
+    "sass-loader": "^12.1.0",
     "semantic-release": "17.4.1",
     "semantic-release-cli": "5.4.3",
-    "source-map-loader": "^3.0.0",
-    "ts-loader": "^9.2.3",
-    "typescript": "^4.3.2",
-    "webpack": "^5.38.1",
-    "webpack-cli": "^4.7.2",
-    "webpack-dev-server": "^3.11.2"
+    "ts-jest": "^27.0.3",
+    "ts-loader": "^9.0.0",
+    "typescript": "^4.3.5",
+    "webpack-notifier": "^1.6.0"
   },
   "renovate": {
     "extends": [

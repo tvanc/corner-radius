@@ -17,3 +17,10 @@ yarn dev-server
 ```
 
 Once the dev server has launched, open your web browser to [localhost:8080/src/example.html](http://localhost:8080/src/example.html)
+
+### TODO
+
+- Test some more thangs
+- Add super-ellipse algorithm
+- Remove unused GPC code
+- Ensure proper licensing and attribution

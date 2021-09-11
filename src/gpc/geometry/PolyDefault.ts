@@ -1,6 +1,6 @@
 import ArrayList from "../util/ArrayList.js"
 import { equals } from "../util/equals.js"
-import Point from "./Point.js"
+import Point from "./Point"
 import Clip from "./Clip.js"
 import ArrayHelper from "../util/ArrayHelper.js"
 import PolySimple from "./PolySimple"
@@ -338,5 +338,13 @@ export default class PolyDefault implements PolygonInterface {
       }
     }
     return res
+  }
+
+  removeUnnecessaryPoints() {
+    for (let i = 0; i < this.m_List.size(); i++) {
+      this.getInnerPoly(i).removeUnnecessaryPoints()
+    }
+
+    return this
   }
 }

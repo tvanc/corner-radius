@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectStartupSharedConfiguration">
     <configurations>
-      <configuration id="npm.live" name="live" />
+      <configuration id="npm.dev-server" name="dev-server" />
     </configurations>
   </component>
 </project>

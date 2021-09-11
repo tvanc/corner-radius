@@ -1,9 +1,11 @@
 import ArrayList from "../util/ArrayList.js"
-import Point from "./Point.js"
+import Point from "./Point"
 import Clip from "./Clip.js"
 import Rectangle from "./Rectangle.js"
 import Polygon from "./Polygon.js"
 import PolygonInterface from "./PolygonInterface"
+import Line from "./Line"
+import { getSlope } from "../../lib/util"
 
 /**
  * <code>PolySimple</code> is a simple polygon - contains only one inner polygon.
@@ -17,10 +19,16 @@ export default class PolySimple implements PolygonInterface {
   /**
    * The list of Point objects in the polygon.
    */
-  m_List = new ArrayList
+  m_List = new ArrayList()
 
   /** Flag used by the Clip algorithm */
   m_Contributes = true
+
+  constructor(pointList: Point[] = null) {
+    if (pointList) {
+      this.add(pointList)
+    }
+  }
 
   /**
    * Return true if the given object is equal to this one.
@@ -358,5 +366,45 @@ export default class PolySimple implements PolygonInterface {
     }
     area = 0.5 * Math.abs(area)
     return area
+  }
+
+  removeUnnecessaryPoints(): this {
+    const oPoints = this.getPoints()
+    const nPoints = [oPoints[0]]
+    const len = oPoints.length
+    const lastIndex = len - 1
+    const pathStartPoint = oPoints[0]
+    const pathEndPoint = oPoints[lastIndex]
+
+    let l1 = new Line(oPoints[0], oPoints[1])
+    let l1Slope = getSlope(l1.start, l1.end)
+
+    for (let i = 2; i < len; ++i) {
+      const l2 = new Line(l1.end, oPoints[i])
+      const l2Slope = getSlope(l2.start, l2.end)
+      const slopeHasChanged = l1Slope !== l2Slope
+
+      if (slopeHasChanged) {
+        nPoints.push(l1.end)
+        if (lastIndex === i) {
+          nPoints.push(l2.end)
+        }
+
+        l1 = l2
+        l1Slope = l2Slope
+      } else if (
+        lastIndex === i &&
+        l2Slope !== getSlope(pathEndPoint, pathStartPoint)
+      ) {
+        nPoints.push(l2.end)
+      } else {
+        // extend last segment
+        l1.end = l2.end
+      }
+    }
+
+    this.m_List = new ArrayList(nPoints)
+
+    return this
   }
 }

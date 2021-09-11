@@ -1,48 +1,38 @@
 import PolyDefault from "../gpc/geometry/PolyDefault"
-import { draw } from "./draw"
-import { roundPathCorners } from "./round.js"
+import { getPaths } from "./draw"
 import PolygonInterface from "../gpc/geometry/PolygonInterface"
+import RadialRounder from "./class/PathRounder/RadialRounder"
 
 const svgNs = "http://www.w3.org/2000/svg"
 const svgElMap = new WeakMap()
 const mutationObserverMap = new WeakMap()
 const resizeObserverMap = new WeakMap()
-
-// @ts-ignore
-CSS.registerProperty({
-  name: "--corner-radius",
-  syntax: "<length>",
-  inherits: false,
-  initialValue: 0,
-})
+const rounder = new RadialRounder()
 
 export function trace(el) {
   const svg = getSvg(el)
 
   const allPaths = svg.querySelectorAll("path")
-  const polygon = getPolygonUnions(el)
-  const { x, y, w, h } = polygon.getBounds()
-  const cornerRadius = parseFloat(
-    getComputedStyle(el).getPropertyValue("--corner-radius"),
-  )
+  const unionPolygon = getUnionOfAllPolygons(el)
+  const { x, y, w, h } = unionPolygon.getBounds()
+  const style = getComputedStyle(el)
+  const cornerRadius = parseFloat(style.getPropertyValue("border-radius"))
 
-  const polygonCommands = draw(x, y, polygon).flat()
+  unionPolygon.removeUnnecessaryPoints()
 
-  for (let j = 0; j < polygonCommands.length; ++j) {
-    const pathCommands = polygonCommands[j]
-    const roundedCommands = roundPathCorners(pathCommands, cornerRadius, false)
-    const path = allPaths[j] ?? document.createElementNS(svgNs, "path")
+  const paths = getPaths(x, y, unionPolygon)
 
-    path.setAttribute("d", roundedCommands)
+  for (let i = 0; i < paths.length; ++i) {
+    const roundedPath = rounder.roundPath(paths[i], cornerRadius)
+    // reuse existing path if available
+    const path = allPaths[i] ?? document.createElementNS(svgNs, "path")
+
+    path.setAttribute("d", roundedPath.toString())
     svg.appendChild(path)
   }
 
-  for (let i = allPaths.length; i > polygonCommands.length; --i) {
+  for (let i = allPaths.length; i > paths.length; --i) {
     allPaths[i - 1].remove()
-  }
-
-  if (w === 352) {
-    console.log(polygon.getBounds())
   }
 
   svg.setAttribute("width", w)
@@ -147,11 +137,11 @@ function getResizeObserver(el, force = true) {
   return observer
 }
 
-function getPolygonUnions(root: HTMLElement) {
+function getUnionOfAllPolygons(root: HTMLElement): PolygonInterface {
   let polygon = getPolygon(root)
 
   ;[...root.children].forEach((leaf) => {
-    polygon = polygon.union(getPolygonUnions(leaf as HTMLElement))
+    polygon = polygon.union(getUnionOfAllPolygons(leaf as HTMLElement))
   })
 
   return polygon
@@ -191,7 +181,11 @@ function getSvg(el) {
   return svg
 }
 
-export function registerProperty(arg0: { name: string; syntax: string; inherits: boolean; initialValue: number }) {
-    throw new Error("Function not implemented.")
+export function registerProperty(arg0: {
+  name: string
+  syntax: string
+  inherits: boolean
+  initialValue: number
+}) {
+  throw new Error("Function not implemented.")
 }
-

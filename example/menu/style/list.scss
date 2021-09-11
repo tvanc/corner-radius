@@ -1,0 +1,79 @@
+/**
+ * @author Travis Uribe <travis@turibe.com>
+ * @file
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.menu {
+  --corner-radius: 1rem;
+  --menu-spacing: 1rem;
+  --half-spacing: calc(var(--menu-spacing) / 2);
+  --menu-width: 5rem;
+  padding: calc(var(--corner-radius)) 0;
+  margin: 0;
+  list-style: none;
+  color: black;
+  min-width: 12rem;
+  border-radius: var(--corner-radius);
+
+  > li {
+    position: relative;
+    width: 100%;
+    padding: var(--half-spacing) var(--menu-spacing);
+    background-clip: padding-box;
+    white-space: nowrap;
+
+    > ul {
+      position: absolute;
+      top: calc(var(--half-spacing) * -1);
+      left: calc(100%);
+    }
+
+    &:not(:hover, .is-hovered) > ul {
+      display: none;
+    }
+
+    &:hover,
+    &.is-hovered {
+      background: rgba(0, 0, 0, 0.25);
+    }
+  }
+}
+
+.has-menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+
+  &::after {
+    content: "›";
+    font-size: 1.5rem;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+.root {
+  --corner-radius: 1rem;
+  align-items: start;
+  list-style: none;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes foo {
+  0% {
+    transform: translate(50%, 50%);
+  }
+  100% {
+    transform: translate(110%, 110%);
+  }
+}

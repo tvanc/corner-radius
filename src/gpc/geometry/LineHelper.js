@@ -1,4 +1,4 @@
-import Point from "./Point.js"
+import Point from "./Point"
 
 export default class LineHelper {
   static equalPoint(p1, p2) {

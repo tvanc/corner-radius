@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body class="center">
+    <ul id="traceMe" class="menu root center">
+      <li>Dashboard</li>
+
+      <li class="has-menu">
+        Accounts
+        <ul class="menu">
+          <li>Account List</li>
+          <li>Archives</li>
+        </ul>
+      </li>
+
+      <li class="has-menu">
+        Reports
+        <ul class="menu">
+          <li>Financial</li>
+          <li>Miscellaneous</li>
+        </ul>
+      </li>
+
+      <li class="has-menu">
+        Settings
+        <ul class="menu">
+          <li>Program</li>
+          <li>Accounting</li>
+          <li class="has-menu">
+            Permissions
+            <ul class="menu">
+              <li>Groups</li>
+              <li>Roles</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <%= htmlWebpackPlugin.tags.bodyTags %>
+  </body>
+</html>

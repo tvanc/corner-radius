@@ -1,46 +1,40 @@
-export function draw(x, y, ...polygons) {
+import { Path } from "./class/Path"
+import PolygonInterface from "../gpc/geometry/PolygonInterface"
+
+export function getPaths(
+  offsetX: number,
+  offsetY: number,
+  ...polygons: PolygonInterface[]
+): Path[] {
   const commands = []
 
   for (const polygon of polygons) {
-    commands.push(drawPoly(polygon, x * -1, y * -1))
+    commands.push(
+      ...getPathsForSingleComplexPolygon(polygon, offsetX * -1, offsetY * -1),
+    )
   }
 
   return commands
 }
 
-function getPolygonVertices(poly) {
-  const vertices = []
-  const numPoints = poly.getNumPoints()
-
-  for (let i = 0; i < numPoints; i++) {
-    vertices.push([poly.getX(i), poly.getY(i)])
-  }
-
-  return vertices
-}
-
-function drawPoly(polygon, ox, oy) {
-  const num = polygon.getNumInnerPoly()
-  const pathCommandSets = []
+/**
+ * Each complex polygon may contain multiple child polygons.
+ *
+ * @see PolySimple
+ */
+function getPathsForSingleComplexPolygon(
+  complexPoly: PolygonInterface,
+  ox: number,
+  oy: number,
+): Path[] {
+  const num = complexPoly.getNumInnerPoly()
+  const paths = []
 
   for (let i = 0; i < num; i++) {
-    const poly = polygon.getInnerPoly(i)
-    const vertices = getPolygonVertices(poly)
+    const simplePoly = complexPoly.getInnerPoly(i)
 
-    pathCommandSets.push(drawSinglePoly(vertices, poly.isHole(), ox, oy))
+    paths.push(Path.fromPoly(simplePoly, ox, oy))
   }
 
-  return pathCommandSets
-}
-
-function drawSinglePoly(vertices, hole, ox = 0, oy = 0) {
-  const commands = [[`M`, vertices[0][0] + ox, vertices[0][1] + oy]]
-
-  for (let i = 1; i < vertices.length; i++) {
-    commands.push(["L", vertices[i][0] + ox, vertices[i][1] + oy])
-  }
-
-  commands.push(["Z"])
-
-  return commands
+  return paths
 }

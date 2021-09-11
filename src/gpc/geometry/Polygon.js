@@ -1,4 +1,4 @@
-import Point from "./Point.js"
+import Point from "./Point"
 import ArrayHelper from "../util/ArrayHelper.js"
 import { equals } from "../util/equals.js"
 
