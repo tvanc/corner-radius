@@ -2,7 +2,9 @@ import AbstractCommand from "./AbstractCommand"
 import CommandWithEndpointInterface from "./CommandWithEndpointInterface"
 import Point from "../../../gpc/geometry/Point"
 
-class Arc extends AbstractCommand implements CommandWithEndpointInterface {
+export default class Arc
+  extends AbstractCommand
+  implements CommandWithEndpointInterface {
   constructor(
     public xRadius: number,
     public yRadius: number,
