@@ -16,7 +16,7 @@
       <option name="HEX_COLOR_SHORT_FORMAT" value="true" />
       <option name="KEEP_SINGLE_LINE_BLOCKS" value="true" />
     </CssCodeStyleSettings>
-    <DB2CodeStyleSettings version="5">
+    <DB2CodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
@@ -53,7 +53,7 @@
       <option name="EXPR_BINARY_OP_ALIGN" value="false" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </DB2CodeStyleSettings>
-    <DerbyCodeStyleSettings version="5">
+    <DerbyCodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
@@ -90,7 +90,7 @@
       <option name="EXPR_BINARY_OP_ALIGN" value="false" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </DerbyCodeStyleSettings>
-    <H2CodeStyleSettings version="5">
+    <H2CodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
@@ -125,7 +125,7 @@
       <option name="EXPR_BINARY_OP_ALIGN" value="false" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </H2CodeStyleSettings>
-    <H2CodeStyleSettings version="5">
+    <H2CodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
@@ -160,7 +160,7 @@
       <option name="EXPR_BINARY_OP_ALIGN" value="false" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </H2CodeStyleSettings>
-    <HSQLCodeStyleSettings version="5">
+    <HSQLCodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
@@ -215,7 +215,7 @@
       <option name="SPACES_WITHIN_IMPORTS" value="true" />
       <option name="USE_CHAINED_CALLS_GROUP_INDENTS" value="true" />
     </JSCodeStyleSettings>
-    <MSSQLCodeStyleSettings version="5">
+    <MSSQLCodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
@@ -251,7 +251,7 @@
       <option name="EXPR_BINARY_OP_ALIGN" value="false" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </MSSQLCodeStyleSettings>
-    <MySQLCodeStyleSettings version="5">
+    <MySQLCodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
@@ -292,7 +292,7 @@
       <option name="NEW_LINE_BEFORE_QUERY_INSIDE_DML" value="true" />
       <option name="INDENT_SELECT_INTO_CLAUSE" value="true" />
     </MySQLCodeStyleSettings>
-    <OracleCodeStyleSettings version="5">
+    <OracleCodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
@@ -344,7 +344,7 @@
       <option name="FORCE_SHORT_DECLARATION_ARRAY_STYLE" value="true" />
       <option name="PLACE_PARENS_FOR_CONSTRUCTOR" value="2" />
     </PHPCodeStyleSettings>
-    <PostgresCodeStyleSettings version="5">
+    <PostgresCodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
@@ -381,7 +381,7 @@
       <option name="EXPR_BINARY_OP_ALIGN" value="false" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </PostgresCodeStyleSettings>
-    <SQLiteCodeStyleSettings version="5">
+    <SQLiteCodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
@@ -416,7 +416,7 @@
       <option name="EXPR_BINARY_OP_ALIGN" value="false" />
       <option name="PRIMARY_KEY_NAME_TEMPLATE" value="{table}_{columns}_pk" />
     </SQLiteCodeStyleSettings>
-    <SqlCodeStyleSettings version="5">
+    <SqlCodeStyleSettings version="6">
       <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
       <option name="CUSTOM_TYPE_CASE" value="3" />
@@ -457,7 +457,7 @@
       <option name="NEW_LINE_BEFORE_QUERY_INSIDE_DML" value="true" />
       <option name="INDENT_SELECT_INTO_CLAUSE" value="true" />
     </SqlCodeStyleSettings>
-    <SybaseCodeStyleSettings version="5">
+    <SybaseCodeStyleSettings version="6">
       <option name="USE_GENERAL_STYLE" value="false" />
       <option name="KEYWORD_CASE" value="2" />
       <option name="TYPE_CASE" value="3" />
