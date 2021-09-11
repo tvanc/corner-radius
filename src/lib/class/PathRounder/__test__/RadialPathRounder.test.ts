@@ -5,6 +5,7 @@ import CubicCurve from "../../Command/CubicCurve"
 import MoveTo from "../../Command/MoveTo"
 import LineTo from "../../Command/LineTo"
 import Close from "../../Command/Close"
+import Arc from "../../Command/Arc"
 
 it("Rounds to given positive numbers", () => {
   const lineLength = 100
@@ -136,10 +137,11 @@ it("A square with oversized radius produces a circle", () => {
   const size = 8
   const endX = originX + size
   const endY = originY + size
-  const radius = size
+  const givenRadius = size
+  const expectedRadius = size / 2
+  const expectedArcRotation = 0
 
   const halfSize = size / 2
-  const quarterSize = size / 4
 
   const vertices = [
     new Point(originX, originY),
@@ -155,28 +157,41 @@ it("A square with oversized radius produces a circle", () => {
 
   const expectedClosedCommandList = [
     new MoveTo(new Point(originX + halfSize, originY)),
+    // Arc
     // top-right "corner"
-    new CubicCurve(
-      new Point(endX - quarterSize, originY),
-      new Point(endX, originY + quarterSize),
+    new Arc(
+      expectedRadius,
+      expectedRadius,
+      expectedArcRotation,
+      false,
+      true,
       new Point(endX, originY + halfSize),
     ),
     // bottom-right "corner"
-    new CubicCurve(
-      new Point(endX, endY - quarterSize),
-      new Point(endX - quarterSize, endY),
+    new Arc(
+      expectedRadius,
+      expectedRadius,
+      expectedArcRotation,
+      false,
+      true,
       new Point(endX - halfSize, endY),
     ),
     // bottom-left "corner"
-    new CubicCurve(
-      new Point(originX + quarterSize, endY),
-      new Point(originX, endY - quarterSize),
+    new Arc(
+      expectedRadius,
+      expectedRadius,
+      expectedArcRotation,
+      false,
+      true,
       new Point(originX, originX + halfSize),
     ),
     // top-left "corner"
-    new CubicCurve(
-      new Point(originX, originY + quarterSize),
-      new Point(originX + quarterSize, originY),
+    new Arc(
+      expectedRadius,
+      expectedRadius,
+      expectedArcRotation,
+      false,
+      true,
       new Point(originX + halfSize, originY),
     ),
     new Close(),
@@ -187,11 +202,13 @@ it("A square with oversized radius produces a circle", () => {
   const expectedUnclosedPath = new Path(expectedUnclosedCommandList)
 
   const rounder = new RadialRounder()
-  const actualClosedResult = rounder.roundPath(closedStartPath, radius)
-  const actualUnclosedResult = rounder.roundPath(unclosedStartPath, radius)
+  const actualClosedResult = rounder.roundPath(closedStartPath, givenRadius)
+  const actualUnclosedResult = rounder.roundPath(unclosedStartPath, givenRadius)
   const actualClosedPathString = actualClosedResult.toString()
   const actualUnclosedPathString = actualUnclosedResult.toString()
 
   expect(actualClosedPathString).toBe(expectedClosedPath.toString())
   expect(actualUnclosedPathString).toBe(expectedUnclosedPath.toString())
 })
+
+it("Gracefully handles corners shorter than given radius", () => {})
