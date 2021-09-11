@@ -210,5 +210,3 @@ it("A square with oversized radius produces a circle", () => {
   expect(actualClosedPathString).toBe(expectedClosedPath.toString())
   expect(actualUnclosedPathString).toBe(expectedUnclosedPath.toString())
 })
-
-it("Gracefully handles corners shorter than given radius", () => {})
