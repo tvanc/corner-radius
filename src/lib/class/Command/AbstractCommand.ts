@@ -5,6 +5,9 @@ export default abstract class AbstractCommand implements CommandInterface {
   abstract getParameters(): any[]
 
   toString(): string {
-    return [this.getCommandLetter(), ...this.getParameters()].join(" ")
+    return [
+      this.getCommandLetter(),
+      ...this.getParameters().map((p) => (typeof p === "boolean" ? +p : p)),
+    ].join(" ")
   }
 }
