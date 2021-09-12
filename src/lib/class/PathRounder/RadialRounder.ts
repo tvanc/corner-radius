@@ -6,7 +6,8 @@ import Point from "../../../gpc/geometry/Point"
 import Close from "../Command/Close"
 import AbstractLineCommand from "../Command/AbstractLineCommand"
 import MoveTo from "../Command/MoveTo"
-import { getDistance } from "../../util"
+import { getDistance, pointsAreClockwise } from "../../util"
+import Arc from "../Command/Arc"
 
 export default class RadialRounder implements PathRounderInterface {
   roundPath(path: Path, radius: number): Path {
@@ -109,32 +110,19 @@ function roundPathCorners(path: Path, maxRadius: number) {
         adjustCommand(curCmd, curveStart)
         origPointMap.set(curCmd, curPoint)
         const distanceToCurveStart = getDistance(prevPoint, curveStart)
+        // Points are arranged clockwise, so any counterclockwise corner must be concave
+        // we want sweep=true for convex corners, and sweep=false for concave corners
+        const sweep = pointsAreClockwise(prevPoint, curPoint, nextPoint)
 
         if (distanceToCurveStart !== 0) {
           resultCommands.push(curCmd)
         }
 
-        // The curve control points are halfway between the start/end of the curve and
-        // the original point
-        const startControl = new Point(
-          curveStart.x + (curPoint.x - curveStart.x) / 2,
-          curveStart.y + (curPoint.y - curveStart.y) / 2,
-        )
-        const endControl = new Point(
-          curPoint.x + (curveEnd.x - curPoint.x) / 2,
-          curPoint.y + (curveEnd.y - curPoint.y) / 2,
-        )
-
-        // Create the curve
-        const curveCmd = new CubicCurve(
-          new Point(startControl.x, startControl.y),
-          new Point(endControl.x, endControl.y),
-          new Point(curveEnd.x, curveEnd.y),
-        )
+        const arc = new Arc(minRadius, minRadius, 0, false, sweep, curveEnd)
 
         // Save the original point for fractional calculations
-        origPointMap.set(curveCmd, curPoint)
-        resultCommands.push(curveCmd)
+        origPointMap.set(arc, curPoint)
+        resultCommands.push(arc)
       } else if (getDistance(prevPoint, curPoint)) {
         // Pass through oldCommands that don't qualify
         resultCommands.push(curCmd)
