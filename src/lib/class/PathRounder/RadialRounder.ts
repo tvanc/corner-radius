@@ -6,7 +6,7 @@ import Point from "../../../gpc/geometry/Point"
 import Close from "../Command/Close"
 import AbstractLineCommand from "../Command/AbstractLineCommand"
 import MoveTo from "../Command/MoveTo"
-import { getDistance, getSlope } from "../../util"
+import { getDistance } from "../../util"
 
 export default class RadialRounder implements PathRounderInterface {
   roundPath(path: Path, radius: number): Path {
