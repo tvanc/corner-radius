@@ -50,10 +50,14 @@ export function trace(el) {
  */
 export function watch(
   el,
-  { mutations = true, animations = true, elementResize = true } = {},
+  {
+    mutations = true,
+    animations = true,
+    elementResize = true,
+  } = {},
 ) {
   let inLoop = false
-  let stopTime, rafHandle
+  let stopTime, frame
 
   const retrace = () => trace(el)
   const startRafLoop = (duration) => {
@@ -62,10 +66,10 @@ export function watch(
     if (!inLoop) {
       inLoop = true
 
-      rafHandle = requestAnimationFrame(function rafLoop() {
+      frame = requestAnimationFrame(function rafLoop() {
         if (inLoop && performance.now() < stopTime) {
           retrace()
-          rafHandle = requestAnimationFrame(rafLoop)
+          frame = requestAnimationFrame(rafLoop)
         } else {
           stopRafLoop()
         }
@@ -75,7 +79,7 @@ export function watch(
 
   const stopRafLoop = () => {
     if (inLoop) {
-      cancelAnimationFrame(rafHandle)
+      cancelAnimationFrame(frame)
       retrace()
       inLoop = false
     }
