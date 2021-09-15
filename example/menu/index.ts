@@ -1,5 +1,5 @@
-import { trace, watch } from "./../../src/lib/trace"
-require("./style/index.scss");
+import { trace, watch } from "../../src"
+require("./style/index.scss")
 
 const el = document.getElementById("traceMe")
 
@@ -16,6 +16,6 @@ el.addEventListener("mouseleave", function () {
   trace(el)
 })
 
-el.addEventListener('mouseover', function () {
+el.addEventListener("mouseover", function () {
   trace(el)
 })
