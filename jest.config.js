@@ -7,4 +7,5 @@ module.exports = {
       useESM: true,
     },
   },
+  setupFilesAfterEnv: ["./jest.setup.ts"],
 }
