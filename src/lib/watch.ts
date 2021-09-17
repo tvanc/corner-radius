@@ -1,4 +1,5 @@
 import { trace } from "./trace"
+import WatchOptions from "./class/WatchOptions"
 
 const mutationObserverMap = new WeakMap()
 const resizeObserverMap = new WeakMap()
@@ -11,8 +12,12 @@ const resizeObserverMap = new WeakMap()
  * @param {boolean} [options.elementResize]
  */
 export function watch(
-  el,
-  { mutations = true, animations = true, elementResize = true } = {},
+  el: HTMLElement,
+  {
+    mutations = true,
+    animations = true,
+    elementResize = true,
+  }: WatchOptions = {},
 ) {
   let inLoop = false
   let stopTime, frame
@@ -58,7 +63,7 @@ export function watch(
 
   if (animations) {
     el.addEventListener("animationstart", function (e) {
-      const style = getComputedStyle(e.target)
+      const style = getComputedStyle(e.target as Element)
       const duration = style.getPropertyValue("animation-duration")
 
       startRafLoop(parseFloat(duration) * 1000)
