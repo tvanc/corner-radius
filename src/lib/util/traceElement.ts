@@ -1,13 +1,13 @@
-import PolyDefault from "../gpc/geometry/PolyDefault"
-import { getPaths } from "./draw"
-import PolygonInterface from "../gpc/geometry/PolygonInterface"
-import RadialRounder from "./class/PathRounder/RadialRounder"
+import { getPaths } from "../draw"
+import PolygonInterface from "../../gpc/geometry/PolygonInterface"
+import PolyDefault from "../../gpc/geometry/PolyDefault"
+import RadialRounder from "../class/PathRounder/RadialRounder"
 
 const svgNs = "http://www.w3.org/2000/svg"
 const svgElMap = new WeakMap()
 const rounder = new RadialRounder()
 
-export function trace(el) {
+export function traceElement(el: HTMLElement) {
   const svg = getSvg(el)
 
   const allPaths = svg.querySelectorAll("path")

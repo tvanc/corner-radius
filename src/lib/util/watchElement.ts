@@ -1,8 +1,8 @@
-import { trace } from "./trace"
-import WatchOptions from "./class/WatchOptions"
+import WatchOptions from "../class/WatchOptions"
+import Tracer from "../class/Tracer"
 
-const mutationObserverMap = new WeakMap()
-const resizeObserverMap = new WeakMap()
+const mutationObservers: WeakMap<HTMLElement, MutationObserver> = new WeakMap()
+const resizeObservers: WeakMap<HTMLElement, ResizeObserver> = new WeakMap()
 
 /**
  * @param el
@@ -11,7 +11,7 @@ const resizeObserverMap = new WeakMap()
  * @param {boolean} [options.animations]
  * @param {boolean} [options.elementResize]
  */
-export function watch(
+export function watchElement(
   el: HTMLElement,
   {
     mutations = false,
@@ -22,7 +22,7 @@ export function watch(
   let inLoop = false
   let stopTime, frame
 
-  const retrace = () => trace(el)
+  const tracer = Tracer.getInstance(el)
   const startRafLoop = (duration) => {
     stopTime = performance.now() + duration
 
@@ -31,7 +31,7 @@ export function watch(
 
       frame = requestAnimationFrame(function rafLoop() {
         if (inLoop && performance.now() < stopTime) {
-          retrace()
+          tracer.trace()
           frame = requestAnimationFrame(rafLoop)
         } else {
           stopRafLoop()
@@ -43,7 +43,7 @@ export function watch(
   const stopRafLoop = () => {
     if (inLoop) {
       cancelAnimationFrame(frame)
-      retrace()
+      tracer.trace()
       inLoop = false
     }
   }
@@ -74,31 +74,33 @@ export function watch(
   }
 }
 
-export function unwatch(el) {
+export function unwatchElement(el) {
   const mutationObserver = getMutationObserver(el, false)
 
   if (mutationObserver) {
-    mutationObserver.unobserve(el)
+    mutationObserver.disconnect()
   }
 }
 
-function getMutationObserver(el, force = true) {
-  let observer = mutationObserverMap.get(el)
+function getMutationObserver(el, force = true): MutationObserver {
+  let observer = mutationObservers.get(el)
 
   if (!observer && force) {
-    mutationObserverMap.set(el, observer)
-    observer = new MutationObserver(() => trace(el))
+    const tracer = Tracer.getInstance(el)
+    mutationObservers.set(el, observer)
+    observer = new MutationObserver(() => tracer.trace())
   }
 
   return observer
 }
 
 function getResizeObserver(el, force = true) {
-  let observer = resizeObserverMap.get(el)
+  let observer = resizeObservers.get(el)
 
   if (!observer && force) {
-    resizeObserverMap.set(el, observer)
-    observer = new ResizeObserver(() => trace(el))
+    const tracer = Tracer.getInstance(el)
+    resizeObservers.set(el, observer)
+    observer = new ResizeObserver(() => tracer.trace())
   }
 
   return observer
