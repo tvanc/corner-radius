@@ -20,6 +20,8 @@
   "scripts": {
     "semantic-release": "semantic-release",
     "test": "jest --coverage && yarn lint --watch",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
     "dev-server": "encore dev-server",
     "dev": "encore dev",
     "ci": "rm -rf node_modules && yarn install --frozen-lockfile"
