@@ -1,11 +1,11 @@
-import { Path } from "../../Path"
-import Point from "../../../../gpc/geometry/Point"
-import RadialRounder from "../RadialRounder"
-import CubicCurve from "../../Command/CubicCurve"
-import MoveTo from "../../Command/MoveTo"
-import LineTo from "../../Command/LineTo"
-import Close from "../../Command/Close"
-import Arc from "../../Command/Arc"
+import { Path } from "../../src/lib/class/Path"
+import Point from "../../src/gpc/geometry/Point"
+import RadialRounder from "../../src/lib/class/PathRounder/RadialRounder"
+import CubicCurve from "../../src/lib/class/Command/CubicCurve"
+import MoveTo from "../../src/lib/class/Command/MoveTo"
+import LineTo from "../../src/lib/class/Command/LineTo"
+import Close from "../../src/lib/class/Command/Close"
+import Arc from "../../src/lib/class/Command/Arc"
 
 it("Rounds to given positive numbers", () => {
   const lineLength = 100
@@ -60,7 +60,7 @@ it("Rounds to given positive numbers", () => {
     new Close(),
   ])
 
-  expect(actualResult).toEqual(expectedResult)
+  expect(actualResult).to.be.equal(expectedResult)
 })
 
 it("Gracefully handles corners shorter than given radius", () => {
@@ -128,7 +128,7 @@ it("Gracefully handles corners shorter than given radius", () => {
   const actualResultPath = rounder.roundPath(startPath, givenRadius)
 
   // It's easier to compare differences between strings
-  expect(actualResultPath.toString()).toBe(expectedResultPath.toString())
+  expect(actualResultPath.toString()).to.be.equal(expectedResultPath.toString())
 })
 
 it("A square with oversized radius produces a circle", () => {
@@ -207,6 +207,6 @@ it("A square with oversized radius produces a circle", () => {
   const actualClosedPathString = actualClosedResult.toString()
   const actualUnclosedPathString = actualUnclosedResult.toString()
 
-  expect(actualClosedPathString).toBe(expectedClosedPath.toString())
-  expect(actualUnclosedPathString).toBe(expectedUnclosedPath.toString())
+  expect(actualClosedPathString).to.be.equal(expectedClosedPath.toString())
+  expect(actualUnclosedPathString).to.be.equal(expectedUnclosedPath.toString())
 })
