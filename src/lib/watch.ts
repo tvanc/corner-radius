@@ -14,10 +14,10 @@ const resizeObserverMap = new WeakMap()
 export function watch(
   el: HTMLElement,
   {
-    mutations = true,
-    animations = true,
-    elementResize = true,
-  }: WatchOptions = {},
+    mutations = false,
+    animations = false,
+    elementResize = false,
+  }: WatchOptions = { mutations: true, animations: true, elementResize: true },
 ) {
   let inLoop = false
   let stopTime, frame
