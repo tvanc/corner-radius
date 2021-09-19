@@ -21,32 +21,24 @@ it("Rounds to given positive numbers", () => {
     new Point(0, lineLength),
   ])
 
-  const commonArcArgs: [number, number, number, boolean, boolean] = [
-    radius,
-    radius,
-    0,
-    false,
-    true,
-  ]
-
   const actualResult = rounder.roundPath(squarePath, radius)
   const expectedResult = new Path([
     // Move to start of top right rounded corner
     new MoveTo(new Point(lengthMinusRadius, 0)),
     // top right corner
-    new Arc(...commonArcArgs, new Point(lineLength, radius)),
+    arcTo(radius, new Point(lineLength, radius)),
     // right side
     new LineTo(new Point(lineLength, lengthMinusRadius)),
     // bottom right corner
-    new Arc(...commonArcArgs, new Point(lengthMinusRadius, lineLength)),
+    arcTo(radius, new Point(lengthMinusRadius, lineLength)),
     // bottom side
     new LineTo(new Point(radius, lineLength)),
     // bottom left corner
-    new Arc(...commonArcArgs, new Point(0, lengthMinusRadius)),
+    arcTo(radius, new Point(0, lengthMinusRadius)),
     // left side
     new LineTo(new Point(0, radius)),
     // top left corner
-    new Arc(...commonArcArgs, new Point(radius, 0)),
+    arcTo(radius, new Point(radius, 0)),
     new Close(),
   ])
 
@@ -200,3 +192,7 @@ it("A square with oversized radius produces a circle", () => {
   expect(actualClosedPathString).to.be.equal(expectedClosedPath.toString())
   expect(actualUnclosedPathString).to.be.equal(expectedUnclosedPath.toString())
 })
+
+function arcTo(radius: number, endpoint: Point, sweep: boolean = true): Arc {
+  return new Arc(radius, radius, 0, false, sweep, endpoint)
+}
