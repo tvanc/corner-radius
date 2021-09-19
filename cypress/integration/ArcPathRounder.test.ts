@@ -63,9 +63,9 @@ it("Gracefully handles corners shorter than given radius", () => {
   //                |
   const midX = startX + horizontalLineLength
   const firstY = startY + verticalLineLength / 2
-  const endX = startX + horizontalLineLength * 2
+  const endX = midX + horizontalLineLength
   const secondY = startY + verticalLineLength
-  const thirdY = secondY + verticalLineLength
+  const thirdY = secondY + verticalLineLength * 2
 
   const rounder = new ArcRounder()
   const startPath = Path.fromPoints([
@@ -81,34 +81,25 @@ it("Gracefully handles corners shorter than given radius", () => {
     new Point(endX, thirdY),
   ])
 
+  // Remove close command
+  startPath.commands.pop()
+
+  const startPathString = startPath.toString()
+  const actualResultPath = rounder.roundPath(startPath, givenRadius)
+
   const expectedResultPath = new Path([
     new MoveTo(new Point(startX, startY)),
     new LineTo(new Point(midX - expectedRadius, startY)),
     // expect these two curves to have a smaller radius than the one given because the points are close together
-    new CubicCurve(
-      new Point(midX - halfExpectedRadius, startY),
-      new Point(midX, startY + halfExpectedRadius),
-      new Point(midX, firstY),
-    ),
-    new CubicCurve(
-      new Point(midX, firstY + halfExpectedRadius),
-      new Point(midX + halfExpectedRadius, secondY),
-      new Point(midX + expectedRadius, secondY),
-    ),
+    arcTo(halfGivenRadius, new Point(midX, firstY)),
+    arcTo(halfGivenRadius, new Point(midX + expectedRadius, secondY)),
     new LineTo(new Point(endX - givenRadius, secondY)),
     //expect this curve to be match the radius given because there is plenty of room
-    new CubicCurve(
-      new Point(endX - halfGivenRadius, secondY),
-      new Point(endX, secondY + halfGivenRadius),
-      new Point(endX, secondY + givenRadius),
-    ),
+    arcTo(givenRadius, new Point(endX, secondY + givenRadius)),
   ])
 
-  // Remove close command
-  startPath.commands.pop()
-
-  const actualResultPath = rounder.roundPath(startPath, givenRadius)
-
+  // start path should be unchanged
+  expect(startPath.toString()).to.be.equal(startPathString)
   // It's easier to compare differences between strings
   expect(actualResultPath.toString()).to.be.equal(expectedResultPath.toString())
 })

@@ -130,9 +130,8 @@ function roundPathCorners(path: Path, maxRadius: number) {
 
     // Fix up the starting point and restore the close path if the path was originally closed
     if (virtualCloseLine) {
-      const newStartPoint = pointForCommand(
-        resultCommands[resultCommands.length - 1],
-      )
+      const lastIndex = resultCommands.length - 1
+      const newStartPoint = pointForCommand(resultCommands[lastIndex])
       adjustCommand(resultCommands[0], newStartPoint)
     }
 
