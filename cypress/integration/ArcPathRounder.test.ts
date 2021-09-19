@@ -11,9 +11,7 @@ it("Rounds to given positive numbers", () => {
   const lineLength = 100
   const radius = 10
 
-  const halfRadius = radius / 2
   const lineLengthMinusRadius = lineLength - radius
-  const lineLengthMinusHalfRadius = lineLength - halfRadius
 
   const rounder = new ArcRounder()
   const squarePath = Path.fromPoints([
@@ -28,39 +26,37 @@ it("Rounds to given positive numbers", () => {
     // Move to start of top right rounded corner
     new MoveTo(new Point(lineLengthMinusRadius, 0)),
     // top right corner
-    new CubicCurve(
-      new Point(lineLengthMinusHalfRadius, 0),
-      new Point(lineLength, halfRadius),
-      new Point(lineLength, radius),
-    ),
+    new Arc(radius, radius, 0, false, true, new Point(lineLength, radius)),
     // right side
     new LineTo(new Point(lineLength, lineLengthMinusRadius)),
     // bottom right corner
-    new CubicCurve(
-      new Point(lineLength, lineLengthMinusHalfRadius),
-      new Point(lineLengthMinusHalfRadius, lineLength),
+    new Arc(
+      radius,
+      radius,
+      0,
+      false,
+      true,
       new Point(lineLengthMinusRadius, lineLength),
     ),
     // bottom side
     new LineTo(new Point(radius, lineLength)),
     // bottom left corner
-    new CubicCurve(
-      new Point(halfRadius, lineLength),
-      new Point(0, lineLengthMinusHalfRadius),
+    new Arc(
+      radius,
+      radius,
+      0,
+      false,
+      true,
       new Point(0, lineLengthMinusRadius),
     ),
     // left side
     new LineTo(new Point(0, radius)),
     // top left corner
-    new CubicCurve(
-      new Point(0, halfRadius),
-      new Point(halfRadius, 0),
-      new Point(radius, 0),
-    ),
+    new Arc(radius, radius, 0, false, true, new Point(radius, 0)),
     new Close(),
   ])
 
-  expect(actualResult).to.be.equal(expectedResult)
+  expect(actualResult.toString()).to.be.equal(expectedResult.toString())
 })
 
 it("Gracefully handles corners shorter than given radius", () => {
