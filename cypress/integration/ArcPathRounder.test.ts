@@ -11,7 +11,7 @@ it("Rounds to given positive numbers", () => {
   const lineLength = 100
   const radius = 10
 
-  const lineLengthMinusRadius = lineLength - radius
+  const lengthMinusRadius = lineLength - radius
 
   const rounder = new ArcRounder()
   const squarePath = Path.fromPoints([
@@ -21,38 +21,32 @@ it("Rounds to given positive numbers", () => {
     new Point(0, lineLength),
   ])
 
+  const commonArcArgs: [number, number, number, boolean, boolean] = [
+    radius,
+    radius,
+    0,
+    false,
+    true,
+  ]
+
   const actualResult = rounder.roundPath(squarePath, radius)
   const expectedResult = new Path([
     // Move to start of top right rounded corner
-    new MoveTo(new Point(lineLengthMinusRadius, 0)),
+    new MoveTo(new Point(lengthMinusRadius, 0)),
     // top right corner
-    new Arc(radius, radius, 0, false, true, new Point(lineLength, radius)),
+    new Arc(...commonArcArgs, new Point(lineLength, radius)),
     // right side
-    new LineTo(new Point(lineLength, lineLengthMinusRadius)),
+    new LineTo(new Point(lineLength, lengthMinusRadius)),
     // bottom right corner
-    new Arc(
-      radius,
-      radius,
-      0,
-      false,
-      true,
-      new Point(lineLengthMinusRadius, lineLength),
-    ),
+    new Arc(...commonArcArgs, new Point(lengthMinusRadius, lineLength)),
     // bottom side
     new LineTo(new Point(radius, lineLength)),
     // bottom left corner
-    new Arc(
-      radius,
-      radius,
-      0,
-      false,
-      true,
-      new Point(0, lineLengthMinusRadius),
-    ),
+    new Arc(...commonArcArgs, new Point(0, lengthMinusRadius)),
     // left side
     new LineTo(new Point(0, radius)),
     // top left corner
-    new Arc(radius, radius, 0, false, true, new Point(radius, 0)),
+    new Arc(...commonArcArgs, new Point(radius, 0)),
     new Close(),
   ])
 
