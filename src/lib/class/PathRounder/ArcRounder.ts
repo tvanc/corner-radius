@@ -1,7 +1,6 @@
 import PathRounderInterface from "./PathRounderInterface"
 import { Path } from "../Path"
 import LineTo from "../Command/LineTo"
-import CubicCurve from "../Command/CubicCurve"
 import Point from "../../../gpc/geometry/Point"
 import Close from "../Command/Close"
 import AbstractLineCommand from "../Command/AbstractLineCommand"
@@ -9,7 +8,7 @@ import MoveTo from "../Command/MoveTo"
 import { getDistance, pointsAreClockwise } from "../../util"
 import Arc from "../Command/Arc"
 
-export default class RadialRounder implements PathRounderInterface {
+export default class ArcRounder implements PathRounderInterface {
   roundPath(path: Path, radius: number): Path {
     return roundPathCorners(path, radius)
   }

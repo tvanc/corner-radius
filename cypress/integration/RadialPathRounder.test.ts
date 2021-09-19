@@ -1,6 +1,6 @@
 import { Path } from "../../src/lib/class/Path"
 import Point from "../../src/gpc/geometry/Point"
-import RadialRounder from "../../src/lib/class/PathRounder/RadialRounder"
+import ArcRounder from "../../src/lib/class/PathRounder/ArcRounder"
 import CubicCurve from "../../src/lib/class/Command/CubicCurve"
 import MoveTo from "../../src/lib/class/Command/MoveTo"
 import LineTo from "../../src/lib/class/Command/LineTo"
@@ -15,7 +15,7 @@ it("Rounds to given positive numbers", () => {
   const lineLengthMinusRadius = lineLength - radius
   const lineLengthMinusHalfRadius = lineLength - halfRadius
 
-  const rounder = new RadialRounder()
+  const rounder = new ArcRounder()
   const squarePath = Path.fromPoints([
     new Point(0, 0),
     new Point(lineLength, 0),
@@ -85,7 +85,7 @@ it("Gracefully handles corners shorter than given radius", () => {
   const secondY = startY + verticalLineLength
   const thirdY = secondY + verticalLineLength
 
-  const rounder = new RadialRounder()
+  const rounder = new ArcRounder()
   const startPath = Path.fromPoints([
     // start point
     new Point(startX, startY),
@@ -201,7 +201,7 @@ it("A square with oversized radius produces a circle", () => {
   const expectedClosedPath = new Path(expectedClosedCommandList)
   const expectedUnclosedPath = new Path(expectedUnclosedCommandList)
 
-  const rounder = new RadialRounder()
+  const rounder = new ArcRounder()
   const actualClosedResult = rounder.roundPath(closedStartPath, givenRadius)
   const actualUnclosedResult = rounder.roundPath(unclosedStartPath, givenRadius)
   const actualClosedPathString = actualClosedResult.toString()
