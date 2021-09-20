@@ -55,15 +55,15 @@ it("Gracefully handles corners shorter than given radius", () => {
   const startY = 0
 
   // Path looks like this, is rectilinear
-  // -------|
-  //        |-------|
+  // M------L
+  //        L-------L
   //                |
-  //                |
+  //                L
   const midX = startX + horizontalLineLength
   const firstY = startY + verticalLineLength / 2
   const endX = midX + horizontalLineLength
   const secondY = startY + verticalLineLength
-  const thirdY = secondY + verticalLineLength * 2
+  const thirdY = secondY + verticalLineLength
 
   const rounder = new ArcRounder()
   const startPath = Path.fromPoints([
@@ -79,6 +79,8 @@ it("Gracefully handles corners shorter than given radius", () => {
     new Point(endX, thirdY),
   ])
 
+  startPath.unclose()
+
   const startPathString = startPath.toString()
   const actualResultPath = rounder.roundPath(startPath, givenRadius)
 
@@ -89,9 +91,8 @@ it("Gracefully handles corners shorter than given radius", () => {
     arcTo(halfGivenRadius, new Point(midX, firstY)),
     arcTo(halfGivenRadius, new Point(midX + expectedRadius, secondY), false),
     new LineTo(new Point(endX - givenRadius, secondY)),
-    //expect this curve to be match the radius given because there is plenty of room
-    arcTo(givenRadius, new Point(endX, secondY + givenRadius)),
-    new Close(),
+    //expect this curve to match the radius given because there is plenty of room
+    arcTo(givenRadius, new Point(endX, thirdY)),
   ])
 
   expect(startPath.toString()).to.be.equal(
