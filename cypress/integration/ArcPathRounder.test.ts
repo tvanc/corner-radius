@@ -51,7 +51,6 @@ it("Gracefully handles corners shorter than given radius", () => {
   const givenRadius = verticalLineLength
   const expectedRadius = verticalLineLength / 2
   const halfGivenRadius = givenRadius / 2
-  const halfExpectedRadius = expectedRadius / 2
 
   const startX = 0
   const startY = 0
@@ -81,9 +80,6 @@ it("Gracefully handles corners shorter than given radius", () => {
     new Point(endX, thirdY),
   ])
 
-  // Remove close command
-  startPath.commands.pop()
-
   const startPathString = startPath.toString()
   const actualResultPath = rounder.roundPath(startPath, givenRadius)
 
@@ -96,12 +92,18 @@ it("Gracefully handles corners shorter than given radius", () => {
     new LineTo(new Point(endX - givenRadius, secondY)),
     //expect this curve to be match the radius given because there is plenty of room
     arcTo(givenRadius, new Point(endX, secondY + givenRadius)),
+    new Close(),
   ])
 
-  // start path should be unchanged
-  expect(startPath.toString()).to.be.equal(startPathString)
+  expect(startPath.toString()).to.be.equal(
+    startPathString,
+    "start path unchanged",
+  )
   // It's easier to compare differences between strings
-  expect(actualResultPath.toString()).to.be.equal(expectedResultPath.toString())
+  expect(actualResultPath.toString()).to.be.equal(
+    expectedResultPath.toString(),
+    "result matches expectation",
+  )
 })
 
 it("A square with oversized radius produces a circle", () => {
