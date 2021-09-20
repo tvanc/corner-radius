@@ -79,6 +79,7 @@ it("Gracefully handles corners shorter than given radius", () => {
     new Point(endX, thirdY),
   ])
 
+  // first and last points remain the same when the path is unclosed
   startPath.unclose()
 
   const startPathString = startPath.toString()
@@ -99,7 +100,7 @@ it("Gracefully handles corners shorter than given radius", () => {
     startPathString,
     "start path unchanged",
   )
-  // It's easier to compare differences between strings
+
   expect(actualResultPath.toString()).to.be.equal(
     expectedResultPath.toString(),
     "result matches expectation",
@@ -118,19 +119,14 @@ it("A square with oversized radius produces a circle", () => {
 
   const halfSize = size / 2
 
-  const vertices = [
+  const startPath = Path.fromPoints([
     new Point(originX, originY),
     new Point(endX, originY),
     new Point(endX, endY),
     new Point(originX, endY),
-  ]
+  ])
 
-  const closedStartPath = Path.fromPoints(vertices)
-  const unclosedStartPath = Path.fromPoints(vertices)
-
-  unclosedStartPath.unclose()
-
-  const expectedClosedCommandList = [
+  const expectedPath = new Path([
     new MoveTo(new Point(originX + halfSize, originY)),
     // Arc
     // top-right "corner"
@@ -170,20 +166,11 @@ it("A square with oversized radius produces a circle", () => {
       new Point(originX + halfSize, originY),
     ),
     new Close(),
-  ]
-  const expectedUnclosedCommandList = expectedClosedCommandList.slice(0, -1)
-
-  const expectedClosedPath = new Path(expectedClosedCommandList)
-  const expectedUnclosedPath = new Path(expectedUnclosedCommandList)
+  ])
 
   const rounder = new ArcRounder()
-  const actualClosedResult = rounder.roundPath(closedStartPath, givenRadius)
-  const actualUnclosedResult = rounder.roundPath(unclosedStartPath, givenRadius)
-  const actualClosedPathString = actualClosedResult.toString()
-  const actualUnclosedPathString = actualUnclosedResult.toString()
-
-  expect(actualClosedPathString).to.be.equal(expectedClosedPath.toString())
-  expect(actualUnclosedPathString).to.be.equal(expectedUnclosedPath.toString())
+  const actualClosedResult = rounder.roundPath(startPath, givenRadius)
+  expect(actualClosedResult.toString()).to.be.equal(expectedPath.toString())
 })
 
 function arcTo(radius: number, endpoint: Point, sweep: boolean = true): Arc {
