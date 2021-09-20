@@ -48,8 +48,8 @@ export default class ArcRounder implements PathRounderInterface {
  */
 function roundPathCorners(path: Path, maxRadius: number) {
   const origPointMap = new Map()
-  const originalCommands = [...path.commands]
-  const newCommands = [...originalCommands]
+  const newPath = path.clone()
+  const newCommands = [...newPath.commands]
 
   // The resulting commands, also grouped
   let resultCommands = []

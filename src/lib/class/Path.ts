@@ -51,6 +51,10 @@ export class Path {
     }
   }
 
+  clone() {
+    return new Path(this.commands.map((c: CommandInterface) => c.clone()))
+  }
+
   get length() {
     return this.commands.length
   }
