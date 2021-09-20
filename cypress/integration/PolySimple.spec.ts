@@ -15,7 +15,7 @@ it("Preserves final point if a vertex", () => {
 
   clippedSquare.removeUnnecessaryPoints()
 
-  expect(clippedSquare.getPoints()).to.equal([
+  expect(clippedSquare.getPoints()).to.deep.equal([
     new Point(0, 0), // top left,
     new Point(2, 0), // top right
     new Point(2, 2), // bottom right
@@ -45,7 +45,7 @@ it("Removes final point if not a vertex", () => {
   square.removeUnnecessaryPoints()
 
   // prettier-ignore
-  expect(square.getPoints()).to.equal([
+  expect(square.getPoints()).to.deep.equal([
     new Point(0, 0),     // top left
     new Point(192, 0),   // top right
     new Point(192, 152), // bottom right
@@ -67,7 +67,7 @@ it("Removes redundant points from non-rectilinear polygons", () => {
 
   triangle.removeUnnecessaryPoints()
 
-  expect(triangle.getPoints()).to.equal([
+  expect(triangle.getPoints()).to.deep.equal([
     new Point(2, 0),
     new Point(4, 2),
     new Point(0, 2),
