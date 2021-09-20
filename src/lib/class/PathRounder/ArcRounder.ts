@@ -48,8 +48,7 @@ export default class ArcRounder implements PathRounderInterface {
  */
 function roundPathCorners(path: Path, maxRadius: number) {
   const origPointMap = new Map()
-  const newPath = path.clone()
-  const newCommands = [...newPath.commands]
+  const newCommands = [...path.clone().commands]
 
   // The resulting commands, also grouped
   let resultCommands = []
@@ -60,10 +59,9 @@ function roundPathCorners(path: Path, maxRadius: number) {
     const pathIsClosed = originalFinalCommand instanceof Close
     // Handle the close path case with a "virtual" closing line
     const virtualCloseLine = new LineTo(startPoint)
+
     if (pathIsClosed) {
       newCommands[newCommands.length - 1] = virtualCloseLine
-    } else {
-      newCommands.push(virtualCloseLine)
     }
 
     // We always use the first command (but it may be mutated)
@@ -129,13 +127,10 @@ function roundPathCorners(path: Path, maxRadius: number) {
     }
 
     // Fix up the starting point and restore the close path if the path was originally closed
-    if (virtualCloseLine) {
+    if (pathIsClosed) {
       const lastIndex = resultCommands.length - 1
       const newStartPoint = pointForCommand(resultCommands[lastIndex])
       adjustCommand(resultCommands[0], newStartPoint)
-    }
-
-    if (pathIsClosed) {
       resultCommands.push(new Close())
     }
 
