@@ -1,7 +1,6 @@
 import { Path } from "../../src/lib/class/Path"
 import Point from "../../src/gpc/geometry/Point"
 import ArcRounder from "../../src/lib/class/PathRounder/ArcRounder"
-import CubicCurve from "../../src/lib/class/Command/CubicCurve"
 import MoveTo from "../../src/lib/class/Command/MoveTo"
 import LineTo from "../../src/lib/class/Command/LineTo"
 import Close from "../../src/lib/class/Command/Close"
@@ -88,7 +87,7 @@ it("Gracefully handles corners shorter than given radius", () => {
     new LineTo(new Point(midX - expectedRadius, startY)),
     // expect these two curves to have a smaller radius than the one given because the points are close together
     arcTo(halfGivenRadius, new Point(midX, firstY)),
-    arcTo(halfGivenRadius, new Point(midX + expectedRadius, secondY)),
+    arcTo(halfGivenRadius, new Point(midX + expectedRadius, secondY), false),
     new LineTo(new Point(endX - givenRadius, secondY)),
     //expect this curve to be match the radius given because there is plenty of room
     arcTo(givenRadius, new Point(endX, secondY + givenRadius)),
