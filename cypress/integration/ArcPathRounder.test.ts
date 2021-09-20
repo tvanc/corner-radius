@@ -130,41 +130,13 @@ it("A square with oversized radius produces a circle", () => {
     new MoveTo(new Point(originX + halfSize, originY)),
     // Arc
     // top-right "corner"
-    new Arc(
-      expectedRadius,
-      expectedRadius,
-      expectedArcRotation,
-      false,
-      true,
-      new Point(endX, originY + halfSize),
-    ),
+    arcTo(expectedRadius, new Point(endX, originY + halfSize)),
     // bottom-right "corner"
-    new Arc(
-      expectedRadius,
-      expectedRadius,
-      expectedArcRotation,
-      false,
-      true,
-      new Point(endX - halfSize, endY),
-    ),
+    arcTo(expectedRadius, new Point(endX - halfSize, endY)),
     // bottom-left "corner"
-    new Arc(
-      expectedRadius,
-      expectedRadius,
-      expectedArcRotation,
-      false,
-      true,
-      new Point(originX, originX + halfSize),
-    ),
+    arcTo(expectedRadius, new Point(originX, originX + halfSize)),
     // top-left "corner"
-    new Arc(
-      expectedRadius,
-      expectedRadius,
-      expectedArcRotation,
-      false,
-      true,
-      new Point(originX + halfSize, originY),
-    ),
+    arcTo(expectedRadius, new Point(originX + halfSize, originY)),
     new Close(),
   ])
 
