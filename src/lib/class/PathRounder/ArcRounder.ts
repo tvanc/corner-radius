@@ -169,7 +169,7 @@ function roundPathCorners(path: Path, maxRadius: number) {
     const width = targetPoint.x - movingPoint.x
     const height = targetPoint.y - movingPoint.y
     const distance = Math.sqrt(width ** 2 + height ** 2)
-    const fraction = Math.min(1, amount / distance)
+    const fraction = Math.min(1, amount / distance) || 0
 
     return new Point(
       movingPoint.x + (targetPoint.x - movingPoint.x) * fraction,
