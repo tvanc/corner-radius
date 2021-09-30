@@ -16,7 +16,7 @@ before(function () {
   traceSpy = cy.spy(tracer, "trace")
 })
 
-it.only("Resize observer fires on resize", async () => {
+it("Calls `trace()` on element resize when `elementResize === true`", async () => {
   el.style.height = "10px"
   tracer.watch({ elementResize: true })
   el.style.height = "100px"
