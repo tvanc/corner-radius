@@ -1,8 +1,9 @@
 import Tracer from "../../src/lib/class/Tracer"
+import { SinonSpy } from "cypress/types/sinon"
 
 const watchElementId = "watchMe"
 
-let el, tracer, traceSpy
+let el: HTMLElement, tracer: Tracer, traceSpy: SinonSpy
 
 before(function () {
   document.body.innerHTML = `
@@ -15,20 +16,10 @@ before(function () {
   traceSpy = cy.spy(tracer, "trace")
 })
 
-it("Mutations are watched when expected", async () => {
-  tracer.watch({ mutations: true })
-  el.innerHTML = "bloop"
-
-  // Introduce tiny delay before assertions to allow mutation observer to run
-  await new Promise((r) => setTimeout(r))
-
-  expect(traceSpy).to.be.calledOnce
-})
-
-it("Resize observer fires on resize", async () => {
-  el.style.height = "10vh"
-  tracer.watch(el, { elementResize: true })
-  el.style.height = "100vh"
+it.only("Resize observer fires on resize", async () => {
+  el.style.height = "10px"
+  tracer.watch({ elementResize: true })
+  el.style.height = "100px"
 
   // Introduce tiny delay before assertions to allow mutation observer to run
   await new Promise((r) => setTimeout(r))

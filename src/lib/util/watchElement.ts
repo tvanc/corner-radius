@@ -1,23 +1,15 @@
 import WatchOptions from "../class/WatchOptions"
 import Tracer from "../class/Tracer"
 
-const mutationObservers: WeakMap<HTMLElement, MutationObserver> = new WeakMap()
 const resizeObservers: WeakMap<HTMLElement, ResizeObserver> = new WeakMap()
+const watchCallbacks: WeakMap<HTMLElement, Function> = new WeakMap()
 
-/**
- * @param el
- * @param {object} [options]
- * @param {boolean} [options.mutations]
- * @param {boolean} [options.animations]
- * @param {boolean} [options.elementResize]
- */
 export function watchElement(
   el: HTMLElement,
-  {
-    mutations = false,
-    animations = false,
-    elementResize = false,
-  }: WatchOptions = { mutations: true, animations: true, elementResize: true },
+  { animations = false, elementResize = false }: WatchOptions = {
+    animations: true,
+    elementResize: true,
+  },
 ) {
   let inLoop = false
   let stopTime, frame
@@ -48,15 +40,6 @@ export function watchElement(
     }
   }
 
-  if (mutations) {
-    getMutationObserver(el).observe(el, {
-      characterData: true,
-      subtree: true,
-      childList: true,
-      attributes: true,
-    })
-  }
-
   if (elementResize) {
     getResizeObserver(el).observe(el)
   }
@@ -75,33 +58,36 @@ export function watchElement(
 }
 
 export function unwatchElement(el) {
-  const mutationObserver = getMutationObserver(el, false)
+  const resizeObserver = getResizeObserver(el, false)
 
-  if (mutationObserver) {
-    mutationObserver.disconnect()
+  if (resizeObserver) {
+    resizeObserver.disconnect()
   }
-}
-
-function getMutationObserver(el, force = true): MutationObserver {
-  let observer = mutationObservers.get(el)
-
-  if (!observer && force) {
-    const tracer = Tracer.getInstance(el)
-    mutationObservers.set(el, observer)
-    observer = new MutationObserver(() => tracer.trace())
-  }
-
-  return observer
 }
 
 function getResizeObserver(el, force = true) {
   let observer = resizeObservers.get(el)
 
   if (!observer && force) {
-    const tracer = Tracer.getInstance(el)
+    observer = new ResizeObserver(getCallback(el) as ResizeObserverCallback)
     resizeObservers.set(el, observer)
-    observer = new ResizeObserver(() => tracer.trace())
   }
 
   return observer
+}
+
+function getCallback(el): Function {
+  let callback = watchCallbacks.get(el)
+
+  if (!callback) {
+    const tracer = Tracer.getInstance(el)
+    let frame
+    callback = (type = "unset") => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(() => tracer.trace())
+    }
+    watchCallbacks.set(el, callback)
+  }
+
+  return callback
 }

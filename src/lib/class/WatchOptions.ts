@@ -1,5 +1,4 @@
 type WatchOptions = {
-  mutations?: boolean
   animations?: boolean
   elementResize?: boolean
 }
