@@ -26,3 +26,9 @@ it("Calls `trace()` on element resize when `elementResize === true`", async () =
 
   expect(traceSpy).to.be.calledOnce
 })
+
+it.only("Calls `trace()` on window resize when `windowResize === true`", () => {
+  tracer.watch({ windowResize: true })
+  window.dispatchEvent(new UIEvent("resize"))
+  expect(traceSpy).to.be.calledOnce
+})

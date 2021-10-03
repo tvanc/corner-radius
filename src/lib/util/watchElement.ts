@@ -6,15 +6,21 @@ const watchCallbacks: WeakMap<HTMLElement, Function> = new WeakMap()
 
 export function watchElement(
   el: HTMLElement,
-  { animations = false, elementResize = false }: WatchOptions = {
+  {
+    animations = false,
+    elementResize = false,
+    windowResize = false,
+  }: WatchOptions = {
     animations: true,
     elementResize: true,
+    windowResize: true,
   },
 ) {
   let inLoop = false
   let stopTime, frame
 
   const tracer = Tracer.getInstance(el)
+  const trace = () => tracer.trace()
   const startRafLoop = (duration) => {
     stopTime = performance.now() + duration
 
@@ -23,7 +29,7 @@ export function watchElement(
 
       frame = requestAnimationFrame(function rafLoop() {
         if (inLoop && performance.now() < stopTime) {
-          tracer.trace()
+          trace()
           frame = requestAnimationFrame(rafLoop)
         } else {
           stopRafLoop()
@@ -54,6 +60,10 @@ export function watchElement(
 
     el.addEventListener("animationend", stopRafLoop)
     el.addEventListener("animationcancel", stopRafLoop)
+  }
+
+  if (windowResize) {
+    el.ownerDocument.defaultView.addEventListener("resize", trace)
   }
 }
 
