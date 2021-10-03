@@ -16,37 +16,11 @@ export function watchElement(
     windowResize: true,
   },
 ) {
-  let inLoop = false
-  let stopTime, frame
-
   const tracer = Tracer.getInstance(el)
-  const trace = () => tracer.trace()
 
   if (animations) {
-    const startRafLoop = (duration) => {
-      stopTime = performance.now() + duration
-
-      if (!inLoop) {
-        inLoop = true
-
-        frame = requestAnimationFrame(function rafLoop() {
-          if (inLoop && performance.now() < stopTime) {
-            trace()
-            frame = requestAnimationFrame(rafLoop)
-          } else {
-            stopRafLoop()
-          }
-        })
-      }
-    }
-
-    const stopRafLoop = () => {
-      if (inLoop) {
-        cancelAnimationFrame(frame)
-        tracer.trace()
-        inLoop = false
-      }
-    }
+    let inLoop = false
+    let stopTime, frame
 
     el.addEventListener("animationstart", function (e) {
       const style = getComputedStyle(e.target as Element)
@@ -57,6 +31,31 @@ export function watchElement(
 
     el.addEventListener("animationend", stopRafLoop)
     el.addEventListener("animationcancel", stopRafLoop)
+
+    function startRafLoop(duration) {
+      stopTime = performance.now() + duration
+
+      if (!inLoop) {
+        inLoop = true
+
+        frame = requestAnimationFrame(function rafLoop() {
+          if (inLoop && performance.now() < stopTime) {
+            tracer.trace()
+            frame = requestAnimationFrame(rafLoop)
+          } else {
+            stopRafLoop()
+          }
+        })
+      }
+    }
+
+    function stopRafLoop() {
+      if (inLoop) {
+        cancelAnimationFrame(frame)
+        tracer.trace()
+        inLoop = false
+      }
+    }
   }
 
   if (elementResize) {
