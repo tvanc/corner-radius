@@ -4,9 +4,19 @@
     <meta charset="UTF-8" />
     <title>Tracer Tests</title>
     <style>
+      .test-div {
+        background: rgba(255, 255, 100, 0.9);
+      }
+
+      path {
+        fill: rgba(100, 200, 255, 1);
+      }
+
       .animate-height {
         --start-height: 10px;
         height: var(--start-height);
+        animation: animate-height 1s;
+        animation-iteration-count: 1;
       }
 
       @keyframes animate-height {
@@ -20,6 +30,6 @@
     </style>
   </head>
   <body>
-    <div id="watchMe">Some Content</div>
+    <div id="watchMe" class="test-div">Some Content</div>
   </body>
 </html>

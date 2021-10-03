@@ -19,19 +19,22 @@ it("Calls `trace()` on element resize when `elementResize === true`", async () =
   tracer.watch({ elementResize: true })
   el.style.height = "100px"
 
-  // Introduce tiny delay before assertions to allow mutation observer to run
-  await new Promise((r) => setTimeout(r))
-
-  expect(traceSpy).to.be.calledOnce
+  cy.wrap(traceSpy).should("be.calledOnce")
 })
 
-it.only("Calls `trace()` on window resize when `windowResize === true`", () => {
+it("Calls `trace()` on window resize when `windowResize === true`", () => {
   cy.viewport("iphone-x", "portrait")
   tracer.watch({ windowResize: true })
   cy.viewport("iphone-x", "landscape")
 
   cy.wrap(traceSpy).should("be.calledOnce")
 })
+
+it("Calls `trace()` on animation when `animations === true`", () => {
+  tracer.watch({ animations: true })
+
+  el.style.animationDuration = "0s"
+  el.classList.add("animate-height")
 
   cy.wrap(traceSpy).should("be.calledOnce")
 })
