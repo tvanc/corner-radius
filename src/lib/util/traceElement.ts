@@ -69,16 +69,16 @@ function getPolygon(el): PolygonInterface {
 }
 
 function getSvg(el) {
-  if (svgElMap.has(el)) {
-    return svgElMap.get(el)
+  if (!svgElMap.has(el)) {
+    const doc = el.ownerDocument
+    const svg = doc.createElementNS(svgNs, "svg")
+
+    svg.style.position = "absolute"
+
+    doc.body.appendChild(svg)
+
+    svgElMap.set(el, svg)
   }
 
-  const svg = document.createElementNS(svgNs, "svg")
-
-  svg.style.position = "absolute"
-
-  document.body.appendChild(svg)
-  svgElMap.set(el, svg)
-
-  return svg
+  return svgElMap.get(el)
 }
