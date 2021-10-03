@@ -21,36 +21,33 @@ export function watchElement(
 
   const tracer = Tracer.getInstance(el)
   const trace = () => tracer.trace()
-  const startRafLoop = (duration) => {
-    stopTime = performance.now() + duration
-
-    if (!inLoop) {
-      inLoop = true
-
-      frame = requestAnimationFrame(function rafLoop() {
-        if (inLoop && performance.now() < stopTime) {
-          trace()
-          frame = requestAnimationFrame(rafLoop)
-        } else {
-          stopRafLoop()
-        }
-      })
-    }
-  }
-
-  const stopRafLoop = () => {
-    if (inLoop) {
-      cancelAnimationFrame(frame)
-      tracer.trace()
-      inLoop = false
-    }
-  }
-
-  if (elementResize) {
-    getResizeObserver(el).observe(el)
-  }
 
   if (animations) {
+    const startRafLoop = (duration) => {
+      stopTime = performance.now() + duration
+
+      if (!inLoop) {
+        inLoop = true
+
+        frame = requestAnimationFrame(function rafLoop() {
+          if (inLoop && performance.now() < stopTime) {
+            trace()
+            frame = requestAnimationFrame(rafLoop)
+          } else {
+            stopRafLoop()
+          }
+        })
+      }
+    }
+
+    const stopRafLoop = () => {
+      if (inLoop) {
+        cancelAnimationFrame(frame)
+        tracer.trace()
+        inLoop = false
+      }
+    }
+
     el.addEventListener("animationstart", function (e) {
       const style = getComputedStyle(e.target as Element)
       const duration = style.getPropertyValue("animation-duration")
@@ -62,8 +59,15 @@ export function watchElement(
     el.addEventListener("animationcancel", stopRafLoop)
   }
 
+  if (elementResize) {
+    getResizeObserver(el).observe(el)
+  }
+
   if (windowResize) {
-    el.ownerDocument.defaultView.addEventListener("resize", trace)
+    el.ownerDocument.defaultView.addEventListener(
+      "resize",
+      getCallback(el) as (event: UIEvent) => {},
+    )
   }
 }
 
@@ -86,13 +90,13 @@ function getResizeObserver(el, force = true) {
   return observer
 }
 
-function getCallback(el): Function {
+function getCallback(el: HTMLElement): Function {
   let callback = watchCallbacks.get(el)
 
   if (!callback) {
     const tracer = Tracer.getInstance(el)
     let frame
-    callback = (type = "unset") => {
+    callback = () => {
       cancelAnimationFrame(frame)
       frame = requestAnimationFrame(() => tracer.trace())
     }
