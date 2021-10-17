@@ -32,8 +32,8 @@ export default class Tracer {
     return this
   }
 
-  unwatch() {
-    unwatchElement(this.#el)
+  unwatch(options: WatchOptions = undefined) {
+    unwatchElement(this.#el, options)
 
     return this
   }
