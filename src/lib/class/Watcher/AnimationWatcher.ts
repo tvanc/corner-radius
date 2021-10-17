@@ -1,12 +1,13 @@
 import WatcherInterface from "./WatcherInterface"
+import WatcherCallback from "./WatcherCallback"
 
 export default class AnimationWatcher implements WatcherInterface {
   readonly #el: HTMLElement
-  readonly #callback: (el: HTMLElement) => any
+  readonly #callback: WatcherCallback
 
   #controller: AbortController
 
-  constructor(el: HTMLElement, callback: (el: HTMLElement) => any) {
+  constructor(el: HTMLElement, callback: WatcherCallback) {
     this.#el = el
     this.#callback = callback
   }
