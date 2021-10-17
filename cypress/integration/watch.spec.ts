@@ -1,5 +1,6 @@
 import Tracer from "../../src/lib/class/Tracer"
 import { SinonSpy } from "cypress/types/sinon"
+import { watch } from "../../src"
 
 const watchElementId = "watchMe"
 
@@ -16,7 +17,7 @@ beforeEach(function () {
 
 it("Calls `trace()` on element resize when `elementResize === true`", async () => {
   el.style.height = "10px"
-  tracer.watch({ elementResize: true })
+  watch(el, { elementResize: true })
   el.style.height = "100px"
 
   cy.wrap(traceSpy).should("be.calledOnce")
@@ -24,14 +25,14 @@ it("Calls `trace()` on element resize when `elementResize === true`", async () =
 
 it("Calls `trace()` on window resize when `windowResize === true`", () => {
   cy.viewport("iphone-x", "portrait")
-  tracer.watch({ windowResize: true })
+  watch(el, { windowResize: true })
   cy.viewport("iphone-x", "landscape")
 
   cy.wrap(traceSpy).should("be.calledOnce")
 })
 
 it("Calls `trace()` on animation when `animations === true`", () => {
-  tracer.watch({ animations: true })
+  watch(el, { animations: true })
 
   el.style.animationDuration = "0s"
   el.classList.add("animate-height")
