@@ -19,7 +19,6 @@
   ],
   "scripts": {
     "semantic-release": "semantic-release",
-    "test": "jest --coverage && yarn lint --watch",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "dev-server": "encore dev-server",
