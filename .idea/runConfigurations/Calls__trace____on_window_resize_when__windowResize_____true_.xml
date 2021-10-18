@@ -1,0 +1,76 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Calls `trace()` on window resize when `windowResize === true`" type="CypressConfigurationType" factoryName="Cypress" nameIsGenerated="true" show_console_on_std_err="false" show_console_on_std_out="false">
+    <option name="allowRunningInParallel" value="true" />
+    <option name="envs">
+      <map />
+    </option>
+    <option name="myCypressRunSettings">
+      <CypressRunSettings>
+        <option name="configKind" value="JS" />
+        <option name="allNames">
+          <list>
+            <option value="Calls `trace()` on window resize when `windowResize === true`" />
+          </list>
+        </option>
+        <option name="specsDir" />
+        <option name="specFile" value="C:\Users\User\PhpstormProjects\corner-radius\cypress\integration\watch.spec.ts" />
+        <option name="testName" value="Calls `trace()` on window resize when `windowResize === true`" />
+        <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+        <option name="envs">
+          <map />
+        </option>
+        <option name="additionalParams" value="-b chrome " />
+        <option name="browser" value="CHROME" />
+        <option name="passParentEnvs" value="true" />
+        <option name="nodeJsRef" value="project" />
+        <option name="npmRef" value="Project" />
+        <option name="kind" value="TEST" />
+        <option name="interactive" value="true" />
+        <option name="browserPort" value="0" />
+        <option name="pageAutoSelection" value="true" />
+        <option name="defaultScript" value="true" />
+        <option name="recorderScript" value="" />
+        <option name="focusToIde" value="true" />
+        <option name="generateComment" value="true" />
+        <option name="insertAtCursor" value="false" />
+        <option name="runType" value="E2E" />
+      </CypressRunSettings>
+    </option>
+    <option name="passParentEnvs" value="true" />
+    <option name="programParameters" value="-b chrome " />
+    <option name="projectPathOnTarget" />
+    <option name="selectedOptions">
+      <list />
+    </option>
+    <option name="workingDirectory" value="C:\Users\User\PhpstormProjects\corner-radius" />
+    <option name="configKind" value="JS" />
+    <option name="allNames">
+      <list>
+        <option value="Calls `trace()` on window resize when `windowResize === true`" />
+      </list>
+    </option>
+    <option name="specsDir" />
+    <option name="specFile" value="C:\Users\User\PhpstormProjects\corner-radius\cypress\integration\watch.spec.ts" />
+    <option name="testName" value="Calls `trace()` on window resize when `windowResize === true`" />
+    <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+    <option name="envs">
+      <map />
+    </option>
+    <option name="additionalParams" value="-b chrome " />
+    <option name="browser" value="CHROME" />
+    <option name="passParentEnvs" value="true" />
+    <option name="nodeJsRef" value="project" />
+    <option name="npmRef" value="Project" />
+    <option name="kind" value="TEST" />
+    <option name="interactive" value="true" />
+    <option name="browserPort" value="0" />
+    <option name="pageAutoSelection" value="true" />
+    <option name="defaultScript" value="true" />
+    <option name="recorderScript" value="" />
+    <option name="focusToIde" value="true" />
+    <option name="generateComment" value="true" />
+    <option name="insertAtCursor" value="false" />
+    <option name="runType" value="E2E" />
+    <method v="2" />
+  </configuration>
+</component>
