@@ -2,9 +2,10 @@ import WatchOptions from "../class/WatchOptions"
 import Tracer from "../class/Tracer"
 import AnimationWatcher from "../class/Watcher/AnimationWatcher"
 import WatcherCallback from "../class/Watcher/WatcherCallback"
+import ResizeWatcher from "../class/Watcher/ResizeWatcher"
 
-// const resizeObservers: WeakMap<HTMLElement, ResizeObserver> = new WeakMap()
 const animationWatchers: WeakMap<HTMLElement, AnimationWatcher> = new WeakMap()
+const resizeWatchers: WeakMap<HTMLElement, ResizeWatcher> = new WeakMap()
 const watchCallbacks: WeakMap<HTMLElement, WatcherCallback> = new WeakMap()
 
 export function watchElement(
@@ -24,7 +25,7 @@ export function watchElement(
   }
 
   if (elementResize) {
-    // getResizeObserver(el).observe(el)
+    getResizeWatcher(el).start()
   }
 
   if (windowResize) {
@@ -51,7 +52,7 @@ export function unwatchElement(
     getAnimationWatcher(el, false)?.stop()
   }
   if (elementResize) {
-    // getResizeObserver(el, false)?.disconnect()
+    getResizeWatcher(el, false)?.stop()
   }
   if (windowResize) {
     // el.ownerDocument.defaultView.removeEventListener()
@@ -64,6 +65,17 @@ function getAnimationWatcher(el, force = true) {
   if (!watcher && force) {
     watcher = new AnimationWatcher(el, getCallback(el))
     animationWatchers.set(el, watcher)
+  }
+
+  return watcher
+}
+
+function getResizeWatcher(el, force = true) {
+  let watcher = resizeWatchers.get(el)
+
+  if (!watcher && force) {
+    watcher = new ResizeWatcher(el, getCallback(el))
+    resizeWatchers.set(el, watcher)
   }
 
   return watcher
