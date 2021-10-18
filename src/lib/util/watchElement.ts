@@ -8,6 +8,7 @@ import WindowWatcher from "../class/Watcher/WindowWatcher"
 const animationWatchers: WeakMap<HTMLElement, AnimationWatcher> = new WeakMap()
 const resizeWatchers: WeakMap<HTMLElement, ResizeWatcher> = new WeakMap()
 const windowWatchers: WeakMap<HTMLElement, WindowWatcher> = new WeakMap()
+
 const watchCallbacks: WeakMap<HTMLElement, WatcherCallback> = new WeakMap()
 
 export function watchElement(
