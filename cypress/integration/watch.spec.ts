@@ -1,6 +1,6 @@
 import Tracer from "../../src/lib/class/Tracer"
 import { SinonSpy } from "cypress/types/sinon"
-import { watch } from "../../src"
+import { unwatch, watch } from "../../src"
 
 const watchElementId = "watchMe"
 
@@ -19,6 +19,7 @@ it("Calls `trace()` on element resize when `elementResize === true`", async () =
   el.style.height = "10px"
   watch(el, { elementResize: true })
   el.style.height = "100px"
+  tracer.unwatch()
 
   cy.wrap(traceSpy).should("be.calledOnce")
 })
