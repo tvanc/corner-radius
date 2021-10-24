@@ -1,11 +1,12 @@
 import WatchOptions from "./WatchOptions"
-import { traceElement } from "../util/traceElement"
+import { getSvg, traceElement } from "../util/traceElement"
 import { watchElement, unwatchElement } from "../util/watchElement"
 
 const tracerMap: WeakMap<HTMLElement, Tracer> = new WeakMap()
 
 export default class Tracer {
   readonly #el: HTMLElement
+  #destroyed: boolean = false
 
   private constructor(el: HTMLElement) {
     this.#el = el
@@ -36,5 +37,16 @@ export default class Tracer {
     unwatchElement(this.#el, options)
 
     return this
+  }
+
+  destroy() {
+    if (!this.#destroyed) {
+      // without options `unwatch()` unwatches everything
+      this.unwatch()
+
+      getSvg(this.#el).remove()
+      tracerMap.delete(this.#el)
+      this.#destroyed = true
+    }
   }
 }

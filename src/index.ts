@@ -1,26 +1,26 @@
 import Tracer from "./lib/class/Tracer"
 import WatchOptions from "./lib/class/WatchOptions"
 
-export function trace(el: HTMLElement) {
-  const tracer = Tracer.getInstance(el)
+export { trace, watch, unwatch, destroy }
 
-  tracer.trace()
-
-  return tracer
+function trace(el: HTMLElement): Tracer {
+  return withTracer(el, (t) => t.trace())
 }
 
-export function watch(el: HTMLElement, options?: WatchOptions) {
-  const tracer = Tracer.getInstance(el)
-
-  tracer.watch(options)
-
-  return tracer
+function watch(el: HTMLElement, options?: WatchOptions): Tracer {
+  return withTracer(el, (t) => t.watch(options))
 }
 
-export function unwatch(el: HTMLElement) {
+function unwatch(el: HTMLElement): Tracer {
+  return withTracer(el, (t) => t.unwatch())
+}
+
+function destroy(el: HTMLElement): void {
+  withTracer(el, (t) => t.destroy())
+}
+
+function withTracer(el: HTMLElement, callback: (t: Tracer) => any) {
   const tracer = Tracer.getInstance(el)
-
-  tracer.unwatch()
-
+  callback(tracer)
   return tracer
 }

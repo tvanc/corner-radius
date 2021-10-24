@@ -68,7 +68,7 @@ function getPolygon(el): PolygonInterface {
   return polygon
 }
 
-function getSvg(el) {
+export function getSvg(el) {
   if (!svgElMap.has(el)) {
     const doc = el.ownerDocument
     const svg = doc.createElementNS(svgNs, "svg")
