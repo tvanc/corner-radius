@@ -6,7 +6,7 @@ const watchElementId = "watchMe"
 
 let el: HTMLElement, tracer: Tracer, traceSpy: SinonSpy
 
-beforeEach(function () {
+beforeEach(() => {
   cy.visit("cypress/pages/index.html")
   cy.window().then((win) => {
     el = win.document.getElementById(watchElementId)
@@ -15,12 +15,17 @@ beforeEach(function () {
   })
 })
 
+afterEach(() => {
+  el = undefined
+  traceSpy = undefined
+  tracer.destroy()
+})
+
 describe("`watch()` Options", () => {
   it("Calls `trace()` on element resize when `elementResize === true`", async () => {
     el.style.height = "10px"
     watch(el, { elementResize: true })
     el.style.height = "100px"
-    tracer.unwatch()
 
     cy.wrap(traceSpy).should("be.calledOnce")
   })
