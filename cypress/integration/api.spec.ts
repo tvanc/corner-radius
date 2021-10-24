@@ -47,3 +47,18 @@ describe("`watch()` Options", () => {
     cy.wrap(traceSpy).should("be.calledOnce")
   })
 })
+
+describe("`destroy()`", () => {
+  it("`destroy()` unwatches everything", () => {
+    cy.viewport("iphone-x", "portrait")
+
+    const tracer = watch(el)
+    tracer.destroy()
+
+    el.style.height = "100px"
+    el.style.animationDuration = "0s"
+    el.classList.add("animate-height")
+
+    cy.wrap(traceSpy).should("be.that.which.has.not.been.calledOnce")
+  })
+})
