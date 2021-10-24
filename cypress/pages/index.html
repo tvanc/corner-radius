@@ -18,7 +18,9 @@
         --debug-stroke-style: dashed;
         --debug-stroke: 0.5rem var(--debug-stroke-style)
           var(--debug-stroke-color);
-        --debug-fill-color: rgba(100, 200, 255, 0.8);
+        --debug-element-color: rgba(100, 200, 255, 0.8);
+
+        font-family: sans-serif;
       }
 
       body {
@@ -36,12 +38,10 @@
         width: 50%;
         position: relative;
         z-index: 1;
+        background-color: var(--debug-element-color);
       }
 
-      path {
-        fill: var(--debug-fill-color);
-      }
-
+      /*noinspection CssUnusedSymbol*/
       .animate-height {
         height: var(--start-height);
         animation: animate-height 1s;
@@ -77,8 +77,8 @@
         border: calc(var(--legend-height) / 2) var(--debug-stroke-color);
         border-style: var(--debug-stroke-style) none;
       }
-      .legend .fill-key {
-        background: var(--debug-fill-color);
+      .legend .subject-key {
+        background: var(--debug-element-color);
       }
 
       @keyframes animate-height {
@@ -96,12 +96,12 @@
     <footer>
       <dl aria-label="Legend" class="legend">
         <div>
-          <dt class="stroke-key"></dt>
-          <dd>stroke on the traced element</dd>
+          <dt class="subject-key"></dt>
+          <dd>HTML Element</dd>
         </div>
         <div>
-          <dt class="fill-key"></dt>
-          <dd>The underlying path</dd>
+          <dt class="stroke-key"></dt>
+          <dd>SVG Path</dd>
         </div>
       </dl>
     </footer>
