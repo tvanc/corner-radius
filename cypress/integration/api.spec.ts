@@ -1,48 +1,49 @@
 import Tracer from "../../src/lib/class/Tracer"
 import { SinonSpy } from "cypress/types/sinon"
-import { unwatch, watch } from "../../src"
+import { destroy, unwatch, watch } from "../../src"
 
 const watchElementId = "watchMe"
 
-let el: HTMLElement, tracer: Tracer, traceSpy: SinonSpy
+let el: HTMLElement
+let tracer: Tracer
+let traceSpy: SinonSpy
 
 beforeEach(() => {
-  cy.visit("cypress/pages/index.html")
-  cy.window().then((win) => {
-    el = win.document.getElementById(watchElementId)
-    tracer = Tracer.getInstance(el)
-    traceSpy = cy.spy(tracer, "trace")
-  })
+  cy.viewport("iphone-x", "portrait")
+    .visit("cypress/pages/index.html")
+    .window()
+    .then((win) => {
+      el = win.document.getElementById(watchElementId)
+      el.style.height = "75px"
+      tracer = Tracer.getInstance(el)
+      traceSpy = cy.spy(tracer, "trace")
+    })
 })
 
 afterEach(() => {
+  destroy(el)
   el = undefined
   traceSpy = undefined
-  tracer.destroy()
 })
 
 describe("`watch()` Options", () => {
   it("Calls `trace()` on element resize when `elementResize === true`", async () => {
-    el.style.height = "10px"
     watch(el, { elementResize: true })
-    el.style.height = "100px"
+    triggerElementResize()
 
     cy.wrap(traceSpy).should("be.calledOnce")
   })
 
   it("Calls `trace()` on window resize when `windowResize === true`", () => {
-    cy.viewport("iphone-x", "portrait")
     watch(el, { windowResize: true })
-    cy.viewport("iphone-x", "landscape")
+    triggerWindowResize()
 
     cy.wrap(traceSpy).should("be.calledOnce")
   })
 
   it("Calls `trace()` on animation when `animations === true`", () => {
     watch(el, { animations: true })
-
-    el.style.animationDuration = "0s"
-    el.classList.add("animate-height")
+    triggerAnimation()
 
     cy.wrap(traceSpy).should("be.calledOnce")
   })
@@ -50,15 +51,29 @@ describe("`watch()` Options", () => {
 
 describe("`destroy()`", () => {
   it("`destroy()` unwatches everything", () => {
-    cy.viewport("iphone-x", "portrait")
-
-    const tracer = watch(el)
-    tracer.destroy()
-
-    el.style.height = "100px"
-    el.style.animationDuration = "0s"
-    el.classList.add("animate-height")
+    watch(el)
+    destroy(el)
+    triggerAllWatchers()
 
     cy.wrap(traceSpy).should("be.that.which.has.not.been.called")
   })
 })
+
+function triggerAllWatchers() {
+  triggerWindowResize()
+  triggerElementResize()
+  triggerAnimation()
+}
+
+function triggerAnimation() {
+  el.style.animationDuration = "0s"
+  el.classList.add("animate-height")
+}
+
+function triggerElementResize() {
+  el.style.height = "100px"
+}
+
+function triggerWindowResize() {
+  cy.viewport("iphone-x", "landscape")
+}
