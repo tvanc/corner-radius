@@ -59,6 +59,6 @@ describe("`destroy()`", () => {
     el.style.animationDuration = "0s"
     el.classList.add("animate-height")
 
-    cy.wrap(traceSpy).should("be.that.which.has.not.been.calledOnce")
+    cy.wrap(traceSpy).should("be.that.which.has.not.been.called")
   })
 })
