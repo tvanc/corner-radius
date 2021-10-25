@@ -49,6 +49,16 @@ describe("`watch()` Options", () => {
   })
 })
 
+describe("`unwatch()`", () => {
+  it("`unwatch()` unwatches everything", () => {
+    watch(el)
+    unwatch(el)
+    triggerAllWatchers()
+
+    cy.wrap(traceSpy).should("not.have.been.called")
+  })
+})
+
 describe("`destroy()`", () => {
   it("`destroy()` unwatches everything", () => {
     watch(el)
