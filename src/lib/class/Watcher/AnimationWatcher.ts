@@ -1,28 +1,14 @@
-import WatcherInterface from "./WatcherInterface"
-import WatcherCallback from "./WatcherCallback"
+import AbstractWatcher from "./AbstractWatcher"
 
-export default class AnimationWatcher implements WatcherInterface {
-  readonly #el: HTMLElement
-  readonly #callback: WatcherCallback
-
+export default class AnimationWatcher extends AbstractWatcher {
   #controller: AbortController
-
-  constructor(el: HTMLElement, callback: WatcherCallback) {
-    this.#el = el
-    this.#callback = callback
-  }
 
   get watching(): boolean {
     return !!this.#controller
   }
 
-  start() {
-    if (this.#controller) {
-      return this
-    }
-
-    const el = this.#el
-    const self = this
+  doStart() {
+    const { el, callback } = this
     const win = el.ownerDocument.defaultView
 
     const controller = new AbortController()
@@ -54,7 +40,7 @@ export default class AnimationWatcher implements WatcherInterface {
 
         frame = requestAnimationFrame(function rafLoop() {
           if (inLoop && performance.now() < stopTime) {
-            self.#callback(el)
+            callback(el)
             frame = requestAnimationFrame(rafLoop)
           } else {
             stopRafLoop()
@@ -66,7 +52,7 @@ export default class AnimationWatcher implements WatcherInterface {
     function stopRafLoop() {
       if (inLoop) {
         cancelAnimationFrame(frame)
-        self.#callback(el)
+        callback(el)
         inLoop = false
       }
     }
@@ -76,7 +62,7 @@ export default class AnimationWatcher implements WatcherInterface {
     return this
   }
 
-  stop() {
+  doStop() {
     this.#controller.abort()
     this.#controller = undefined
   }

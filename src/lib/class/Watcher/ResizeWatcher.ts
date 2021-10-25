@@ -1,34 +1,21 @@
-import WatcherInterface from "./WatcherInterface"
-import WatcherCallback from "./WatcherCallback"
+import AbstractWatcher from "./AbstractWatcher"
 
-export default class ResizeWatcher implements WatcherInterface {
-  readonly #el: HTMLElement
-  readonly #callback: WatcherCallback
-
+export default class ResizeWatcher extends AbstractWatcher {
   #observer: ResizeObserver
 
-  constructor(el: HTMLElement, callback: WatcherCallback) {
-    this.#el = el
-    this.#callback = callback
+  get watching(): boolean {
+    return !!this.#observer
   }
 
-  start() {
-    if (this.#observer) {
-      return
-    }
-
-    const resizeObserver = new ResizeObserver(() => this.#callback(this.#el))
-    resizeObserver.observe(this.#el)
+  doStart() {
+    const resizeObserver = new ResizeObserver(() => this.callback(this.el))
+    resizeObserver.observe(this.el)
 
     this.#observer = resizeObserver
   }
 
-  stop() {
+  doStop() {
     this.#observer.disconnect()
     this.#observer = undefined
-  }
-
-  get watching(): boolean {
-    return !!this.#observer
   }
 }

@@ -1,36 +1,23 @@
-import WatcherInterface from "./WatcherInterface"
-import WatcherCallback from "./WatcherCallback"
+import AbstractWatcher from "./AbstractWatcher"
 
-export default class WindowWatcher implements WatcherInterface {
-  readonly #el: HTMLElement
-  readonly #callback: WatcherCallback
-
+export default class WindowWatcher extends AbstractWatcher {
   #controller: AbortController
 
-  constructor(el: HTMLElement, callback: WatcherCallback) {
-    this.#el = el
-    this.#callback = callback
+  get watching(): boolean {
+    return !!this.#controller
   }
 
-  start() {
-    if (this.#controller) {
-      return
-    }
-
-    const win: Window = this.#el.ownerDocument.defaultView
+  doStart() {
+    const win: Window = this.el.ownerDocument.defaultView
     this.#controller = new AbortController()
 
-    win.addEventListener("resize", () => this.#callback(this.#el), {
+    win.addEventListener("resize", () => this.callback(this.el), {
       signal: this.#controller.signal,
     })
   }
 
-  stop() {
+  doStop() {
     this.#controller.abort()
     this.#controller = undefined
-  }
-
-  get watching(): boolean {
-    return !!this.#controller
   }
 }
