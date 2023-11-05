@@ -15,10 +15,10 @@
 
 .menu {
   --corner-radius: 1rem;
-  --menu-spacing: 1rem;
+  --menu-spacing: 1.2rem;
   --half-spacing: calc(var(--menu-spacing) / 2);
   --menu-width: 5rem;
-  padding: calc(var(--corner-radius)) 0;
+  padding: 0;
   margin: 0;
   list-style: none;
   color: black;
@@ -28,7 +28,7 @@
   > li {
     position: relative;
     width: 100%;
-    padding: var(--half-spacing) var(--menu-spacing);
+    padding: var(--half-spacing);
     background-clip: padding-box;
     white-space: nowrap;
 
