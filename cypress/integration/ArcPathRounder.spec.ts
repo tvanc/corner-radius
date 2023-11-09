@@ -1,6 +1,6 @@
 import { Path } from "../../src/lib/class/Path"
 import Point from "../../src/gpc/geometry/Point"
-import ArcRounder from "../../src/lib/class/PathRounder/ArcRounder"
+import ArcRounder from "../../src/lib/class/Rounder/ArcRounder"
 import MoveTo from "../../src/lib/class/Command/MoveTo"
 import LineTo from "../../src/lib/class/Command/LineTo"
 import Close from "../../src/lib/class/Command/Close"
