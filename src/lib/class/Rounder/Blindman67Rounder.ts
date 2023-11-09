@@ -76,7 +76,7 @@ function roundPathCorners(path: Path, radiusAll: number) {
     // Part 6
     // TODO figure out how to convert end angle to end point
     const endPoint = new Point(x, y)
-    resultCommands.push(new Arc(cRadius, cRadius, 0, false, drawDirection, endPoint))
+    resultCommands.push(new Arc(cRadius, cRadius, 0, false, !drawDirection, endPoint))
     // ctx.arc(x, y, cRadius, v1.ang + Math.PI / 2 * radDirection, v2.ang - Math.PI / 2 * radDirection, drawDirection)
 
     //-----------------------------------------
