@@ -55,12 +55,14 @@ function parsePath(str) {
 /**
  * Iterates through an array of normalised commands and insert arcs where applicable.
  * This function modifies the array in place.
- * @param {array} _cmds Array with commands to be modified
+ * @param {array} cmds Array with commands to be modified
  * @param {number} r Expected radius of the arcs.
  * @param {number} round Number of decimal digits to round values
- * @returns {array} Sequence of commands containing arcs in place of corners
+ * @param {number} offsetX
+ * @param {number} offsetY
+ * @returns {string} Sequence of commands containing arcs in place of corners
  */
-function roundCommands(cmds, r, round) {
+function roundCommands(cmds, r, round, offsetX, offsetY) {
   let subpaths = []
   let newCmds = []
 
@@ -86,9 +88,19 @@ function roundCommands(cmds, r, round) {
     reverseMarkOverlapped(subPathCmds, subPathCmds.length - 1)
 
     // is this an open or closed path? don't add arcs to start/end.
-    const closedPath = subPathCmds[subPathCmds.length - 1].marker == "Z"
+    const closedPath = subPathCmds[subPathCmds.length - 1].marker === "Z"
+    const adjustEndPoint = (cmd) => {
+      if (cmd.values?.x !== undefined && cmd.values?.y !== undefined) {
+        cmd.values.x += offsetX
+        cmd.values.y += offsetY
+      }
+
+      return cmd
+    }
+
     subPathCmds
       .filter((el) => !el.overlap)
+      .map(adjustEndPoint)
       .map((el, i, arr) => {
         const largeArcFlag = 0
         const prev = getPreviousNoZ(el, i, arr)
@@ -105,8 +117,7 @@ function roundCommands(cmds, r, round) {
         const o = getOffset(angle, radius)
         const offset = o.offset
         const sweepFlag = o.sweepFlag
-
-        const openFirstOrLast = (i == 0 || i == arr.length - 1) && !closedPath
+        const openFirstOrLast = (i === 0 || i === arr.length - 1) && !closedPath
         switch (el.marker) {
           case "M": // moveTo x,y
           case "L": // lineTo x,y
@@ -171,10 +182,7 @@ function roundCommands(cmds, r, round) {
       })
   })
 
-  return {
-    path: commandsToSvgPath(newCmds),
-    commands: newCmds,
-  }
+  return commandsToSvgPath(newCmds)
 }
 
 /**
@@ -183,10 +191,12 @@ function roundCommands(cmds, r, round) {
  * @param {string} str Raw string with commands from the path element
  * @param {number} r Expected radius of the arcs.
  * @param {number} round Number of decimal digits to round values
- * @returns {array} New commands sequence with rounded corners
+ * @param {number} [offsetX]
+ * @param {number} [offsetY]
+ * @returns {string} New commands sequence with rounded corners
  */
-function roundCorners(str, r, round) {
-  return roundCommands([...parsePath(str)], r, round)
+function roundCorners(str, r, round, offsetX, offsetY) {
+  return roundCommands([...parsePath(str)], r, round, offsetX, offsetY)
 }
 
 export { parsePath, roundCommands, roundCorners }

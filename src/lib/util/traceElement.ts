@@ -1,7 +1,7 @@
-import { getPaths } from "../draw"
 import PolygonInterface from "../../gpc/geometry/PolygonInterface"
 import PolyDefault from "../../gpc/geometry/PolyDefault"
-import ArcRounder from "../class/PathRounder/ArcRounder"
+import ArcRounder from "../class/Rounder/ArcRounder"
+import PathMaker from "../class/PathMaker"
 
 const svgNs = "http://www.w3.org/2000/svg"
 const svgElMap = new WeakMap()
@@ -15,21 +15,21 @@ export function traceElement(el: HTMLElement) {
   const { x, y, w, h } = unionPolygon.getBounds()
   const style = getComputedStyle(el)
   const cornerRadius = parseFloat(style.getPropertyValue("border-radius"))
+  const pathMaker = new PathMaker()
 
   unionPolygon.removeUnnecessaryPoints()
 
-  const paths = getPaths(x, y, unionPolygon)
+  const pathStrings = pathMaker.makePaths(unionPolygon, cornerRadius, -x, -y)
 
-  for (let i = 0; i < paths.length; ++i) {
-    const roundedPath = rounder.roundPath(paths[i], cornerRadius)
-    // reuse existing path if available
-    const path = allPaths[i] ?? document.createElementNS(svgNs, "path")
+  for (let i = 0; i < pathStrings.length; ++i) {
+    const pathEl = allPaths[i] ?? document.createElementNS(svgNs, "path")
+    pathEl.setAttribute("d", pathStrings[i])
+    svg.appendChild(pathEl)
 
-    path.setAttribute("d", roundedPath.toString())
-    svg.appendChild(path)
+    el.style.clipPath = `path('${pathStrings[i]}')`
   }
 
-  for (let i = allPaths.length; i > paths.length; --i) {
+  for (let i = allPaths.length; i > pathStrings.length; --i) {
     allPaths[i - 1].remove()
   }
 
