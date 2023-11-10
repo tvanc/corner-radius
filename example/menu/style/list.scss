@@ -10,6 +10,8 @@
 }
 
 :root {
+  --menu-bg: lightgray;
+  --menu-text-color: black;
   font-size: 24px;
 }
 
@@ -21,7 +23,7 @@
   padding: 0;
   margin: 0;
   list-style: none;
-  color: black;
+  color: var(--menu-text-color);
   min-width: 12rem;
   border-radius: var(--corner-radius);
 
@@ -44,7 +46,8 @@
 
     &:hover,
     &.is-hovered {
-      background: rgba(0, 0, 0, 0.25);
+      background: var(--menu-text-color);
+      color: var(--menu-bg);
     }
   }
 }
