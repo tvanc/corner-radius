@@ -1,7 +1,7 @@
 /**
  * Round the values of each command to the given number of decimals.
  * This function modifies the object in place.
- * @param {array} cmds Sequence of commands
+ * @param {object} el Sequence of commands
  * @param {number} round Number of decimal place to be rounded
  * @returns {array} Sequence of commands with their values rounded
  */
@@ -335,7 +335,7 @@ export function markOverlapped(el, index, array) {
  * Similar purpose as markOverlapped(). Recursively marks trailling commands that have the same end coordinate as the inital 'M'.
  * This function modifies the array in place.
  * @param {array} cmds Commands array
- * @param {number} index Optional start index counting backwards. Usually the last index from the array
+ * @param {number} counter Optional start index counting backwards. Usually the last index from the array
  */
 export function reverseMarkOverlapped(cmds, counter) {
   const overlap = ["x", "y"].every((key) => {
