@@ -12,6 +12,8 @@
 :root {
   --menu-bg: lightgray;
   --menu-text-color: black;
+  --menu-hover-bg: rgb(27, 82, 203);
+  --menu-hover-text-color: white;
   font-size: 24px;
 }
 
@@ -46,8 +48,23 @@
 
     &:hover,
     &.is-hovered {
-      background: var(--menu-text-color);
-      color: var(--menu-bg);
+      background-color: var(--menu-hover-bg);
+      color: var(--menu-hover-text-color);
+      background-image: linear-gradient(
+        to bottom,
+        lch(100 1 0 / 0.2),
+        transparent
+      );
+    }
+  }
+
+  li:not(:last-child) {
+    content: "";
+    display: block;
+    border-block-end: 1px solid #aaa;
+
+    &:hover {
+      border-block-end-color: transparent;
     }
   }
 }
@@ -62,7 +79,7 @@
     content: "›";
     font-size: 1.5rem;
     position: absolute;
-    right: 1rem;
+    right: 0.75rem;
     top: 50%;
     transform: translateY(-50%);
   }
