@@ -1,11 +1,9 @@
 import PolygonInterface from "../../gpc/geometry/PolygonInterface"
 import PolyDefault from "../../gpc/geometry/PolyDefault"
-import ArcRounder from "../class/Rounder/ArcRounder"
 import PathMaker from "../class/PathMaker"
 
 const svgNs = "http://www.w3.org/2000/svg"
 const svgElMap = new WeakMap()
-const rounder = new ArcRounder()
 
 export function traceElement(el: HTMLElement) {
   const svg = getSvg(el)
