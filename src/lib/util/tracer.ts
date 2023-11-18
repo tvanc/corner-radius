@@ -1,28 +1,28 @@
 import PolygonInterface from "../../gpc/geometry/PolygonInterface"
 import PolyDefault from "../../gpc/geometry/PolyDefault"
-import PathMaker from "../class/PathMaker"
 import Point from "../../gpc/geometry/Point"
+import PolySimple from "../../gpc/geometry/PolySimple"
+import { roundPathFromPoints } from "../svg-round-corners"
 
 const svgNs = "http://www.w3.org/2000/svg"
 const svgElMap = new WeakMap()
 
 export function tracer(el: HTMLElement) {
   const svg = getSvg(el)
-
   const allPaths = svg.querySelectorAll("path")
   const origin = el.getBoundingClientRect()
   const unionPolygon = getPolygons(el, origin)
   const { w, h } = unionPolygon.getBounds()
   const style = getComputedStyle(el)
   const radius = parseFloat(style.getPropertyValue("border-radius"))
-  const pathMaker = new PathMaker()
-  const pathStrings = pathMaker.makePaths(unionPolygon, radius)
+  const pathStrings = createPaths(unionPolygon, radius)
 
   for (let i = 0; i < pathStrings.length; ++i) {
     const pathEl = allPaths[i] ?? document.createElementNS(svgNs, "path")
     pathEl.setAttribute("d", pathStrings[i])
     svg.appendChild(pathEl)
 
+    // TODO clip each child with a detached polygon separately
     el.style.clipPath = `path('${pathStrings[i]}')`
   }
 
@@ -34,6 +34,21 @@ export function tracer(el: HTMLElement) {
   svg.setAttribute("height", h)
   svg.style.top = `${origin.y}px`
   svg.style.left = `${origin.x}px`
+}
+
+export function getSvg(el) {
+  if (!svgElMap.has(el)) {
+    const doc = el.ownerDocument
+    const svg = doc.createElementNS(svgNs, "svg")
+
+    svg.style.position = "absolute"
+
+    doc.body.appendChild(svg)
+
+    svgElMap.set(el, svg)
+  }
+
+  return svgElMap.get(el)
 }
 
 function getPolygons(
@@ -68,17 +83,19 @@ function getPolygon(el, origin): PolygonInterface {
   return polygon
 }
 
-export function getSvg(el) {
-  if (!svgElMap.has(el)) {
-    const doc = el.ownerDocument
-    const svg = doc.createElementNS(svgNs, "svg")
+function createPaths(
+  complexPolygon: PolygonInterface,
+  radius: number = 0,
+): string[] {
+  const num = complexPolygon.getNumInnerPoly()
+  const paths = []
 
-    svg.style.position = "absolute"
+  for (let i = 0; i < num; i++) {
+    const innerPoly: PolySimple = complexPolygon.getInnerPoly(i)
+    const points = innerPoly.removeUnnecessaryPoints().getPoints()
 
-    doc.body.appendChild(svg)
-
-    svgElMap.set(el, svg)
+    paths.push(roundPathFromPoints(points, radius).toString())
   }
 
-  return svgElMap.get(el)
+  return paths
 }
