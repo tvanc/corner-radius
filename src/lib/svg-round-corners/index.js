@@ -20,19 +20,14 @@ import Close from "../class/Command/Close"
  * This function modifies the array in place.
  * @param {array} points Array with commands to be modified
  * @param {number} r Expected radius of the arcs.
- * @param {number} [offsetX]
- * @param {number} [offsetY]
  * @returns {array} Sequence of commands containing arcs in place of corners
  */
-export function roundPathFromPoints(points, r, offsetX = 0, offsetY = 0) {
+export function roundPathFromPoints(points, r) {
   const commands = []
   points
     .map(
       (el) =>
-        new Point(
-          parseFloat((el.x + offsetX).toFixed(2)),
-          parseFloat((el.y + offsetY).toFixed(2)),
-        ),
+        new Point(parseFloat(el.x.toFixed(2)), parseFloat(el.y.toFixed(2))),
     )
     .map((el, i, arr) => {
       const largeArcFlag = false

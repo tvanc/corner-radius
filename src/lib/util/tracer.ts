@@ -1,6 +1,7 @@
 import PolygonInterface from "../../gpc/geometry/PolygonInterface"
 import PolyDefault from "../../gpc/geometry/PolyDefault"
 import PathMaker from "../class/PathMaker"
+import Point from "../../gpc/geometry/Point"
 
 const svgNs = "http://www.w3.org/2000/svg"
 const svgElMap = new WeakMap()
@@ -9,12 +10,13 @@ export function tracer(el: HTMLElement) {
   const svg = getSvg(el)
 
   const allPaths = svg.querySelectorAll("path")
-  const unionPolygon = getUnionOfAllPolygons(el)
-  const { x, y, w, h } = unionPolygon.getBounds()
+  const origin = el.getBoundingClientRect()
+  const unionPolygon = getPolygons(el, origin)
+  const { w, h } = unionPolygon.getBounds()
   const style = getComputedStyle(el)
   const radius = parseFloat(style.getPropertyValue("border-radius"))
   const pathMaker = new PathMaker()
-  const pathStrings = pathMaker.makePaths(unionPolygon, radius, -x, -y)
+  const pathStrings = pathMaker.makePaths(unionPolygon, radius)
 
   for (let i = 0; i < pathStrings.length; ++i) {
     const pathEl = allPaths[i] ?? document.createElementNS(svgNs, "path")
@@ -30,21 +32,24 @@ export function tracer(el: HTMLElement) {
 
   svg.setAttribute("width", w)
   svg.setAttribute("height", h)
-  svg.style.top = `${y}px`
-  svg.style.left = `${x}px`
+  svg.style.top = `${origin.y}px`
+  svg.style.left = `${origin.x}px`
 }
 
-function getUnionOfAllPolygons(root: HTMLElement): PolygonInterface {
-  let polygon = getPolygon(root)
+function getPolygons(
+  root: HTMLElement,
+  origin: Point = new Point(0, 0),
+): PolygonInterface {
+  let polygon = getPolygon(root, origin)
 
   ;[...root.children].forEach((leaf) => {
-    polygon = polygon.union(getUnionOfAllPolygons(leaf as HTMLElement))
+    polygon = polygon.union(getPolygons(leaf as HTMLElement, origin))
   })
 
   return polygon
 }
 
-function getPolygon(el): PolygonInterface {
+function getPolygon(el, origin): PolygonInterface {
   const rect = el.getBoundingClientRect()
   const polygon = new PolyDefault(false)
 
@@ -54,10 +59,10 @@ function getPolygon(el): PolygonInterface {
   const y2 = Math.round(rect.y + rect.height)
 
   polygon.add([
-    [x1, y1],
-    [x2, y1],
-    [x2, y2],
-    [x1, y2],
+    [x1 - origin.x, y1 - origin.y],
+    [x2 - origin.x, y1 - origin.y],
+    [x2 - origin.x, y2 - origin.y],
+    [x1 - origin.x, y2 - origin.y],
   ])
 
   return polygon
