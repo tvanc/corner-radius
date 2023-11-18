@@ -14,9 +14,6 @@ export function traceElement(el: HTMLElement) {
   const style = getComputedStyle(el)
   const cornerRadius = parseFloat(style.getPropertyValue("border-radius"))
   const pathMaker = new PathMaker()
-
-  unionPolygon.removeUnnecessaryPoints()
-
   const pathStrings = pathMaker.makePaths(unionPolygon, cornerRadius, -x, -y)
 
   for (let i = 0; i < pathStrings.length; ++i) {

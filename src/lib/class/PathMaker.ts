@@ -1,7 +1,6 @@
 import PolygonInterface from "../../gpc/geometry/PolygonInterface"
-import { Path } from "./Path"
 import PolySimple from "../../gpc/geometry/PolySimple"
-import { roundCorners } from "../svg-round-corners"
+import { roundPathFromPoints } from "../svg-round-corners"
 
 export default class PathMaker {
   makePaths(
@@ -10,9 +9,12 @@ export default class PathMaker {
     offsetX,
     offsetY,
   ): string[] {
-    return this.#getSimplePolygons(complexPolygon).map((p) =>
-      makePath(p, radius, offsetX, offsetY),
-    )
+    return this.#getSimplePolygons(complexPolygon).map((p) => {
+      const points = p.getPoints()
+      const fromPoints = roundPathFromPoints(points, radius, offsetX, offsetY)
+
+      return fromPoints.toString()
+    })
   }
 
   #getSimplePolygons(polygon: PolygonInterface): PolySimple[] {
@@ -20,21 +22,11 @@ export default class PathMaker {
     const simplePolygons = []
 
     for (let i = 0; i < num; i++) {
-      simplePolygons.push(polygon.getInnerPoly(i))
+      const innerPoly: PolySimple = polygon.getInnerPoly(i)
+      innerPoly.removeUnnecessaryPoints()
+      simplePolygons.push(innerPoly)
     }
 
     return simplePolygons
   }
-}
-
-function makePath(
-  simplePolygon: PolySimple,
-  radius: number,
-  offsetX: number,
-  offsetY: number,
-): string {
-  const points = simplePolygon.getPoints()
-  const path = Path.fromPoints(points)
-
-  return roundCorners(path.toString(), radius, 2, offsetX, offsetY)
 }

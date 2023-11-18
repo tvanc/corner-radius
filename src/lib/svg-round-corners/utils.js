@@ -566,3 +566,25 @@ export function commandsToSvgPath(cmds) {
     .join("")
     .trim()
 }
+
+export function getPreviousPoint(i, a) {
+  return a[mod(i - 1, a.length)]
+}
+
+export function getNextPoint(i, a) {
+  return a[mod(i + 1, a.length)]
+}
+
+/**
+ * Calculates the distance between the current command and
+ * it's direct neighbours and returns the nearest distance
+ * @param {any} el current command
+ * @param {any} previous previous command
+ * @param {any} next next command
+ * @returns {number} the distance to teh nearest command
+ */
+export function shortestLength(el, previous, next) {
+  const nxtSide = getDistance(el, next)
+  const prvSide = getDistance(previous, el)
+  return Math.min(prvSide, nxtSide)
+}
