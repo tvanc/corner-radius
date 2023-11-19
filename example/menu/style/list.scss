@@ -22,16 +22,24 @@
   --menu-spacing: 1.2rem;
   --half-spacing: calc(var(--menu-spacing) / 2);
   --menu-width: 5rem;
+
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
+  list-style: none;
   padding: 0;
   margin: 0;
-  list-style: none;
   color: var(--menu-text-color);
   min-width: 12rem;
   border-radius: var(--corner-radius);
 
   > li {
-    position: relative;
-    width: 100%;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
     padding: calc(var(--half-spacing) / 1.1) var(--half-spacing);
     background-clip: padding-box;
     white-space: nowrap;
@@ -60,7 +68,6 @@
 
   li:not(:last-child) {
     content: "";
-    display: block;
     border-block-end: 1px solid #aaa;
 
     &:hover {
@@ -72,25 +79,13 @@
 .has-menu {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   position: relative;
 
   &::after {
     content: "›";
     font-size: 1.5rem;
-    position: absolute;
-    right: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
+    line-height: 0;
   }
-}
-
-.root {
-  --corner-radius: 1rem;
-  align-items: start;
-  list-style: none;
-  position: relative;
-  z-index: 1;
 }
 
 @keyframes foo {
