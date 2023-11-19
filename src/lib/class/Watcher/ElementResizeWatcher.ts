@@ -1,6 +1,6 @@
 import AbstractWatcher from "./AbstractWatcher"
 
-export default class ResizeWatcher extends AbstractWatcher {
+export default class ElementResizeWatcher extends AbstractWatcher {
   #observer: ResizeObserver
 
   protected doStart() {

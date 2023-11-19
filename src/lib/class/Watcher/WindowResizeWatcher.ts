@@ -1,6 +1,6 @@
 import AbstractWatcher from "./AbstractWatcher"
 
-export default class WindowWatcher extends AbstractWatcher {
+export default class WindowResizeWatcher extends AbstractWatcher {
   #controller: AbortController
 
   protected doStart() {

@@ -2,12 +2,12 @@ import WatchOptions from "../class/WatchOptions"
 import Tracer from "../class/Tracer"
 import WatcherCallback from "../class/Watcher/WatcherCallback"
 import AnimationWatcher from "../class/Watcher/AnimationWatcher"
-import ResizeWatcher from "../class/Watcher/ResizeWatcher"
-import WindowWatcher from "../class/Watcher/WindowWatcher"
+import ElementResizeWatcher from "../class/Watcher/ElementResizeWatcher"
+import WindowResizeWatcher from "../class/Watcher/WindowResizeWatcher"
 
 const animationWatchers: WeakMap<HTMLElement, AnimationWatcher> = new WeakMap()
-const resizeWatchers: WeakMap<HTMLElement, ResizeWatcher> = new WeakMap()
-const windowWatchers: WeakMap<HTMLElement, WindowWatcher> = new WeakMap()
+const resizeWatchers: WeakMap<HTMLElement, ElementResizeWatcher> = new WeakMap()
+const windowWatchers: WeakMap<HTMLElement, WindowResizeWatcher> = new WeakMap()
 
 const watchCallbacks: WeakMap<HTMLElement, WatcherCallback> = new WeakMap()
 
@@ -28,11 +28,11 @@ export function watchElement(
   }
 
   if (elementResize) {
-    getResizeWatcher(el).start()
+    getElementResizeWatcher(el).start()
   }
 
   if (windowResize) {
-    getWindowWatcher(el).start()
+    getWindowResizeWatcher(el).start()
   }
 }
 
@@ -52,10 +52,10 @@ export function unwatchElement(
     getAnimationWatcher(el, false)?.stop()
   }
   if (elementResize) {
-    getResizeWatcher(el, false)?.stop()
+    getElementResizeWatcher(el, false)?.stop()
   }
   if (windowResize) {
-    getWindowWatcher(el, false)?.stop()
+    getWindowResizeWatcher(el, false)?.stop()
   }
 }
 
@@ -70,22 +70,22 @@ function getAnimationWatcher(el, force = true) {
   return watcher
 }
 
-function getResizeWatcher(el, force = true) {
+function getElementResizeWatcher(el, force = true) {
   let watcher = resizeWatchers.get(el)
 
   if (!watcher && force) {
-    watcher = new ResizeWatcher(el, getCallback(el))
+    watcher = new ElementResizeWatcher(el, getCallback(el))
     resizeWatchers.set(el, watcher)
   }
 
   return watcher
 }
 
-function getWindowWatcher(el: HTMLElement, force: boolean = true) {
+function getWindowResizeWatcher(el: HTMLElement, force: boolean = true) {
   let watcher = windowWatchers.get(el)
 
   if (!watcher && force) {
-    watcher = new WindowWatcher(el, getCallback(el))
+    watcher = new WindowResizeWatcher(el, getCallback(el))
     windowWatchers.set(el, watcher)
   }
 
