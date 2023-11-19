@@ -24,7 +24,7 @@
   --menu-width: 5rem;
 
   position: relative;
-  z-index: 1;
+  z-index: -1;
   display: flex;
   flex-direction: column;
   justify-content: stretch;
@@ -47,11 +47,16 @@
     > ul {
       position: absolute;
       top: 0;
-      left: 100%;
+      left: 0;
+      scale: 1 0;
+      transform-origin: top;
+      transition-property: left, opacity, scale;
+      transition-duration: 0.25s;
+      transition-timing-function: ease-out;
     }
 
     &:not(:hover, .is-hovered) > ul {
-      display: none;
+      opacity: 0;
     }
 
     &:hover,
@@ -63,6 +68,12 @@
         lch(100 1 0 / 0.2),
         transparent
       );
+
+      > ul {
+        scale: 1;
+        left: 100%;
+        opacity: 1;
+      }
     }
   }
 
@@ -86,6 +97,10 @@
     font-size: 1.5rem;
     line-height: 0;
   }
+}
+
+.root {
+  z-index: 1;
 }
 
 @keyframes foo {
