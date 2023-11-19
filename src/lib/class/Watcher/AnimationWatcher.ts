@@ -3,11 +3,7 @@ import AbstractWatcher from "./AbstractWatcher"
 export default class AnimationWatcher extends AbstractWatcher {
   #controller: AbortController
 
-  get watching(): boolean {
-    return !!this.#controller
-  }
-
-  doStart() {
+  protected doStart() {
     const { el, callback } = this
     const win = el.ownerDocument.defaultView
 
@@ -62,7 +58,7 @@ export default class AnimationWatcher extends AbstractWatcher {
     return this
   }
 
-  doStop() {
+  protected doStop() {
     this.#controller.abort()
     this.#controller = undefined
   }

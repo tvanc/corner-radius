@@ -5,7 +5,7 @@ export default abstract class AbstractWatcher implements WatcherInterface {
   protected readonly el: HTMLElement
   protected readonly callback: WatcherCallback
 
-  abstract get watching(): boolean
+  #watching = false
 
   protected abstract doStart()
 
@@ -16,15 +16,21 @@ export default abstract class AbstractWatcher implements WatcherInterface {
     this.callback = callback
   }
 
+  get watching(): boolean {
+    return this.#watching
+  }
+
   start() {
-    if (!this.watching) {
+    if (!this.#watching) {
       this.doStart()
+      this.#watching = true
     }
   }
 
   stop() {
-    if (this.watching) {
+    if (this.#watching) {
       this.doStop()
+      this.#watching = false
     }
   }
 }

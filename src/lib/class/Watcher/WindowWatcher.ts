@@ -3,11 +3,7 @@ import AbstractWatcher from "./AbstractWatcher"
 export default class WindowWatcher extends AbstractWatcher {
   #controller: AbortController
 
-  get watching(): boolean {
-    return !!this.#controller
-  }
-
-  doStart() {
+  protected doStart() {
     const win: Window = this.el.ownerDocument.defaultView
     this.#controller = new AbortController()
 
@@ -16,7 +12,7 @@ export default class WindowWatcher extends AbstractWatcher {
     })
   }
 
-  doStop() {
+  protected doStop() {
     this.#controller.abort()
     this.#controller = undefined
   }
