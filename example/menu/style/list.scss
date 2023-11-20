@@ -10,41 +10,79 @@
 }
 
 :root {
+  --menu-bg: lightgray;
+  --menu-text-color: black;
+  --menu-hover-bg: rgb(27, 82, 203);
+  --menu-hover-text-color: white;
   font-size: 24px;
 }
 
 .menu {
   --corner-radius: 1rem;
-  --menu-spacing: 1rem;
+  --menu-spacing: 1.2rem;
   --half-spacing: calc(var(--menu-spacing) / 2);
   --menu-width: 5rem;
-  padding: calc(var(--corner-radius)) 0;
-  margin: 0;
+
+  position: relative;
+  z-index: -1;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
   list-style: none;
-  color: black;
+  padding: 0;
+  margin: 0;
+  color: var(--menu-text-color);
   min-width: 12rem;
   border-radius: var(--corner-radius);
 
   > li {
-    position: relative;
-    width: 100%;
-    padding: var(--half-spacing) var(--menu-spacing);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: calc(var(--half-spacing) / 1.1) var(--half-spacing);
     background-clip: padding-box;
     white-space: nowrap;
 
     > ul {
       position: absolute;
-      top: calc(var(--half-spacing) * -1);
-      left: calc(100%);
+      top: 0;
+      left: 0;
+      scale: 1 0;
+      transform-origin: top;
+      transition-property: left, opacity, scale;
+      transition-duration: 0.5s;
+      transition-timing-function: ease-out;
     }
 
     &:not(:hover, .is-hovered) > ul {
-      display: none;
+      opacity: 0;
     }
 
     &:hover,
     &.is-hovered {
-      background: rgba(0, 0, 0, 0.25);
+      background-color: var(--menu-hover-bg);
+      color: var(--menu-hover-text-color);
+      background-image: linear-gradient(
+        to bottom,
+        lch(100 1 0 / 0.2),
+        transparent
+      );
+
+      > ul {
+        scale: 1;
+        left: 100%;
+        opacity: 1;
+      }
+    }
+  }
+
+  li:not(:last-child) {
+    content: "";
+    border-block-end: 1px solid #aaa;
+
+    &:hover {
+      border-block-end-color: transparent;
     }
   }
 }
@@ -52,24 +90,16 @@
 .has-menu {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   position: relative;
 
   &::after {
     content: "›";
     font-size: 1.5rem;
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
+    line-height: 0;
   }
 }
 
 .root {
-  --corner-radius: 1rem;
-  align-items: start;
-  list-style: none;
-  position: relative;
   z-index: 1;
 }
 

@@ -24,9 +24,18 @@ export class Path {
     ]
 
     for (let i = 1; i < points.length; i++) {
-      commands.push(
-        new LineTo(new Point(points[i].x + offsetX, points[i].y + offsetY)),
-      )
+      const previousPoint = points[i - 1]
+      const currentPoint = points[i]
+      const nextPoint = points[i + 1] ?? firstPoint
+      const slopeFromPreviousToCurrent = slope(previousPoint, currentPoint)
+      const slopeFromPreviousToNext = slope(previousPoint, nextPoint)
+
+      // Eliminate unnecessary points on a line
+      if (slopeFromPreviousToCurrent !== slopeFromPreviousToNext) {
+        commands.push(
+          new LineTo(new Point(currentPoint.x + offsetX, currentPoint.y + offsetY)),
+        )
+      }
     }
 
     commands.push(new Close())
@@ -51,7 +60,15 @@ export class Path {
     }
   }
 
+  clone() {
+    return new Path(this.commands.map((c: CommandInterface) => c.clone()))
+  }
+
   get length() {
     return this.commands.length
   }
+}
+
+function slope(point1: Point, point2: Point) {
+  return (point2.y - point1.y) / (point2.x - point1.x)
 }

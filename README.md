@@ -20,6 +20,7 @@ Once the dev server has launched, open your web browser to [localhost:8080/src/e
 
 ### TODO
 
+- Use intersection observer to monitor positional changes
 - Add window resize watcher
 - Clip traced element by path
 - Add super-ellipse algorithm

@@ -1,7 +1,8 @@
 type WatchOptions = {
-  mutations?: boolean
   animations?: boolean
   elementResize?: boolean
+  transitions?: boolean
+  windowResize?: boolean
 }
 
 export default WatchOptions

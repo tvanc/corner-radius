@@ -10,8 +10,8 @@ function log(e) {
   console.log(e.type, e)
 }
 
-el.addEventListener("transitionstart", log)
-el.addEventListener("transitionend", log)
+// el.addEventListener("transitionstart", log)
+// el.addEventListener("transitionend", log)
 el.addEventListener("mouseleave", function () {
   trace(el)
 })

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tracer Tests</title>
+    <style>
+      body,
+      .test-div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+
+      :root {
+        --start-height: 100px;
+        --debug-stroke-color: rgba(255, 200, 170, 0.8);
+        --debug-stroke-style: dashed;
+        --debug-stroke: 0.5rem var(--debug-stroke-style)
+          var(--debug-stroke-color);
+        --debug-element-color: rgba(100, 200, 255, 0.8);
+
+        font-family: sans-serif;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+      }
+
+      .stroked {
+        outline: var(--debug-stroke);
+      }
+
+      .test-div {
+        border-radius: 1em;
+        width: 50%;
+        position: relative;
+        z-index: 1;
+        background-color: var(--debug-element-color);
+      }
+
+      /*noinspection CssUnusedSymbol*/
+      .animate-height {
+        height: var(--start-height);
+        animation: animate-height 1s;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+      }
+
+      .test-div,
+      footer {
+        margin-top: auto;
+      }
+
+      .legend,
+      .legend > div {
+        display: flex;
+        align-items: center;
+      }
+      .legend {
+        gap: 3rem;
+      }
+      .legend dt {
+        --legend-height: 1rem;
+
+        height: var(--legend-height);
+        width: 2.5rem;
+      }
+      .legend dd {
+        margin-left: 0.35rem;
+      }
+      .legend .stroke-key {
+        box-sizing: content-box;
+        height: 0;
+        border: calc(var(--legend-height) / 2) var(--debug-stroke-color);
+        border-style: var(--debug-stroke-style) none;
+      }
+      .legend .subject-key {
+        background: var(--debug-element-color);
+      }
+
+      @keyframes animate-height {
+        0% {
+          height: var(--start-height);
+        }
+        100% {
+          height: 200px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="watchMe" class="test-div stroked">Some Content</div>
+    <footer>
+      <dl aria-label="Legend" class="legend">
+        <div>
+          <dt class="subject-key"></dt>
+          <dd>HTML Element</dd>
+        </div>
+        <div>
+          <dt class="stroke-key"></dt>
+          <dd>SVG Path</dd>
+        </div>
+      </dl>
+    </footer>
+  </body>
+</html>

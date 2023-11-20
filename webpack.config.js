@@ -41,6 +41,7 @@ Encore
   .enableTypeScriptLoader()
 
   .addPlugin(
+    // outputs to localhost:8080/dist/menuExample.html
     new HtmlWebpackPlugin({
       title: "Menu Example",
       filename: "[name].html",

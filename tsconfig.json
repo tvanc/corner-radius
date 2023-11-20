@@ -12,9 +12,10 @@
     ],
     "outDir": "./dist/",
     "sourceMap": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": ["cypress", "node"]
   },
   "include": [
-    "./src/**/*"
+    "./src/**/*.ts"
   ]
 }

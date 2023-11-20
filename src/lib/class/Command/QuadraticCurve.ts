@@ -5,8 +5,8 @@ import AbstractCommand from "./AbstractCommand"
 export default class QuadraticCurve
   extends AbstractCommand
   implements CommandWithEndpointInterface {
-  endPoint: Point
   controlPoint: Point
+  endPoint: Point
 
   constructor(controlPoint: Point, endPoint: Point) {
     super()
