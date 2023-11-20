@@ -33,10 +33,6 @@ export default class EventWatcher extends AbstractWatcher {
 
       controller.signal.addEventListener("abort", stopRafLoop)
 
-      startRafLoop()
-    }
-
-    function startRafLoop() {
       if (!inLoop) {
         inLoop = true
 
