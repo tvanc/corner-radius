@@ -3,11 +3,12 @@ import PolyDefault from "../../gpc/geometry/PolyDefault"
 import Point from "../../gpc/geometry/Point"
 import PolySimple from "../../gpc/geometry/PolySimple"
 import { roundPathFromPoints } from "../svg-round-corners"
+import { Path } from "../class/Path"
 
 const svgNs = "http://www.w3.org/2000/svg"
 const svgElMap = new WeakMap()
 
-export function tracer(el: HTMLElement) {
+export function trace(el: HTMLElement) {
   const svg = getSvg(el)
   const allPaths = svg.querySelectorAll("path")
   const origin = el.getBoundingClientRect()
@@ -30,8 +31,8 @@ export function tracer(el: HTMLElement) {
     allPaths[i - 1].remove()
   }
 
-  svg.setAttribute("width", w)
-  svg.setAttribute("height", h)
+  svg.setAttribute("width", w * 2 + "")
+  svg.setAttribute("height", h * 2 + "")
   svg.style.top = `${origin.y}px`
   svg.style.left = `${origin.x}px`
 }
@@ -92,9 +93,22 @@ function createPaths(
 
   for (let i = 0; i < num; i++) {
     const innerPoly: PolySimple = complexPolygon.getInnerPoly(i)
-    const points = innerPoly.removeUnnecessaryPoints().getPoints()
+    const points = [
+      new Point(411.1875, 236.602294921875),
+      new Point(123.1875, 236.602294921875),
+      new Point(0.1875, 220.602294921875),
+      new Point(0.1875, -0.397705078125),
+      new Point(288.1875, -0.397705078125),
+      new Point(288.1875, 165.602294921875),
+      new Point(411.1875, 165.602294921875),
+    ]
+    const path = roundPathFromPoints(points, radius).toString()
 
-    paths.push(roundPathFromPoints(points, radius).toString())
+    console.log("points", points)
+    console.log("original path", Path.fromPoints(points).toString())
+    console.log("rounded path", path)
+
+    paths.push(path)
   }
 
   return paths

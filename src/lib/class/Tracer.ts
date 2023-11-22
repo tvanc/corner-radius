@@ -1,6 +1,6 @@
 import WatchOptions from "./WatchOptions"
-import { getSvg, tracer } from "../util/tracer"
-import { watchElement, unwatchElement } from "../util/watchElement"
+import { getSvg, trace } from "../util/trace"
+import { watch, unwatch } from "../util/watch"
 
 const tracerMap: WeakMap<HTMLElement, Tracer> = new WeakMap()
 
@@ -22,19 +22,19 @@ export default class Tracer {
   }
 
   trace() {
-    tracer(this.#el)
+    trace(this.#el)
 
     return this
   }
 
   watch(options: WatchOptions = undefined) {
-    watchElement(this.#el, options)
+    watch(this.#el, options)
 
     return this
   }
 
   unwatch(options: WatchOptions = undefined) {
-    unwatchElement(this.#el, options)
+    unwatch(this.#el, options)
 
     return this
   }

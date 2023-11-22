@@ -13,7 +13,7 @@ const windowWatchers: WeakMap<HTMLElement, WindowResizeWatcher> = new WeakMap()
 const rafCallbacks: WeakMap<HTMLElement, WatcherCallback> = new WeakMap()
 const immediateCallbacks: WeakMap<HTMLElement, WatcherCallback> = new WeakMap()
 
-export function watchElement(
+export function watch(
   el: HTMLElement,
   {
     animations = false,
@@ -43,7 +43,7 @@ export function watchElement(
     // getWindowResizeWatcher(el).start()
   }
 }
-export function unwatchElement(
+export function unwatch(
   el,
   {
     animations = false,
