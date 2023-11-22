@@ -62,7 +62,7 @@ export function roundPathFromPoints(points, r) {
       parseFloat(nextPoint[1].toFixed(3)),
     )
 
-    // there only need be a curve if and only if the next marker is a corner
+    // curve needed only if next marker is a corner
     if (i === 0) {
       commands.push(new MoveTo(linePoint))
     } else {
