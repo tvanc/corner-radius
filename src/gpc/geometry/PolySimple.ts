@@ -397,6 +397,10 @@ export default class PolySimple implements PolygonInterface {
       }
     }
 
+    if (nPoints.length > 1 && nPoints[0] === nPoints[nPoints.length - 1]) {
+      nPoints.pop()
+    }
+
     this.m_List = new ArrayList(nPoints)
 
     return this
