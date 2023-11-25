@@ -92,21 +92,9 @@ function createPaths(
   const paths = []
 
   for (let i = 0; i < num; i++) {
-    const innerPoly: PolySimple = complexPolygon.getInnerPoly(i)
-    const points = [
-      new Point(411.1875, 236.602294921875),
-      new Point(123.1875, 236.602294921875),
-      new Point(0.1875, 220.602294921875),
-      new Point(0.1875, -0.397705078125),
-      new Point(288.1875, -0.397705078125),
-      new Point(288.1875, 165.602294921875),
-      new Point(411.1875, 165.602294921875),
-    ]
+    const innerPoly = complexPolygon.getInnerPoly(i)
+    const points = innerPoly.getPoints()
     const path = roundPathFromPoints(points, radius).toString()
-
-    console.log("points", points)
-    console.log("original path", Path.fromPoints(points).toString())
-    console.log("rounded path", path)
 
     paths.push(path)
   }
