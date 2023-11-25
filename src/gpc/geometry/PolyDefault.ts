@@ -167,7 +167,7 @@ export default class PolyDefault implements PolygonInterface {
   /**
    * Returns the polygon at this index.
    */
-  getInnerPoly(polyIndex) {
+  getInnerPoly(polyIndex): PolySimple {
     return this.m_List.get(polyIndex)
   }
   /**
