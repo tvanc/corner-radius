@@ -379,7 +379,7 @@ export default class PolySimple implements PolygonInterface {
     let l1 = new Line(oPoints[0], oPoints[1])
     let l1Slope = getSlope(l1.start, l1.end)
 
-    for (let i = 2; i < len; ++i) {
+    for (let i = 1; i < len; ++i) {
       const l2 = new Line(l1.end, getNextPoint(i, oPoints))
       const l2Slope = getSlope(l2.start, l2.end)
 
