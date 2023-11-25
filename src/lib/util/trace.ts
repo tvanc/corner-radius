@@ -1,9 +1,7 @@
 import PolygonInterface from "../../gpc/geometry/PolygonInterface"
 import PolyDefault from "../../gpc/geometry/PolyDefault"
 import Point from "../../gpc/geometry/Point"
-import PolySimple from "../../gpc/geometry/PolySimple"
 import { roundPathFromPoints } from "../svg-round-corners"
-import { Path } from "../class/Path"
 
 const svgNs = "http://www.w3.org/2000/svg"
 const svgElMap = new WeakMap()
@@ -31,8 +29,8 @@ export function trace(el: HTMLElement) {
     allPaths[i - 1].remove()
   }
 
-  svg.setAttribute("width", w * 2 + "")
-  svg.setAttribute("height", h * 2 + "")
+  svg.setAttribute("width", w)
+  svg.setAttribute("height", h)
   svg.style.top = `${origin.y}px`
   svg.style.left = `${origin.x}px`
 }
