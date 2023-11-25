@@ -67,16 +67,19 @@ function getPolygon(el, origin): PolygonInterface {
   const rect = el.getBoundingClientRect()
   const polygon = new PolyDefault(false)
 
+  const oX = Math.round(origin.x)
+  const oY = Math.round(origin.y)
+
   const x1 = Math.round(rect.x)
   const y1 = Math.round(rect.y)
   const x2 = Math.round(rect.x + rect.width)
   const y2 = Math.round(rect.y + rect.height)
 
   polygon.add([
-    [x1 - origin.x, y1 - origin.y],
-    [x2 - origin.x, y1 - origin.y],
-    [x2 - origin.x, y2 - origin.y],
-    [x1 - origin.x, y2 - origin.y],
+    [x1 - oX, y1 - oY],
+    [x2 - oX, y1 - oY],
+    [x2 - oX, y2 - oY],
+    [x1 - oX, y2 - oY],
   ])
 
   return polygon
