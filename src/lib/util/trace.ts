@@ -93,7 +93,7 @@ function createPaths(
 
   for (let i = 0; i < num; i++) {
     const innerPoly = complexPolygon.getInnerPoly(i)
-    const points = innerPoly.getPoints()
+    const points = innerPoly.removeUnnecessaryPoints().getPoints()
     const path = roundPathFromPoints(points, radius).toString()
 
     paths.push(path)
