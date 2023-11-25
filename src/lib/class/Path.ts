@@ -24,18 +24,14 @@ export class Path {
     ]
 
     for (let i = 1; i < points.length; i++) {
-      const previousPoint = points[i - 1]
       const currentPoint = points[i]
-      const nextPoint = points[i + 1] ?? firstPoint
-      const slopeFromPreviousToCurrent = slope(previousPoint, currentPoint)
-      const slopeFromPreviousToNext = slope(previousPoint, nextPoint)
 
       // Eliminate unnecessary points on a line
-      if (slopeFromPreviousToCurrent !== slopeFromPreviousToNext) {
-        commands.push(
-          new LineTo(new Point(currentPoint.x + offsetX, currentPoint.y + offsetY)),
-        )
-      }
+      commands.push(
+        new LineTo(
+          new Point(currentPoint.x + offsetX, currentPoint.y + offsetY),
+        ),
+      )
     }
 
     commands.push(new Close())
