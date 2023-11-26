@@ -196,7 +196,7 @@ export default class PolySimple implements PolygonInterface {
    * Returns <code>this</code> if <code>polyIndex = 0</code>, else it throws
    * IllegalStateException.
    */
-  getInnerPoly(polyIndex) {
+  getInnerPoly(polyIndex): PolySimple {
     if (polyIndex !== 0) {
       alert("PolySimple only has one poly")
     }
