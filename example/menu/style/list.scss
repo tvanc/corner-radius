@@ -49,10 +49,10 @@
       top: 0;
       left: 0;
       scale: 1 0;
-      transform-origin: top;
+      transform-origin: top right;
       transition-property: left, opacity, scale;
       transition-duration: 0.5s;
-      transition-timing-function: ease-out;
+      transition-timing-function: ease-in-out;
     }
 
     &:not(:hover, .is-hovered) > ul {
