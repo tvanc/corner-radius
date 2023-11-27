@@ -24,6 +24,7 @@ import Close from "../class/Command/Close"
  */
 export function roundPathFromPoints(points, r) {
   const commands = []
+  let arcTo
 
   for (let i = 0; i < points.length; ++i) {
     const el = points[i]
@@ -57,20 +58,19 @@ export function roundPathFromPoints(points, r) {
       parseFloat(prevPoint[1].toFixed(3)),
     )
 
-    const arcPoint = new Point(
-      parseFloat(nextPoint[0].toFixed(3)),
-      parseFloat(nextPoint[1].toFixed(3)),
-    )
-
     // curve needed only if next marker is a corner
     if (i === 0) {
       commands.push(new MoveTo(linePoint))
-    } else {
+    } else if (!arcTo || arcTo.x !== linePoint.x || arcTo.y !== linePoint.y) {
       commands.push(new LineTo(linePoint))
     }
 
+    arcTo = new Point(
+      parseFloat(nextPoint[0].toFixed(3)),
+      parseFloat(nextPoint[1].toFixed(3)),
+    )
     commands.push(
-      new Arc(radius, radius, degrees, largeArcFlag, sweepFlag, arcPoint),
+      new Arc(radius, radius, degrees, largeArcFlag, sweepFlag, arcTo),
     )
   }
 
