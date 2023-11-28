@@ -3,15 +3,20 @@ import Tracer from "../class/Tracer"
 import WatcherCallback from "../class/Watcher/WatcherCallback"
 import ElementResizeWatcher from "../class/Watcher/ElementResizeWatcher"
 import WindowResizeWatcher from "../class/Watcher/WindowResizeWatcher"
-import EventWatcher from "../class/Watcher/EventWatcher"
+import StartStopWatcher from "../class/Watcher/StartStopWatcher"
+import RenderList from "../class/Watcher/RenderList"
+import HTML = Mocha.reporters.HTML
 
-const animationWatchers: WeakMap<HTMLElement, EventWatcher> = new WeakMap()
+const animationWatchers: WeakMap<HTMLElement, StartStopWatcher> = new WeakMap()
 const resizeWatchers: WeakMap<HTMLElement, ElementResizeWatcher> = new WeakMap()
-const transitionWatchers: WeakMap<HTMLElement, EventWatcher> = new WeakMap()
+const transitionWatchers: WeakMap<HTMLElement, StartStopWatcher> = new WeakMap()
 const windowWatchers: WeakMap<HTMLElement, WindowResizeWatcher> = new WeakMap()
 
 const rafCallbacks: WeakMap<HTMLElement, WatcherCallback> = new WeakMap()
-const immediateCallbacks: WeakMap<HTMLElement, WatcherCallback> = new WeakMap()
+const startCallbacks: WeakMap<HTMLElement, WatcherCallback> = new WeakMap()
+const stopCallbacks: WeakMap<HTMLElement, WatcherCallback> = new WeakMap()
+
+const traceList = new RenderList()
 
 export function watch(
   el: HTMLElement,
@@ -78,9 +83,10 @@ function getAnimationWatcher(el, force = true) {
   let watcher = animationWatchers.get(el)
 
   if (!watcher && force) {
-    watcher = new EventWatcher(
+    watcher = new StartStopWatcher(
       el,
-      getImmediateCallback(el),
+      getStartCallback(el),
+      getStopCallback(el),
       ["animationstart"],
       ["animationcancel", "animationend"],
     )
@@ -105,9 +111,10 @@ function getTransitionWatcher(el: HTMLElement, force = true) {
   let watcher = transitionWatchers.get(el)
 
   if (!watcher && force) {
-    watcher = new EventWatcher(
+    watcher = new StartStopWatcher(
       el,
-      getImmediateCallback(el),
+      getStartCallback(el),
+      getStopCallback(el),
       ["transitionstart"],
       ["transitioncancel", "transitionend"],
     )
@@ -128,12 +135,21 @@ function getWindowResizeWatcher(el: HTMLElement, force: boolean = true) {
   return watcher
 }
 
-function getImmediateCallback(el: HTMLElement): WatcherCallback {
-  let callback = immediateCallbacks.get(el)
+function getStartCallback(el: HTMLElement): WatcherCallback {
+  let callback = startCallbacks.get(el)
 
   if (!callback) {
-    const tracer = Tracer.getInstance(el)
-    callback = () => tracer.trace()
+    callback = () => traceList.add(Tracer.getInstance(el))
+  }
+
+  return callback
+}
+
+function getStopCallback(el: HTMLElement): WatcherCallback {
+  let callback = stopCallbacks.get(el)
+
+  if (!callback) {
+    callback = () => traceList.delete(Tracer.getInstance(el))
   }
 
   return callback
@@ -143,17 +159,7 @@ function getRafCallback(el: HTMLElement): WatcherCallback {
   let callback = rafCallbacks.get(el)
 
   if (!callback) {
-    const tracer = Tracer.getInstance(el)
-    let frame = null
-    callback = () => {
-      if (!frame) {
-        frame = requestAnimationFrame(() => {
-          tracer.trace()
-          frame = null
-        })
-      }
-    }
-    rafCallbacks.set(el, callback)
+    rafCallbacks.set(el, () => traceList.addOnce(Tracer.getInstance(el)))
   }
 
   return callback
