@@ -5,7 +5,7 @@ export default class RenderList extends Set<Tracer> {
   #onceSet = new Set<Tracer>()
 
   #renderFrame() {
-    if (this.size === 0) {
+    if (this.size === 0 && this.#onceSet.size === 0) {
       this.#running = false
       return
     }
@@ -22,16 +22,31 @@ export default class RenderList extends Set<Tracer> {
     window.requestAnimationFrame(this.#renderFrame.bind(this))
   }
 
-  add(value: Tracer): this {
+  #start() {
     if (!this.#running) {
       window.requestAnimationFrame(this.#renderFrame.bind(this))
       this.#running = true
     }
+  }
 
-    return super.add(value)
+  add(value: Tracer): this {
+    this.#start()
+    const result = super.add(value)
+    console.log("size on add", this.size)
+    return result
   }
 
   addOnce(tracer: Tracer) {
+    this.#start()
     this.#onceSet.add(tracer)
+    console.log("once size on add", this.size)
+  }
+
+  delete(value: Tracer): boolean {
+    const has = super.delete(value)
+    if (has) {
+      console.log("size after delete", this.size)
+    }
+    return has
   }
 }

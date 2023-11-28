@@ -26,7 +26,6 @@ export default class StartStopWatcher extends AbstractWatcher {
   protected doStart() {
     const controller = new AbortController()
     const handlerArgs = { signal: controller.signal }
-    const handleOnceArgs = { once: true, ...handlerArgs }
     const self = this
 
     for (const startEvent of this.#startEvents) {
@@ -34,7 +33,7 @@ export default class StartStopWatcher extends AbstractWatcher {
     }
 
     for (const stopEvent of self.#stopEvents) {
-      this.el.addEventListener(stopEvent, handleStopEvent, handleOnceArgs)
+      this.el.addEventListener(stopEvent, handleStopEvent, handlerArgs)
     }
 
     this.#controller = controller

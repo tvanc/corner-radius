@@ -5,7 +5,6 @@ import ElementResizeWatcher from "../class/Watcher/ElementResizeWatcher"
 import WindowResizeWatcher from "../class/Watcher/WindowResizeWatcher"
 import StartStopWatcher from "../class/Watcher/StartStopWatcher"
 import RenderList from "../class/Watcher/RenderList"
-import HTML = Mocha.reporters.HTML
 
 const animationWatchers: WeakMap<HTMLElement, StartStopWatcher> = new WeakMap()
 const resizeWatchers: WeakMap<HTMLElement, ElementResizeWatcher> = new WeakMap()
@@ -140,6 +139,7 @@ function getStartCallback(el: HTMLElement): WatcherCallback {
 
   if (!callback) {
     callback = () => traceList.add(Tracer.getInstance(el))
+    startCallbacks.set(el, callback)
   }
 
   return callback
@@ -150,6 +150,7 @@ function getStopCallback(el: HTMLElement): WatcherCallback {
 
   if (!callback) {
     callback = () => traceList.delete(Tracer.getInstance(el))
+    stopCallbacks.set(el, callback)
   }
 
   return callback
@@ -159,7 +160,8 @@ function getRafCallback(el: HTMLElement): WatcherCallback {
   let callback = rafCallbacks.get(el)
 
   if (!callback) {
-    rafCallbacks.set(el, () => traceList.addOnce(Tracer.getInstance(el)))
+    callback = () => traceList.addOnce(Tracer.getInstance(el))
+    rafCallbacks.set(el, callback)
   }
 
   return callback
