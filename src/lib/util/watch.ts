@@ -4,7 +4,7 @@ import WatcherCallback from "../class/Watcher/WatcherCallback"
 import ElementResizeWatcher from "../class/Watcher/ElementResizeWatcher"
 import WindowResizeWatcher from "../class/Watcher/WindowResizeWatcher"
 import StartStopWatcher from "../class/Watcher/StartStopWatcher"
-import RenderList from "../class/Watcher/RenderList"
+import Animator from "../class/Watcher/Animator"
 
 const animationWatchers: WeakMap<HTMLElement, StartStopWatcher> = new WeakMap()
 const resizeWatchers: WeakMap<HTMLElement, ElementResizeWatcher> = new WeakMap()
@@ -15,7 +15,7 @@ const rafCallbacks: WeakMap<HTMLElement, WatcherCallback> = new WeakMap()
 const startCallbacks: WeakMap<HTMLElement, WatcherCallback> = new WeakMap()
 const stopCallbacks: WeakMap<HTMLElement, WatcherCallback> = new WeakMap()
 
-const traceList = new RenderList()
+const animator = new Animator()
 
 export function watch(
   el: HTMLElement,
@@ -138,7 +138,7 @@ function getStartCallback(el: HTMLElement): WatcherCallback {
   let callback = startCallbacks.get(el)
 
   if (!callback) {
-    callback = () => traceList.add(Tracer.getInstance(el))
+    callback = () => animator.register(Tracer.getInstance(el))
     startCallbacks.set(el, callback)
   }
 
@@ -149,7 +149,7 @@ function getStopCallback(el: HTMLElement): WatcherCallback {
   let callback = stopCallbacks.get(el)
 
   if (!callback) {
-    callback = () => traceList.delete(Tracer.getInstance(el))
+    callback = () => animator.deregister(Tracer.getInstance(el))
     stopCallbacks.set(el, callback)
   }
 
@@ -160,7 +160,7 @@ function getRafCallback(el: HTMLElement): WatcherCallback {
   let callback = rafCallbacks.get(el)
 
   if (!callback) {
-    callback = () => traceList.addOnce(Tracer.getInstance(el))
+    callback = () => animator.renderOnce(Tracer.getInstance(el))
     rafCallbacks.set(el, callback)
   }
 
