@@ -7,7 +7,7 @@ export default class Point {
     this.y = y
   }
 
-  toString () {
+  toString() {
     return `${this.x},${this.y}`
   }
 }

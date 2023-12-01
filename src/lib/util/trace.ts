@@ -2,6 +2,9 @@ import PolygonInterface from "../../gpc/geometry/PolygonInterface"
 import PolyDefault from "../../gpc/geometry/PolyDefault"
 import Point from "../../gpc/geometry/Point"
 import { roundPathFromPoints } from "../svg-round-corners"
+import PolySimple from "../../gpc/geometry/PolySimple"
+import Polygon from "../../gpc/geometry/Polygon"
+import { Path } from "../class/Path"
 
 const svgNs = "http://www.w3.org/2000/svg"
 const svgElMap = new WeakMap()
@@ -22,7 +25,7 @@ export function trace(el: HTMLElement) {
     svg.appendChild(pathEl)
 
     // TODO clip each child with a detached polygon separately
-    el.style.clipPath = `path('${pathStrings[i]}')`
+    // el.style.clipPath = `path('${pathStrings[i]}')`
   }
 
   for (let i = allPaths.length; i > pathStrings.length; --i) {
@@ -52,20 +55,43 @@ export function getSvg(el) {
 
 function getPolygons(
   root: HTMLElement,
-  origin: Point = new Point(0, 0),
+  origin = new Point(0, 0),
+  rotationRadians = 0,
 ): PolygonInterface {
-  let polygon = getPolygon(root, origin)
+  const originalPolygon = getPolygon(root, origin)
+  const topLeft = originalPolygon.getPoint(0)
+  const style = getComputedStyle(root)
+  const rotationDegrees = (parseFloat(style.rotate) || 0) % 360
+  const transformOriginValue = style.transformOrigin.split(" ")
+  const hub = new Point(...transformOriginValue.map(parseFloat))
+
+  hub.x += topLeft.x
+  hub.y += topLeft.y
+
+  rotationRadians += (rotationDegrees * Math.PI) / 180
+  let polygon = rotationDegrees
+    ? rotatePolygon(originalPolygon, rotationRadians, hub)
+    : originalPolygon
 
   ;[...root.children].forEach((leaf) => {
-    polygon = polygon.union(getPolygons(leaf as HTMLElement, origin))
+    polygon = polygon.union(
+      getPolygons(leaf as HTMLElement, origin, rotationRadians),
+    )
   })
 
   return polygon
 }
 
-function getPolygon(el, origin): PolygonInterface {
-  const rect = el.getBoundingClientRect()
+function getPolygon(el, origin): PolyDefault {
   const polygon = new PolyDefault(false)
+
+  // getBoundingClientRect() gets box AFTER rotation
+  const rect = {
+    x: el.offsetLeft,
+    y: el.offsetTop,
+    width: el.offsetWidth,
+    height: el.offsetHeight,
+  }
 
   const oX = Math.round(origin.x)
   const oY = Math.round(origin.y)
@@ -74,12 +100,11 @@ function getPolygon(el, origin): PolygonInterface {
   const y1 = Math.round(rect.y)
   const x2 = Math.round(rect.x + rect.width)
   const y2 = Math.round(rect.y + rect.height)
-
   polygon.add([
-    [x1 - oX, y1 - oY],
-    [x2 - oX, y1 - oY],
-    [x2 - oX, y2 - oY],
-    [x1 - oX, y2 - oY],
+    new Point(x1 - oX, y1 - oY),
+    new Point(x2 - oX, y1 - oY),
+    new Point(x2 - oX, y2 - oY),
+    new Point(x1 - oX, y2 - oY),
   ])
 
   return polygon
@@ -101,4 +126,26 @@ function createPaths(
   }
 
   return paths
+}
+
+function rotatePolygon(
+  polygon: PolygonInterface,
+  angle,
+  center,
+): PolygonInterface {
+  const rotated = new PolyDefault(false)
+  // Rotate each vertex of the translated polygon
+  rotated.add(
+    polygon.getPoints().map((point) => {
+      const dx = point.x - center.x
+      const dy = point.y - center.y
+      const fromAngle = Math.atan2(dy, dx)
+      const toAngle = fromAngle + angle
+      const radius = Math.hypot(dx, dy)
+      const x = center.x + radius * Math.cos(toAngle)
+      const y = center.y + radius * Math.sin(toAngle)
+      return new Point(x, y)
+    }),
+  )
+  return rotated
 }

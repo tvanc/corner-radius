@@ -17,6 +17,11 @@
   font-size: 24px;
 }
 
+body > .menu {
+  transform-origin: center center;
+  rotate: -45deg;
+}
+
 .menu {
   --corner-radius: 1rem;
   --menu-spacing: 1.2rem;
