@@ -73,11 +73,9 @@ function getPolygons(
     ? rotatePolygon(originalPolygon, rotationRadians, hub)
     : originalPolygon
 
-  ;[...root.children].forEach((leaf) => {
-    polygon = polygon.union(
-      getPolygons(leaf as HTMLElement, origin, rotationRadians),
-    )
-  })
+  for (const leaf of (root.children as unknown) as HTMLElement[]) {
+    polygon = polygon.union(getPolygons(leaf, origin, rotationRadians))
+  }
 
   return polygon
 }
