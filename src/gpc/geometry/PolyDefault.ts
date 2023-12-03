@@ -278,8 +278,8 @@ export default class PolyDefault implements PolygonInterface {
    *
    * @return the returned Poly will be an instance of PolyDefault.
    */
-  union(p) {
-    return Clip.union(p, this, "PolyDefault")
+  union(p): PolyDefault {
+    return Clip.union(p, this, "PolyDefault") as PolyDefault
   }
 
   /**
