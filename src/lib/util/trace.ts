@@ -56,69 +56,34 @@ export function getSvg(el) {
 function getPolygons(
   root: HTMLElement,
   origin = new Point(0, 0),
-  rotationRadians = 0,
-  previousHub: Point = undefined,
 ): PolygonInterface {
-  const originalPolygon = new PolyDefault(false)
-  originalPolygon.add(getPolygon(root, origin))
-  const topLeft = originalPolygon.getPoint(0)
-
-  if (!topLeft) {
-    return undefined
-  }
-
-  const style = getComputedStyle(root)
-  const rotationDegrees = (parseFloat(style.rotate) || 0) % 360
-  const transformOriginValue = style.transformOrigin.split(" ")
-  const originalHub = new Point(...transformOriginValue.map(parseFloat))
-
-  originalHub.x += topLeft.x
-  originalHub.y += topLeft.y
-
-  rotationRadians += (rotationDegrees * Math.PI) / 180
-  let polygon = rotationDegrees
-    ? rotatePolygon(originalPolygon, rotationRadians, originalHub)
-    : originalPolygon
-
-  for (const leaf of (root.children as unknown) as HTMLElement[]) {
-    const polyToAdd = getPolygons(leaf, origin, rotationRadians)
-    if (polyToAdd) {
-      polygon = polygon.union(polyToAdd)
-    }
-  }
+  let polygon = new PolyDefault(false)
+  polygon.add(getPolygon(root, origin))
+  polygon = transform(polygon, getComputedStyle(root))
+  ;[...root.children].forEach((leaf) => {
+    polygon = polygon.union(getPolygons(leaf as HTMLElement, origin))
+  })
 
   return polygon
 }
 
 function getPolygon(el, origin): PolySimple {
-  const polygon = new PolySimple()
+  const rect = getRect(el)
 
-  // getBoundingClientRect() gets box AFTER rotation
-  const originalRect = getRect(el)
-  const scaleValue = getComputedStyle(el).scale
-  const scale =
-    scaleValue === "none" ? [1, 1] : scaleValue.split(" ").map(parseFloat)
+  const oX = Math.round(origin.x)
+  const oY = Math.round(origin.y)
 
-  originalRect.width *= scale[0]
-  originalRect.height *= scale[1]
+  const x1 = Math.round(rect.x)
+  const y1 = Math.round(rect.y)
+  const x2 = Math.round(rect.x + rect.width)
+  const y2 = Math.round(rect.y + rect.height)
 
-  if (originalRect.width && originalRect.height) {
-    const oX = Math.round(origin.x)
-    const oY = Math.round(origin.y)
-
-    const x1 = Math.round(originalRect.x)
-    const y1 = Math.round(originalRect.y)
-    const x2 = Math.round(originalRect.x + originalRect.width)
-    const y2 = Math.round(originalRect.y + originalRect.height)
-    polygon.add([
-      new Point(x1 - oX, y1 - oY),
-      new Point(x2 - oX, y1 - oY),
-      new Point(x2 - oX, y2 - oY),
-      new Point(x1 - oX, y2 - oY),
-    ])
-  }
-
-  return polygon
+  return new PolySimple([
+    new Point(x1 - oX, y1 - oY),
+    new Point(x2 - oX, y1 - oY),
+    new Point(x2 - oX, y2 - oY),
+    new Point(x1 - oX, y2 - oY),
+  ])
 }
 
 function getRect(el: HTMLElement) {
@@ -177,4 +142,37 @@ function rotatePoint(point, angle, hub) {
   const x = hub.x + radius * Math.cos(toAngle)
   const y = hub.y + radius * Math.sin(toAngle)
   return new Point(x, y)
+}
+
+function skewPolygon(polygon, origin): PolyDefault {
+  return polygon
+}
+
+function scalePolygon(polygon, x, y, origin): PolyDefault {
+  return polygon
+}
+
+function transform(polygon, styles): PolyDefault {
+  const scaleValue = styles.scale
+  const scale =
+    scaleValue === "none" ? [1, 1] : scaleValue.split(" ").map(parseFloat)
+
+  const topLeft = polygon.getPoint(0)
+
+  if (!topLeft) {
+    return undefined
+  }
+
+  const rotationDegrees = (parseFloat(styles.rotate) || 0) % 360
+  const rotationRadians = (rotationDegrees * Math.PI) / 180
+  const transformOriginValue = styles.transformOrigin.split(" ")
+  const hub = new Point(...transformOriginValue.map(parseFloat))
+
+  hub.x += topLeft.x
+  hub.y += topLeft.y
+
+  polygon = rotatePolygon(polygon, rotationRadians, hub)
+  polygon = scalePolygon(polygon, scale[0], scale[1], hub)
+
+  return polygon
 }
