@@ -57,24 +57,34 @@ function getPolygons(
   root: HTMLElement,
   origin = new Point(0, 0),
   rotationRadians = 0,
+  previousHub: Point = undefined,
 ): PolygonInterface {
-  const originalPolygon = getPolygon(root, origin)
+  const originalPolygon = new PolyDefault(false)
+  originalPolygon.add(getPolygon(root, origin))
   const topLeft = originalPolygon.getPoint(0)
+
+  if (!topLeft) {
+    return undefined
+  }
+
   const style = getComputedStyle(root)
   const rotationDegrees = (parseFloat(style.rotate) || 0) % 360
   const transformOriginValue = style.transformOrigin.split(" ")
-  const hub = new Point(...transformOriginValue.map(parseFloat))
+  const originalHub = new Point(...transformOriginValue.map(parseFloat))
 
-  hub.x += topLeft.x
-  hub.y += topLeft.y
+  originalHub.x += topLeft.x
+  originalHub.y += topLeft.y
 
   rotationRadians += (rotationDegrees * Math.PI) / 180
   let polygon = rotationDegrees
-    ? rotatePolygon(originalPolygon, rotationRadians, hub)
+    ? rotatePolygon(originalPolygon, rotationRadians, originalHub)
     : originalPolygon
 
   for (const leaf of (root.children as unknown) as HTMLElement[]) {
-    polygon = polygon.union(getPolygons(leaf, origin, rotationRadians))
+    const polyToAdd = getPolygons(leaf, origin, rotationRadians)
+    if (polyToAdd) {
+      polygon = polygon.union(polyToAdd)
+    }
   }
 
   return polygon
@@ -106,8 +116,6 @@ function getPolygon(el, origin): PolySimple {
       new Point(x2 - oX, y2 - oY),
       new Point(x1 - oX, y2 - oY),
     ])
-  } else {
-    console.log("skipping", el)
   }
 
   return polygon
