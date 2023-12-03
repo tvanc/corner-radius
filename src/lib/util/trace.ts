@@ -53,13 +53,10 @@ export function getSvg(el) {
   return svgElMap.get(el)
 }
 
-function getPolygons(
-  root: HTMLElement,
-  origin = new Point(0, 0),
-): PolygonInterface {
+function getPolygons(root: HTMLElement, origin = new Point(0, 0)): PolyDefault {
   let polygon = new PolyDefault(false)
   polygon.add(getPolygon(root, origin))
-  polygon = transform(polygon, getComputedStyle(root))
+  polygon = transform(root, polygon, getComputedStyle(root))
   ;[...root.children].forEach((leaf) => {
     polygon = polygon.union(getPolygons(leaf as HTMLElement, origin))
   })
@@ -148,11 +145,21 @@ function skewPolygon(polygon, origin): PolyDefault {
   return polygon
 }
 
-function scalePolygon(polygon, x, y, origin): PolyDefault {
-  return polygon
+function scalePolygon(polygon, scaleX, scaleY, origin): PolyDefault {
+  const scaled = new PolyDefault(false)
+
+  scaled.add(
+    polygon.getPoints().map((p) => {
+      const newX = (p.x - origin.x) * scaleX + origin.x
+      const newY = (p.y - origin.y) * scaleY + origin.y
+      return new Point(newX, newY)
+    }),
+  )
+
+  return scaled
 }
 
-function transform(polygon, styles): PolyDefault {
+function transform(el, polygon, styles): PolyDefault {
   const scaleValue = styles.scale
   const scale =
     scaleValue === "none" ? [1, 1] : scaleValue.split(" ").map(parseFloat)
@@ -172,7 +179,7 @@ function transform(polygon, styles): PolyDefault {
   hub.y += topLeft.y
 
   polygon = rotatePolygon(polygon, rotationRadians, hub)
-  polygon = scalePolygon(polygon, scale[0], scale[1], hub)
+  polygon = scalePolygon(polygon, scale[0], scale[1] ?? scale[0], hub)
 
   return polygon
 }
