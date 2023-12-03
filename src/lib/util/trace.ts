@@ -80,8 +80,8 @@ function getPolygons(
   return polygon
 }
 
-function getPolygon(el, origin): PolyDefault {
-  const polygon = new PolyDefault(false)
+function getPolygon(el, origin): PolySimple {
+  const polygon = new PolySimple()
 
   // getBoundingClientRect() gets box AFTER rotation
   const originalRect = getRect(el)
@@ -150,21 +150,23 @@ function createPaths(
 function rotatePolygon(
   polygon: PolygonInterface,
   angle,
-  center,
+  hub,
 ): PolygonInterface {
   const rotated = new PolyDefault(false)
+
   // Rotate each vertex of the translated polygon
-  rotated.add(
-    polygon.getPoints().map((point) => {
-      const dx = point.x - center.x
-      const dy = point.y - center.y
-      const fromAngle = Math.atan2(dy, dx)
-      const toAngle = fromAngle + angle
-      const radius = Math.hypot(dx, dy)
-      const x = center.x + radius * Math.cos(toAngle)
-      const y = center.y + radius * Math.sin(toAngle)
-      return new Point(x, y)
-    }),
-  )
+  rotated.add(polygon.getPoints().map((p) => rotatePoint(p, angle, hub)))
+
   return rotated
+}
+
+function rotatePoint(point, angle, hub) {
+  const dx = point.x - hub.x
+  const dy = point.y - hub.y
+  const fromAngle = Math.atan2(dy, dx)
+  const toAngle = fromAngle + angle
+  const radius = Math.hypot(dx, dy)
+  const x = hub.x + radius * Math.cos(toAngle)
+  const y = hub.y + radius * Math.sin(toAngle)
+  return new Point(x, y)
 }
