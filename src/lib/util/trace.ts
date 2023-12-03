@@ -84,6 +84,36 @@ function getPolygon(el, origin): PolyDefault {
   const polygon = new PolyDefault(false)
 
   // getBoundingClientRect() gets box AFTER rotation
+  const originalRect = getRect(el)
+  const scaleValue = getComputedStyle(el).scale
+  const scale =
+    scaleValue === "none" ? [1, 1] : scaleValue.split(" ").map(parseFloat)
+
+  originalRect.width *= scale[0]
+  originalRect.height *= scale[1]
+
+  if (originalRect.width && originalRect.height) {
+    const oX = Math.round(origin.x)
+    const oY = Math.round(origin.y)
+
+    const x1 = Math.round(originalRect.x)
+    const y1 = Math.round(originalRect.y)
+    const x2 = Math.round(originalRect.x + originalRect.width)
+    const y2 = Math.round(originalRect.y + originalRect.height)
+    polygon.add([
+      new Point(x1 - oX, y1 - oY),
+      new Point(x2 - oX, y1 - oY),
+      new Point(x2 - oX, y2 - oY),
+      new Point(x1 - oX, y2 - oY),
+    ])
+  } else {
+    console.log("skipping", el)
+  }
+
+  return polygon
+}
+
+function getRect(el: HTMLElement) {
   const rect = {
     x: el.offsetLeft,
     y: el.offsetTop,
@@ -91,21 +121,12 @@ function getPolygon(el, origin): PolyDefault {
     height: el.offsetHeight,
   }
 
-  const oX = Math.round(origin.x)
-  const oY = Math.round(origin.y)
+  while ((el = el.parentElement)) {
+    rect.x += el.offsetLeft
+    rect.y += el.offsetTop
+  }
 
-  const x1 = Math.round(rect.x)
-  const y1 = Math.round(rect.y)
-  const x2 = Math.round(rect.x + rect.width)
-  const y2 = Math.round(rect.y + rect.height)
-  polygon.add([
-    new Point(x1 - oX, y1 - oY),
-    new Point(x2 - oX, y1 - oY),
-    new Point(x2 - oX, y2 - oY),
-    new Point(x1 - oX, y2 - oY),
-  ])
-
-  return polygon
+  return rect
 }
 
 function createPaths(

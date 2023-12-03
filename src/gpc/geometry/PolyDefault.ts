@@ -190,7 +190,7 @@ export default class PolyDefault implements PolygonInterface {
     return this.m_List.get(0).getX(index)
   }
   getPoint(index) {
-    return this.m_List.get(0).getPoint(index)
+    return this.m_List.get(0)?.getPoint(index)
   }
 
   getPoints() {
