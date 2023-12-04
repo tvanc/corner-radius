@@ -1,9 +1,9 @@
-import PolySimple from "../../gpc/geometry/PolySimple"
 import CommandInterface from "./Command/CommandInterface"
 import MoveTo from "./Command/MoveTo"
 import LineTo from "./Command/LineTo"
 import Close from "./Command/Close"
 import Point from "../../gpc/geometry/Point"
+import PolygonInterface from "../../gpc/geometry/PolygonInterface"
 
 export class Path {
   public commands: CommandInterface[]
@@ -41,7 +41,11 @@ export class Path {
     return path
   }
 
-  static fromPoly(poly: PolySimple, offsetX: number = 0, offsetY: number = 0) {
+  static fromPoly(
+    poly: PolygonInterface,
+    offsetX: number = 0,
+    offsetY: number = 0,
+  ) {
     return this.fromPoints(poly.getPoints(), offsetX, offsetY)
   }
 
