@@ -5,6 +5,8 @@ import { roundPathFromPoints } from "../svg-round-corners"
 import PolySimple from "../../gpc/geometry/PolySimple"
 import Polygon from "../../gpc/geometry/Polygon"
 import { Path } from "../class/Path"
+import Transformer from "../class/Transformer"
+import Scale from "../../gpc/geometry/Scale"
 
 const svgNs = "http://www.w3.org/2000/svg"
 const svgElMap = new WeakMap()
@@ -13,7 +15,7 @@ export function trace(el: HTMLElement) {
   const svg = getSvg(el)
   const allPaths = svg.querySelectorAll("path")
   const origin = el.getBoundingClientRect()
-  const unionPolygon = getPolygons(el, origin)
+  const unionPolygon = getPolygons(el, new Transformer(origin))
   const { w, h } = unionPolygon.getBounds()
   const style = getComputedStyle(el)
   const radius = parseFloat(style.getPropertyValue("border-radius"))
@@ -53,12 +55,12 @@ export function getSvg(el) {
   return svgElMap.get(el)
 }
 
-function getPolygons(root: HTMLElement, origin = new Point(0, 0)): PolyDefault {
+function getPolygons(root: HTMLElement, transformer: Transformer): PolyDefault {
   let polygon = new PolyDefault(false)
-  polygon.add(getPolygon(root, origin))
-  polygon = transform(root, polygon, getComputedStyle(root))
+  polygon.add(getPolygon(root, transformer.origin))
+  polygon = transform(root, polygon, transformer)
   ;[...root.children].forEach((leaf) => {
-    polygon = polygon.union(getPolygons(leaf as HTMLElement, origin))
+    // polygon = polygon.union(getPolygons(leaf as HTMLElement, transformer))
   })
 
   return polygon
@@ -117,16 +119,9 @@ function createPaths(
   return paths
 }
 
-function rotatePolygon(
-  polygon: PolygonInterface,
-  angle,
-  hub,
-): PolygonInterface {
+function rotatePolygon(p: PolygonInterface, t: Transformer): PolygonInterface {
   const rotated = new PolyDefault(false)
-
-  // Rotate each vertex of the translated polygon
-  rotated.add(polygon.getPoints().map((p) => rotatePoint(p, angle, hub)))
-
+  rotated.add(p.getPoints().map((p) => rotatePoint(p, t.rotation, t.origin)))
   return rotated
 }
 
@@ -141,25 +136,20 @@ function rotatePoint(point, angle, hub) {
   return new Point(x, y)
 }
 
-function skewPolygon(polygon, origin): PolyDefault {
-  return polygon
-}
-
-function scalePolygon(polygon, scaleX, scaleY, origin): PolyDefault {
+function scalePolygon(p: PolygonInterface, t: Transformer): PolyDefault {
   const scaled = new PolyDefault(false)
-
-  scaled.add(
-    polygon.getPoints().map((p) => {
-      const newX = (p.x - origin.x) * scaleX + origin.x
-      const newY = (p.y - origin.y) * scaleY + origin.y
-      return new Point(newX, newY)
-    }),
-  )
-
+  scaled.add(p.getPoints().map((p) => scalePoint(p, t.scale, t.origin)))
   return scaled
 }
 
-function transform(el, polygon, styles): PolyDefault {
+function scalePoint(point: Point, scale: Scale, origin: Point) {
+  const newX = (point.x - origin.x) * scale.x + origin.x
+  const newY = (point.y - origin.y) * scale.y + origin.y
+  return new Point(newX, newY)
+}
+
+function transform(el, polygon, transformer): PolyDefault {
+  const styles = getComputedStyle(el)
   const scaleValue = styles.scale
   const scale =
     scaleValue === "none" ? [1, 1] : scaleValue.split(" ").map(parseFloat)
@@ -173,13 +163,21 @@ function transform(el, polygon, styles): PolyDefault {
   const rotationDegrees = (parseFloat(styles.rotate) || 0) % 360
   const rotationRadians = (rotationDegrees * Math.PI) / 180
   const transformOriginValue = styles.transformOrigin.split(" ")
-  const hub = new Point(...transformOriginValue.map(parseFloat))
 
-  hub.x += topLeft.x
-  hub.y += topLeft.y
+  // transform the new hub around the old
+  let newOrigin = new Point(...transformOriginValue.map(parseFloat))
+  newOrigin.x += topLeft.x
+  newOrigin.y += topLeft.y
+  newOrigin = rotatePoint(newOrigin, transformer.rotation, transformer.origin)
+  newOrigin = scalePoint(newOrigin, transformer.scale, transformer.origin)
 
-  polygon = rotatePolygon(polygon, rotationRadians, hub)
-  polygon = scalePolygon(polygon, scale[0], scale[1] ?? scale[0], hub)
+  transformer.scale.x *= scale[0]
+  transformer.scale.y *= scale[1] ?? scale[0]
+  transformer.rotation += rotationRadians
+  transformer.origin = newOrigin
+
+  polygon = rotatePolygon(polygon, transformer)
+  polygon = scalePolygon(polygon, transformer)
 
   return polygon
 }
