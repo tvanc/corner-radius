@@ -64,6 +64,10 @@ function getPolygons(
   let polygon = new PolyDefault(false)
   polygon.add(polyToAdd)
 
+  if (root.id === "traceMe") {
+    console.log("root menu", Path.fromPoly(polygon).toString())
+  }
+
   polygon = transform(root, polygon, transformer)
   ;[...root.children].forEach((leaf) => {
     const leafTransformer = structuredClone(transformer)
@@ -176,28 +180,38 @@ function transform(el, polygon, transformer): PolyDefault {
 
   // transform the new hub around the old
   let newOrigin = new Point(...transformOriginValue.map(parseFloat))
+
+  if (scale[0] !== 1 || scale[1] !== 1 || rotationRadians) {
+    if (transformer.origin) {
+      newOrigin = rotatePoint(
+        newOrigin,
+        transformer.rotation,
+        transformer.origin,
+      )
+      // newOrigin = scalePoint(newOrigin, transformer.scale, transformer.origin)
+    }
+
+    transformer.scale.x *= scale[0]
+    transformer.scale.y *= scale[1] ?? scale[0]
+    transformer.rotation += rotationRadians
+
+    transformer.origin ??= newOrigin
+
+    transformer.origin.x += newOrigin.x
+    transformer.origin.y += newOrigin.y
+  }
+
   newOrigin.x += topLeft.x
   newOrigin.y += topLeft.y
 
-  if (transformer.origin) {
-    newOrigin = rotatePoint(newOrigin, transformer.rotation, transformer.origin)
-    // newOrigin = scalePoint(newOrigin, transformer.scale, transformer.origin)
-  }
-
-  transformer.scale.x *= scale[0]
-  transformer.scale.y *= scale[1] ?? scale[0]
-  transformer.rotation += rotationRadians
-
-  if (scale[0] !== 1 || scale[1] !== 1 || rotationRadians) {
-    transformer.origin = newOrigin
-  }
-
   if (el.id === "settingsMenu") {
-    console.log(newOrigin)
+    console.log("settingsMenu", Path.fromPoly(polygon).toString())
   }
 
-  polygon = rotatePolygon(polygon, transformer)
-  // polygon = scalePolygon(polygon, transformer)
+  if (transformer.origin) {
+    polygon = rotatePolygon(polygon, transformer)
+    // polygon = scalePolygon(polygon, transformer)
+  }
 
   return polygon
 }
