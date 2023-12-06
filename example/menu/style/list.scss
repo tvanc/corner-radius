@@ -17,8 +17,12 @@
   font-size: 24px;
 }
 
+//body {
+//  overflow: hidden;
+//}
+
 body > .menu {
-  transform-origin: center center;
+  transform-origin: left top;
   rotate: -45deg;
 }
 
@@ -48,6 +52,7 @@ body > .menu {
     padding: calc(var(--half-spacing) / 1.1) var(--half-spacing);
     background-clip: padding-box;
     white-space: nowrap;
+    transform-origin: left top;
 
     > ul {
       position: absolute;

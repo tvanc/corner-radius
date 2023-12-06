@@ -15,7 +15,7 @@ export function trace(el: HTMLElement) {
   const svg = getSvg(el)
   const allPaths = svg.querySelectorAll("path")
   const origin = el.getBoundingClientRect()
-  const unionPolygon = getPolygons(el, new Transformer(origin))
+  const unionPolygon = getPolygons(el, origin)
   const { w, h } = unionPolygon.getBounds()
   const style = getComputedStyle(el)
   const radius = parseFloat(style.getPropertyValue("border-radius"))
@@ -55,12 +55,21 @@ export function getSvg(el) {
   return svgElMap.get(el)
 }
 
-function getPolygons(root: HTMLElement, transformer: Transformer): PolyDefault {
+function getPolygons(
+  root: HTMLElement,
+  origin: Point,
+  transformer = new Transformer(),
+): PolyDefault {
+  const polyToAdd = getPolygon(root, origin)
   let polygon = new PolyDefault(false)
-  polygon.add(getPolygon(root, transformer.origin))
+  polygon.add(polyToAdd)
+
   polygon = transform(root, polygon, transformer)
   ;[...root.children].forEach((leaf) => {
-    // polygon = polygon.union(getPolygons(leaf as HTMLElement, transformer))
+    const leafTransformer = structuredClone(transformer)
+    const polyToAdd = getPolygons(leaf as HTMLElement, origin, leafTransformer)
+
+    polygon = polygon.union(polyToAdd)
   })
 
   return polygon
@@ -143,22 +152,23 @@ function scalePolygon(p: PolygonInterface, t: Transformer): PolyDefault {
 }
 
 function scalePoint(point: Point, scale: Scale, origin: Point) {
+  //           subtract origin   ->   scale  -> add origin
   const newX = (point.x - origin.x) * scale.x + origin.x
   const newY = (point.y - origin.y) * scale.y + origin.y
   return new Point(newX, newY)
 }
 
 function transform(el, polygon, transformer): PolyDefault {
-  const styles = getComputedStyle(el)
-  const scaleValue = styles.scale
-  const scale =
-    scaleValue === "none" ? [1, 1] : scaleValue.split(" ").map(parseFloat)
-
   const topLeft = polygon.getPoint(0)
 
   if (!topLeft) {
     return undefined
   }
+
+  const styles = getComputedStyle(el)
+  const scaleValue = styles.scale
+  const scale =
+    scaleValue === "none" ? [1, 1] : scaleValue.split(" ").map(parseFloat)
 
   const rotationDegrees = (parseFloat(styles.rotate) || 0) % 360
   const rotationRadians = (rotationDegrees * Math.PI) / 180
@@ -168,16 +178,26 @@ function transform(el, polygon, transformer): PolyDefault {
   let newOrigin = new Point(...transformOriginValue.map(parseFloat))
   newOrigin.x += topLeft.x
   newOrigin.y += topLeft.y
-  newOrigin = rotatePoint(newOrigin, transformer.rotation, transformer.origin)
-  newOrigin = scalePoint(newOrigin, transformer.scale, transformer.origin)
+
+  if (transformer.origin) {
+    newOrigin = rotatePoint(newOrigin, transformer.rotation, transformer.origin)
+    // newOrigin = scalePoint(newOrigin, transformer.scale, transformer.origin)
+  }
 
   transformer.scale.x *= scale[0]
   transformer.scale.y *= scale[1] ?? scale[0]
   transformer.rotation += rotationRadians
-  transformer.origin = newOrigin
+
+  if (scale[0] !== 1 || scale[1] !== 1 || rotationRadians) {
+    transformer.origin = newOrigin
+  }
+
+  if (el.id === "settingsMenu") {
+    console.log(newOrigin)
+  }
 
   polygon = rotatePolygon(polygon, transformer)
-  polygon = scalePolygon(polygon, transformer)
+  // polygon = scalePolygon(polygon, transformer)
 
   return polygon
 }

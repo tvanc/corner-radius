@@ -5,5 +5,5 @@ export default class Transformer {
   scale = new Scale(1, 1)
   rotation = 0
 
-  constructor(public origin: Point) {}
+  constructor(public origin: Point = undefined) {}
 }
