@@ -30,7 +30,7 @@
     "@symfony/webpack-encore": "^1.8.1",
     "@types/jest": "^29.5.11",
     "core-js": "^3.20.3",
-    "cypress": "^8.7.0",
+    "cypress": "^13.6.1",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^29.7.0",
     "mini-css-extract-plugin": "^2.5.3",

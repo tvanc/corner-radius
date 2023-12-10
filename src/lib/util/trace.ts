@@ -60,13 +60,9 @@ function getPolygons(
   boundingBox: DOMRect,
   transformer = new Transformer(),
 ): PolyDefault {
-  const polyToAdd = getPolygonRelativeToBoundingBox(root, boundingBox)
+  const polyToAdd = getPolygonRelativeToBoundingClientRect(root, boundingBox)
   let polygon = new PolyDefault(false)
   polygon.add(polyToAdd)
-
-  if (root.id === "traceMe") {
-    console.log("root menu", Path.fromPoly(polygon).toString())
-  }
 
   polygon = transform(root, polygon, transformer)
   ;[...root.children].forEach((leaf) => {
@@ -83,7 +79,7 @@ function getPolygons(
   return polygon
 }
 
-function getPolygonRelativeToBoundingBox(el, boundingBox): PolySimple {
+function getPolygonRelativeToBoundingClientRect(el, boundingBox): PolySimple {
   const rect = getOffsetRectangle(el)
 
   const oX = Math.round(boundingBox.x)
