@@ -9,7 +9,8 @@ let tracer: Tracer
 let traceSpy: SinonSpy
 
 beforeEach(() => {
-  cy.viewport("iphone-x", "portrait")
+  return cy
+    .viewport("iphone-x", "portrait")
     .visit("cypress/pages/index.html")
     .window()
     .then((win) => {
@@ -22,12 +23,10 @@ beforeEach(() => {
 
 afterEach(() => {
   destroy(el)
-  el = undefined
-  traceSpy = undefined
 })
 
 describe("`watch()` Options", () => {
-  it("Calls `trace()` on element resize when `elementResize === true`", async () => {
+  it("Calls `trace()` on element resize when `elementResize === true`", () => {
     watch(el, { elementResize: true })
     triggerElementResize()
 

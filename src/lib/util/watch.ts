@@ -22,7 +22,7 @@ export function watch(
   {
     animations = false,
     elementResize = false,
-    transitions = true,
+    transitions = false,
     windowResize = false,
   }: WatchOptions = {
     animations: true,
@@ -32,11 +32,11 @@ export function watch(
   },
 ) {
   if (animations) {
-    // getAnimationWatcher(el).start()
+    getAnimationWatcher(el).start()
   }
 
   if (elementResize) {
-    // getElementResizeWatcher(el).start()
+    getElementResizeWatcher(el).start()
   }
 
   if (transitions) {
@@ -44,7 +44,7 @@ export function watch(
   }
 
   if (windowResize) {
-    // getWindowResizeWatcher(el).start()
+    getWindowResizeWatcher(el).start()
   }
 }
 export function unwatch(
