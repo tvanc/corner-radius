@@ -17,5 +17,9 @@
   },
   "include": [
     "./src/**/*.ts"
+  ],
+  "exclude": [
+    "/cypress/",
+    "**/*.spec.ts"
   ]
 }
