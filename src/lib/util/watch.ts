@@ -140,49 +140,37 @@ function getWindowResizeWatcher(el: HTMLElement, force: boolean = true) {
 }
 
 function getStartCallback(el: HTMLElement): WatcherCallback {
-  let callback = startCallbacks.get(el)
-
-  if (!callback) {
-    callback = () => animator.register(Tracer.getInstance(el))
-    startCallbacks.set(el, callback)
+  if (!startCallbacks.has(el)) {
+    startCallbacks.set(el, () => animator.register(Tracer.getInstance(el)))
   }
 
-  return callback
+  return startCallbacks.get(el)
 }
 
 function getCancelCallback(el: HTMLElement): WatcherCallback {
-  let callback = cancelCallbacks.get(el)
-
-  if (!callback) {
-    callback = () => animator.deregister(Tracer.getInstance(el))
-    cancelCallbacks.set(el, callback)
+  if (!cancelCallbacks.has(el)) {
+    cancelCallbacks.set(el, () => animator.deregister(Tracer.getInstance(el)))
   }
 
-  return callback
+  return cancelCallbacks.get(el)
 }
 
 function getStopCallback(el: HTMLElement): WatcherCallback {
-  let callback = stopCallbacks.get(el)
-
-  if (!callback) {
-    callback = () => {
+  if (!stopCallbacks.has(el)) {
+    stopCallbacks.set(el, () => {
       const tracer = Tracer.getInstance(el)
       animator.deregister(tracer)
       animator.renderOnce(tracer)
-    }
-    stopCallbacks.set(el, callback)
+    })
   }
 
-  return callback
+  return stopCallbacks.get(el)
 }
 
 function getRafCallback(el: HTMLElement): WatcherCallback {
-  let callback = rafCallbacks.get(el)
-
-  if (!callback) {
-    callback = () => animator.renderOnce(Tracer.getInstance(el))
-    rafCallbacks.set(el, callback)
+  if (!rafCallbacks.has(el)) {
+    rafCallbacks.set(el, () => animator.renderOnce(Tracer.getInstance(el)))
   }
 
-  return callback
+  return rafCallbacks.get(el)
 }
