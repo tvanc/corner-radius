@@ -54,12 +54,13 @@ export function getSvg(el) {
   return svgElMap.get(el)
 }
 
+// TODO why is the origin in an unexpected place - abstract to use Jest or test on the dom with Cypress
 function getPolygons(
   root: HTMLElement,
-  origin: Point,
+  boundingBox: DOMRect,
   transformer = new Transformer(),
 ): PolyDefault {
-  const polyToAdd = getPolygon(root, origin)
+  const polyToAdd = getPolygonRelativeToBoundingBox(root, boundingBox)
   let polygon = new PolyDefault(false)
   polygon.add(polyToAdd)
 
@@ -70,7 +71,11 @@ function getPolygons(
   polygon = transform(root, polygon, transformer)
   ;[...root.children].forEach((leaf) => {
     const leafTransformer = structuredClone(transformer)
-    const polyToAdd = getPolygons(leaf as HTMLElement, origin, leafTransformer)
+    const polyToAdd = getPolygons(
+      leaf as HTMLElement,
+      boundingBox,
+      leafTransformer,
+    )
 
     polygon = polygon.union(polyToAdd)
   })
@@ -78,17 +83,18 @@ function getPolygons(
   return polygon
 }
 
-function getPolygon(el, origin): PolySimple {
-  const rect = getRect(el)
+function getPolygonRelativeToBoundingBox(el, boundingBox): PolySimple {
+  const rect = getOffsetRectangle(el)
 
-  const oX = Math.round(origin.x)
-  const oY = Math.round(origin.y)
+  const oX = Math.round(boundingBox.x)
+  const oY = Math.round(boundingBox.y)
 
   const x1 = Math.round(rect.x)
   const y1 = Math.round(rect.y)
   const x2 = Math.round(rect.x + rect.width)
   const y2 = Math.round(rect.y + rect.height)
 
+  // Get rectangle with points rel
   return new PolySimple([
     new Point(x1 - oX, y1 - oY),
     new Point(x2 - oX, y1 - oY),
@@ -97,7 +103,7 @@ function getPolygon(el, origin): PolySimple {
   ])
 }
 
-function getRect(el: HTMLElement) {
+function getOffsetRectangle(el: HTMLElement) {
   const rect = {
     x: el.offsetLeft,
     y: el.offsetTop,
