@@ -13,6 +13,7 @@ const windowWatchers: WeakMap<HTMLElement, WindowResizeWatcher> = new WeakMap()
 
 const rafCallbacks: WeakMap<HTMLElement, WatcherCallback> = new WeakMap()
 const startCallbacks: WeakMap<HTMLElement, WatcherCallback> = new WeakMap()
+const cancelCallbacks: WeakMap<HTMLElement, WatcherCallback> = new WeakMap()
 const stopCallbacks: WeakMap<HTMLElement, WatcherCallback> = new WeakMap()
 
 const animator = new Animator()
@@ -70,7 +71,7 @@ export function unwatch(
   }
 
   if (transitions) {
-    getTransitionWatcher(el).start()
+    getTransitionWatcher(el, false)?.start()
   }
 
   if (windowResize) {
@@ -85,9 +86,11 @@ function getAnimationWatcher(el, force = true) {
     watcher = new StartStopWatcher(
       el,
       getStartCallback(el),
+      getCancelCallback(el),
       getStopCallback(el),
       ["animationstart"],
-      ["animationcancel", "animationend"],
+      ["animationcancel"],
+      ["animationend"],
     )
     animationWatchers.set(el, watcher)
   }
@@ -113,9 +116,11 @@ function getTransitionWatcher(el: HTMLElement, force = true) {
     watcher = new StartStopWatcher(
       el,
       getStartCallback(el),
+      getCancelCallback(el),
       getStopCallback(el),
       ["transitionstart"],
-      ["transitioncancel", "transitionend"],
+      ["transitioncancel"],
+      ["transitionend"],
     )
     transitionWatchers.set(el, watcher)
   }
@@ -145,11 +150,26 @@ function getStartCallback(el: HTMLElement): WatcherCallback {
   return callback
 }
 
+function getCancelCallback(el: HTMLElement): WatcherCallback {
+  let callback = cancelCallbacks.get(el)
+
+  if (!callback) {
+    callback = () => animator.deregister(Tracer.getInstance(el))
+    cancelCallbacks.set(el, callback)
+  }
+
+  return callback
+}
+
 function getStopCallback(el: HTMLElement): WatcherCallback {
   let callback = stopCallbacks.get(el)
 
   if (!callback) {
-    callback = () => animator.deregister(Tracer.getInstance(el))
+    callback = () => {
+      const tracer = Tracer.getInstance(el)
+      animator.deregister(tracer)
+      animator.renderOnce(tracer)
+    }
     stopCallbacks.set(el, callback)
   }
 

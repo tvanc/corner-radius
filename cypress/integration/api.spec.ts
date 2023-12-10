@@ -8,9 +8,10 @@ let el: HTMLElement
 let tracer: Tracer
 let traceSpy: SinonSpy
 
+before(() => cy.viewport("iphone-x", "portrait"))
+
 beforeEach(() => {
   return cy
-    .viewport("iphone-x", "portrait")
     .visit("cypress/pages/index.html")
     .window()
     .then((win) => {
