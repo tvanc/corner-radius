@@ -14,7 +14,7 @@ export function trace(el: HTMLElement) {
   const svg = getSvg(el)
   const allPaths = svg.querySelectorAll("path")
   const origin = el.getBoundingClientRect()
-  const unionPolygon = getPolygons(el, origin)
+  const unionPolygon = getUnionPolygon(el, origin)
   const { w, h } = unionPolygon.getBounds()
   const style = getComputedStyle(el)
   const radius = parseFloat(style.getPropertyValue("border-radius"))
@@ -55,7 +55,7 @@ export function getSvg(el) {
 }
 
 // TODO why is the origin in an unexpected place - abstract to use Jest or test on the dom with Cypress
-function getPolygons(
+export function getUnionPolygon(
   root: HTMLElement,
   boundingBox: DOMRect,
   transformer = new Transformer(),
@@ -67,7 +67,7 @@ function getPolygons(
   polygon = transform(root, polygon, transformer)
   ;[...root.children].forEach((leaf) => {
     const leafTransformer = structuredClone(transformer)
-    const polyToAdd = getPolygons(
+    const polyToAdd = getUnionPolygon(
       leaf as HTMLElement,
       boundingBox,
       leafTransformer,
@@ -79,7 +79,10 @@ function getPolygons(
   return polygon
 }
 
-function getPolygonRelativeToBoundingClientRect(el, boundingBox): PolySimple {
+export function getPolygonRelativeToBoundingClientRect(
+  el,
+  boundingBox,
+): PolySimple {
   const rect = getOffsetRectangle(el)
 
   const oX = Math.round(boundingBox.x)
@@ -115,7 +118,7 @@ function getOffsetRectangle(el: HTMLElement) {
   return rect
 }
 
-function createPaths(
+export function createPaths(
   complexPolygon: PolygonInterface,
   radius: number = 0,
 ): string[] {
