@@ -12,7 +12,7 @@ before(() => cy.viewport("iphone-x", "portrait"))
 
 beforeEach(() => {
   return cy
-    .visit("cypress/pages/index.html")
+    .visit("cypress/pages/watch.html")
     .window()
     .then((win) => {
       el = win.document.getElementById(watchElementId)
