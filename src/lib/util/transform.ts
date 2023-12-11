@@ -39,9 +39,7 @@ export function scalePoint(point: Point, scale: Scale, origin: Point) {
 }
 
 export function transform(el, polygon, transformer): PolyDefault {
-  const topLeft = polygon.getPoint(0)
-
-  if (!topLeft) {
+  if (0 === polygon.getNumPoints()) {
     return undefined
   }
 
@@ -70,15 +68,8 @@ export function transform(el, polygon, transformer): PolyDefault {
     transformer.scale.x *= scale[0]
     transformer.scale.y *= scale[1] ?? scale[0]
     transformer.rotation += rotationRadians
-
-    transformer.origin ??= newOrigin
-
-    transformer.origin.x += newOrigin.x
-    transformer.origin.y += newOrigin.y
+    transformer.origin = newOrigin
   }
-
-  newOrigin.x += topLeft.x
-  newOrigin.y += topLeft.y
 
   if (el.id === "settingsMenu") {
     console.log("settingsMenu", Path.fromPoly(polygon).toString())
