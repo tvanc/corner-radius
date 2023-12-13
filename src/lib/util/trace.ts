@@ -13,9 +13,9 @@ const svgElMap = new WeakMap()
 export function trace(el: HTMLElement) {
   const svg = getSvg(el)
   const allPaths = svg.querySelectorAll("path")
-  const origin = el.getBoundingClientRect()
+  const offsetRect = getOffsetRectangle(el)
   const unionPolygon = getUnionPolygon(el)
-  const { w, h } = unionPolygon.getBounds()
+  const bounds = unionPolygon.getBounds()
   const style = getComputedStyle(el)
   const radius = parseFloat(style.getPropertyValue("border-radius"))
   const pathStrings = createPaths(unionPolygon, radius)
@@ -33,10 +33,11 @@ export function trace(el: HTMLElement) {
     allPaths[i - 1].remove()
   }
 
-  svg.setAttribute("width", w)
-  svg.setAttribute("height", h)
-  svg.style.top = `${origin.y}px`
-  svg.style.left = `${origin.x}px`
+  svg.setAttribute("width", bounds.w)
+  svg.setAttribute("height", bounds.h)
+  svg.setAttribute("viewBox", `${bounds.x} ${bounds.y} ${bounds.w} ${bounds.h}`)
+  svg.style.top = `${offsetRect.y + bounds.y}`
+  svg.style.left = `${offsetRect.x + bounds.x}px`
 }
 
 export function getSvg(el) {
@@ -99,7 +100,7 @@ export function getPolygonRelativeToOrigin(el, origin): PolySimple {
   ])
 }
 
-function getOffsetRectangle(el: HTMLElement) {
+export function getOffsetRectangle(el: HTMLElement) {
   const rect = {
     x: el.offsetLeft,
     y: el.offsetTop,

@@ -33,8 +33,8 @@ describe("`getPolygon()` produces expected result", () => {
       svg.appendChild(pathEl)
     }
 
-    svg.style.setProperty("left", rect.x - bounds.x + "px")
-    svg.style.setProperty("top", rect.y - bounds.y + "px")
+    svg.style.setProperty("left", rect.x + bounds.x + "px")
+    svg.style.setProperty("top", rect.y + bounds.y + "px")
     svg.setAttribute("width", bounds.w + "")
     svg.setAttribute("height", bounds.h + "")
 
