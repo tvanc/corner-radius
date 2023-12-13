@@ -22,8 +22,11 @@
 //}
 
 body > .menu {
-  transform-origin: left top;
+  transform-origin: right bottom;
   rotate: -45deg;
+  //position: absolute;
+  //left: 0;
+  //top: 0;
 }
 
 .menu {
