@@ -1,4 +1,4 @@
-import { createPaths, getUnionPolygon } from "../../src/lib/util/trace"
+import { getOffsetRectangle, getUnionPolygon } from "../../src/lib/util/trace"
 import { Path } from "../../src/lib/class/Path"
 
 const watchElementId = "watchMe"
@@ -23,6 +23,8 @@ beforeEach(() => {
 describe("`getPolygon()` produces expected result", () => {
   it("Polygon receives correct rotation", () => {
     const poly = getUnionPolygon(el)
+    const rect = getOffsetRectangle(el)
+    const bounds = poly.getBounds()
 
     for (const innerPoly of poly.m_List.toArray()) {
       const svgNs = "http://www.w3.org/2000/svg"
@@ -31,8 +33,10 @@ describe("`getPolygon()` produces expected result", () => {
       svg.appendChild(pathEl)
     }
 
-    svg.setAttribute("width", win.innerWidth + "")
-    svg.setAttribute("height", win.innerHeight + "")
+    svg.style.setProperty("left", rect.x - bounds.x + "px")
+    svg.style.setProperty("top", rect.y - bounds.y + "px")
+    svg.setAttribute("width", bounds.w + "")
+    svg.setAttribute("height", bounds.h + "")
 
     expect(true).to.be.true
   })

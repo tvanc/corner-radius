@@ -45,8 +45,9 @@ export function transform(el, polygon, transformer): PolyDefault {
 
   const styles = getComputedStyle(el)
   const scaleValue = styles.scale
-  const scale =
+  const scaleArr =
     scaleValue === "none" ? [1, 1] : scaleValue.split(" ").map(parseFloat)
+  const scale = transformer.scale
 
   const rotationDegrees = (parseFloat(styles.rotate) || 0) % 360
   const rotationRadians = (rotationDegrees * Math.PI) / 180
@@ -55,30 +56,20 @@ export function transform(el, polygon, transformer): PolyDefault {
   // transform the new hub around the old
   let newOrigin = new Point(...transformOriginValue.map(parseFloat))
 
-  if (scale[0] !== 1 || scale[1] !== 1 || rotationRadians) {
-    if (transformer.origin) {
-      newOrigin = rotatePoint(
-        newOrigin,
-        transformer.rotation,
-        transformer.origin,
-      )
-      // newOrigin = scalePoint(newOrigin, transformer.scale, transformer.origin)
-    }
-
-    transformer.scale.x *= scale[0]
-    transformer.scale.y *= scale[1] ?? scale[0]
-    transformer.rotation += rotationRadians
-    transformer.origin = newOrigin
+  if (
+    transformer.origin &&
+    (scale.x !== 1 || scale.y !== 1 || transformer.rotation)
+  ) {
+    newOrigin = rotatePoint(newOrigin, transformer.rotation, transformer.origin)
   }
 
-  if (el.id === "settingsMenu") {
-    console.log("settingsMenu", Path.fromPoly(polygon).toString())
-  }
+  scale.x *= scaleArr[0]
+  scale.y *= scaleArr[1] ?? scaleArr[0]
+  transformer.rotation += rotationRadians
+  transformer.origin = newOrigin
 
-  if (transformer.origin) {
-    polygon = rotatePolygon(polygon, transformer)
-    // polygon = scalePolygon(polygon, transformer)
-  }
+  polygon = rotatePolygon(polygon, transformer)
+  // polygon = scalePolygon(polygon, transformer)
 
   return polygon
 }
