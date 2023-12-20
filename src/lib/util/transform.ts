@@ -4,6 +4,7 @@ import PolyDefault from "../../gpc/geometry/PolyDefault"
 import Point from "../../gpc/geometry/Point"
 import Scale from "../../gpc/geometry/Scale"
 import { Path } from "../class/Path"
+import PolySimple from "../../gpc/geometry/PolySimple"
 
 export function rotatePolygon(
   p: PolygonInterface,
@@ -38,6 +39,26 @@ export function scalePoint(point: Point, scale: Scale, origin: Point) {
   return new Point(newX, newY)
 }
 
+export function translatePoint(
+  point: Point,
+  translateX: number,
+  translateY: number,
+) {
+  return new Point(point.x + translateX, point.y + translateY)
+}
+
+export function translatePolygon(
+  p: PolygonInterface,
+  translateX: number,
+  translateY: number,
+) {
+  const translated = new PolyDefault(false)
+  translated.add(
+    p.getPoints().map((p) => translatePoint(p, translateX, translateY)),
+  )
+  return translated
+}
+
 export function transform(el, polygon, transformer): PolyDefault {
   if (0 === polygon.getNumPoints()) {
     return undefined
@@ -56,20 +77,42 @@ export function transform(el, polygon, transformer): PolyDefault {
   // transform the new hub around the old
   let newOrigin = new Point(...transformOriginValue.map(parseFloat))
 
-  if (
-    transformer.origin &&
-    (scale.x !== 1 || scale.y !== 1 || transformer.rotation)
-  ) {
-    newOrigin = rotatePoint(newOrigin, transformer.rotation, transformer.origin)
+  if (transformer.origin) {
+    const rotatedOrigin = rotatePoint(
+      newOrigin,
+      transformer.rotation,
+      transformer.origin,
+    )
+
+    polygon = translatePolygon(
+      polygon,
+      newOrigin.x + rotatedOrigin.x,
+      newOrigin.y + rotatedOrigin.y,
+    )
+
+    newOrigin = rotatedOrigin
   }
+
+  transformer.origin = newOrigin
 
   scale.x *= scaleArr[0]
   scale.y *= scaleArr[1] ?? scaleArr[0]
   transformer.rotation += rotationRadians
-  transformer.origin = newOrigin
 
   polygon = rotatePolygon(polygon, transformer)
   // polygon = scalePolygon(polygon, transformer)
 
-  return polygon
+  return smoothPoints(polygon)
+}
+
+function smoothPoints(originalPolygon: PolySimple) {
+  const newPolygon = new PolyDefault()
+
+  for (const point of originalPolygon.getPoints()) {
+    newPolygon.addPoint(
+      new Point(point.x.toFixed(3) * 1, point.y.toFixed(3) * 1),
+    )
+  }
+
+  return newPolygon
 }
