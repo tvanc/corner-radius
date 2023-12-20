@@ -49,6 +49,19 @@ export class Path {
     return this.fromPoints(poly.getPoints(), offsetX, offsetY)
   }
 
+  static fromRectangle(
+    { x, y, w = undefined, h = undefined, width = w, height = h },
+    offsetX = 0,
+    offsetY = 0,
+  ) {
+    return this.fromPoints([
+      new Point(x, y),
+      new Point(x + width, y),
+      new Point(x + width, y + height),
+      new Point(x, y + height),
+    ])
+  }
+
   add(...commands: CommandInterface[]) {
     this.commands.push(...commands)
   }
