@@ -64,6 +64,7 @@ export function transform(el, polygon, transformer): PolyDefault {
     return undefined
   }
 
+  const topLeft = polygon.getPoint(0)
   const styles = getComputedStyle(el)
   const scaleValue = styles.scale
   const scaleArr =
@@ -75,32 +76,40 @@ export function transform(el, polygon, transformer): PolyDefault {
   const transformOriginValue = styles.transformOrigin.split(" ")
 
   // transform the new hub around the old
-  let newOrigin = new Point(...transformOriginValue.map(parseFloat))
+  const newOrigin = new Point(
+    parseFloat(transformOriginValue[0]) + topLeft.x,
+    parseFloat(transformOriginValue[1]) + topLeft.y,
+  )
 
-  if (transformer.origin) {
-    const rotatedOrigin = rotatePoint(
-      newOrigin,
-      transformer.rotation,
-      transformer.origin,
-    )
-
-    polygon = translatePolygon(
+  // rotate child around its own axis
+  if (rotationRadians) {
+    polygon = rotatePolygon(
       polygon,
-      newOrigin.x + rotatedOrigin.x,
-      newOrigin.y + rotatedOrigin.y,
+      new Transformer(newOrigin, rotationRadians),
     )
-
-    newOrigin = rotatedOrigin
   }
 
-  transformer.origin = newOrigin
+  if (transformer.origin) {
+    if (transformer.rotation) {
+      // rotate child around parent axis
+      polygon = rotatePolygon(polygon, transformer)
+    }
+
+    if (rotationRadians) {
+      // rotate new axis around previous
+      transformer.origin = rotatePoint(
+        newOrigin,
+        transformer.rotation,
+        transformer.origin,
+      )
+    }
+  } else {
+    transformer.origin = newOrigin
+  }
 
   scale.x *= scaleArr[0]
   scale.y *= scaleArr[1] ?? scaleArr[0]
   transformer.rotation += rotationRadians
-
-  polygon = rotatePolygon(polygon, transformer)
-  // polygon = scalePolygon(polygon, transformer)
 
   return smoothPoints(polygon)
 }
